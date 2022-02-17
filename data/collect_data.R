@@ -77,7 +77,7 @@ scroll_down_and_load <- function(remDr){
     remDr$executeScript(
       script = "window.scrollTo(0, document.body.scrollHeight)")
     
-    Sys.sleep(2)
+    nytnyt(c(2, 3))
     
     new_height <- 
       remDr$executeScript("return document.body.scrollHeight") %>% 
@@ -91,7 +91,13 @@ scroll_down_and_load <- function(remDr){
     
     last_height <- new_height
   }
+  nytnyt(period = c(2,5))
   return(last_height)
+}
+
+# Scroll to the top of the page
+scroll_to_top <- function() {
+  remDr$executeScript("window.scrollTo(0, 0);", args = list(1))
 }
 
 # Number of times to go back
@@ -103,6 +109,61 @@ go_back <- function(remDr,
     remDr$goBack()
     nytnyt(c(min, max))
   })
+}
+
+# Go to the categories page of the current store
+store_categories_url <- function(remDr) {
+  url <- remDr$getCurrentUrl() %>% 
+    unlist()
+  
+  cat(crayon::blue("Saved url: ", url))
+  return(url)
+}
+
+# Verify that output length from selenium & rvest match
+verify_length_match <- function(sel = num_of_stores_selenium, 
+                                rve = num_of_store_rvest) {
+  if(sel == rve) {
+    cat(crayon::green("Success! Lengths match: ",  rve, "\n"))
+  } else {
+    cat(crayon::red("Go Back! Lengths match DO NOT match:\n",
+                    "From sel: ", sel, "\n", 
+                    "From rve: ", rve,"\n"))
+  }
+}
+
+# Extract the link for a specific subcategory
+category_element <- function(type = "category", element) {
+  if(!is.character(element)) {
+    element <- as.character(element)
+    cat(crayon::blue("Input was coerced into a character \n"))
+  }
+  
+  switch(type, 
+         "category" = {
+           category_position <-
+             store_categories %>%
+             str_detect(regex(pattern = element, ignore_case = TRUE)) %>%
+             which()
+           
+           if(is_empty(category_position)) {
+             cat(crayon::blue("No match was found \n"))
+           } else {
+             paste0(url, category_links[category_position])
+           }
+         }, 
+         "subcategory" = {
+           subcategory_position <-
+             store_subcategories %>%
+             str_detect(regex(pattern = element, ignore_case = TRUE)) %>%
+             which()
+           
+           if(is_empty(subcategory_position)) {
+             cat(crayon::blue("No match was found \n"))
+           } else {
+             paste0(url, subcategory_links[subcategory_position])
+           }
+         })
 }
 
 ##### 3: Check which webpages are not bot friendly -----
@@ -130,140 +191,137 @@ remDr$open()
 remDr$navigate(url)
 get_page_title(remDr)
 
-# Find all available locations
-rem_locations <- remDr$findElements(using = "class name", 
-                                    value = "text-success")
-locations <- rem_locations %>% 
-  map(~ .$getElementText()) %>% 
-  unlist()
-
+# Find all available locations : 131 links in the '1st-layer'
+locations <- get_html_elements(remDr, 
+                               css = ".text-success", 
+                               type = "text")
 locations
-# There are 131 links to click in the '1st-layer'
+
 
 ### Collect the store info for each location
 # Click on location link
-rem_locations_link <- remDr$findElement(using = "link text", 
-                                        value = "Abu Hail")
+location_links <- get_html_elements(remDr, 
+                                    css = ".text-success", 
+                                    type = "attribute", 
+                                    attribute_selector = "href")
 
-rem_locations_link$clickElement()
+remDr$navigate(paste0(url, location_links[[1]]))
 
 # Click on 'i' icon: (1) click on each one, (2) collect data
 # (1) scroll to the title & click on each 'i' icon
-rem_title <- remDr$findElement(using = "tag name", 
-                               value = "h1")
+scroll_down_and_load(remDr)
+scroll_to_top()
+location_title <- get_html_element(remDr, css = "h1")
 
-rem_title$getElementText() # SAVE the title for later use
-
-# NEED TO SCROLL???
-# scroll_to_element(remDr, rem_title)
+num_of_store_rvest <- 
+  get_html_elements(remDr, css = "h2.text-black") %>% 
+  length()
 
 rem_store_info <- remDr$findElements(using = "class name", 
                                      value = "store-info")
-
 rem_store_info %>% 
   map(~ .$clickElement()) %>% 
   unlist()
 
+num_of_stores_selenium <- length(rem_store_info)
+
+# Verify correct number of stores
+verify_length_match()
+
 
 # (2) collect data
-rem_store_details <- remDr$findElements(using = "class name", 
-                                        value = "store-detail")
-
-store_details <- rem_store_details %>% 
-  map(~ .$getElementText()) %>% 
-  unlist() %>% 
-  str_replace_all("\n", " ")
+store_details <- get_html_elements(remDr, css = ".store-detail")
+store_links <- get_html_elements(remDr, 
+                                 css = ".store-grid", 
+                                 type = "attribute", 
+                                 attribute_selector = "href")
 
 ### Collect category data from each store
 # Click on store ---> categories
-rem_store_details[[1]]$clickElement()
+remDr$navigate(paste0(url, store_links[[1]]))
+
 rem_category_link <- remDr$findElement(using = "class name", 
                                        value = "category-link")
 rem_category_link$clickElement()
 
+current_store_categories_url <- store_categories_url(remDr)
+
+# Grab the categories image links
+category_image_links <- get_html_elements(remDr, 
+                                          css = "img.center", 
+                                          type = "attribute", 
+                                          attribute_selector = "src")
+
+# category_image <- magick::image_read(path = category_image_link %>% 
+#                                        unlist())
+
 # What categories are available
-rem_category_title <- remDr$findElements(using = "tag name", 
-                                         value = "h3")
-store_categories <- rem_category_title %>% 
-  map(~ .$getElementText()) %>% 
-  unlist()
+store_categories <- 
+  get_html_elements(remDr, css = "h3.text-black") %>% 
+  str_trim(side = "both")
 
-# Choose a specific store category (e.g., snacks OR store_categories[[i]])
-category_element <- rem_category_title %>% 
-  map(., ~ .$getElementText()) %>% 
-  unlist() %>% 
-  str_detect(., regex("\\s{0}snacks\\s{0}", ignore_case = TRUE)) %>% 
-  which()
+# Grab the category links (e.g., snacks OR store_categories[[i]])
+scroll_down_and_load(remDr)
+scroll_to_top()
 
-rem_category_selected <- rem_category_title[[category_element]]
-scroll_to_element(remDr, rem_category_selected)
+category_links <- get_html_elements(remDr, 
+                                    css = ".category-card", 
+                                    type = "attribute", 
+                                    attribute_selector = "href")
 
-# Grab the categories images
-rem_category_images <- remDr$findElements(using = "css selector", 
-                                          value = "img.center")
+verify_length_match(sel = length(store_categories), 
+                    rve = length(category_links))
 
-category_image_link <- rem_category_images[1] %>% 
-  map(., ~ .$getElementAttribute("src"))
-category_image <- magick::image_read(path = category_image_link %>% 
-                                       unlist())
+category_url <- category_element(type = "category", element = "snacks")
 
 # Click on chosen category
-rem_category_selected$clickElement()
+remDr$navigate(category_url)
 
 # How many "sub-categories" /{all}
-rem_subcategory_title <- remDr$findElements(using = "class name", 
-                                            value = "text-primery-1")
-
-store_subcategories <- rem_subcategory_title %>% 
-  map(., ~ .$getElementText()) %>% 
-  unlist()
+store_subcategories <- 
+  get_html_elements(remDr, css = ".text-primery-1") %>% 
+  str_trim(side = "both")
 length(store_subcategories)
 
-# Choose a specific store subcategory (e.g., sweets OR store_subcategories[[i]])
-subcategory_element <- store_subcategories %>% 
-  str_detect(., regex("\\s{0}sweets\\s{0}", ignore_case = TRUE)) %>% 
-  which()
+subcategory_links <- 
+get_html_elements(remDr, 
+                    css = "div.ng-tns-c20-0>div:nth-child(1) > a:nth-child(1)", 
+                    type = "attribute", 
+                    attribute_selector = "href") %>% 
+  .[-1]
 
-rem_subcategory_selected <- rem_subcategory_title[[subcategory_element]]
+verify_length_match(sel = length(store_subcategories), 
+                    rve = length(subcategory_links))
+
+# Choose a specific store subcategory (e.g., sweets OR store_subcategories[[i]])
+subcategory_url <- category_element(type = "subcategory", element = "biscuits")
 
 # Click on chosen subcategory
-rem_subcategory_selected$clickElement()
-scroll_to_element(remDr, rem_subcategory_selected)
+remDr$navigate(subcategory_url)
 
 # Scroll to the bottom to dynamically load all of the items
 scroll_down_and_load(remDr)
+scroll_to_top()
 
 # Grab item title, weight, price, image
-rem_item_title <- remDr$findElements(using = "class name", 
-                                     value = "text-black")
-item_title <- rem_item_title %>% 
-  map(., ~ .$getElementText()) %>% 
-  unlist()
+item_title <- get_html_elements(remDr, css = "h2.text-black")
+item_weight <- get_html_elements(remDr, css = "div.item-label")
+item_price <- get_html_elements(remDr, css = "div.item-price")
+item_image_links <- get_html_elements(remDr, 
+                                      css = "img.center", 
+                                      type = "attribute", 
+                                      attribute_selector = "src")
 
-rem_item_title <- remDr$findElements(using = "class name", 
-                                     value = "item-label")
-item_label <- rem_item_title %>% 
-  map(., ~ .$getElementText()) %>% 
-  unlist()
+# item_image <- magick::image_read(path = item_image_links %>% 
+#                                    unlist())
 
-rem_item_title <- remDr$findElements(using = "class name", 
-                                     value = "item-price")
-item_price <- rem_item_title %>% 
-  map(., ~ .$getElementText()) %>% 
-  unlist()
-
-rem_subcategory_images <- remDr$findElements(using = "css selector", 
-                                             value = "img.center")
-subcategory_image_link <- rem_subcategory_images %>% 
-  map(., ~ .$getElementAttribute("src"))
-subcategory_image <- magick::image_read(path = subcategory_image_link %>% 
-                                          unlist())
-
-tibble::tibble(item_title, item_label, item_price, subcategory_image_link)
+tibble::tibble(item_title, item_weight, item_price, item_image_links)
 # Repeat above for each subcategory
 
-# Go back subcategory + 1 times
-go_back(remDr)
+# Go back subcategory + 1 times OR simply navigate to categories page
+go_back(remDr, times = length(subcategory_links) + 1)
+# OR
+remDr$navigate(current_store_categories_url)
 
 # Repeat 127 "What categories are available" TO 214 for the next category
 
@@ -284,6 +342,7 @@ go_back(remDr, times = 1)
 remDr$close()
 remDr$closeWindow()
 system("kill /im java.exe /f")
+# system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)
 gc()
 ##### Substitute Rselenium with Rvest where applicable -----
 # lines 180-183
