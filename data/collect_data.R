@@ -1,10 +1,14 @@
-##### Load packages -----
+##### 1: Load packages -----
 # Main packages loaded: robotstxt, Selenium, rvest, purrr
 # Packages used with namespace: netstat, crayon
 pacman::p_load(robotstxt, RSelenium, rvest, purrr, stringr)
 
-##### Misc. functions -----
+##### 2: Misc. functions -----
 # Sleep & print time
+get_page_title <- function(remDr) {
+  cat(crayon::blue(remDr$getTitle()))
+}
+
 nytnyt <- function(period = c(1, 2)){
   tictoc <- runif(1, period[1], period[2])
   cat(crayon::green(paste0(">>> Sleeping for ", round(tictoc, 2), " seconds\n")))
@@ -59,7 +63,7 @@ go_back <- function(remDr,
   })
 }
 
-##### Check which webpages are not bot friendly -----
+##### 3: Check which webpages are not bot friendly -----
 url <- "https://www.elgrocer.com"
 
 rtxt <- robotstxt(domain = url)
@@ -70,7 +74,7 @@ rtxt$permissions
 paths_allowed(domain = url, paths = c("/store", "/stores"))
 # We can collect data from the webpages we are interested in
 
-##### Initiate Selenium server -----
+##### 4: Initiate Selenium server -----
 initiate_server <- rsDriver(port = netstat::free_port(), 
                             browser = "firefox", 
                             verbose = FALSE)
@@ -79,10 +83,10 @@ initiate_server <- rsDriver(port = netstat::free_port(),
 remDr <- initiate_server$client
 remDr$open()
 
-##### Selenium to collect data -----
+##### 5: Selenium to collect data -----
 ### How many links to click in the '1st-layer'?
 remDr$navigate(url)
-cat(crayon::blue(remDr$getTitle()))
+get_page_title(remDr)
 
 # Find all available locations
 rem_locations <- remDr$findElements(using = "class name", 
@@ -225,6 +229,13 @@ go_back(remDr)
 go_back(remDr, times = 1)
 
 # Repeat "Selenium to collect data" for each location 
+
+# continue...
+# IF store info already collected ---> break from existing loop
+# loop 1: nest the locations
+# loop 2: if new store ---> info + click, else ignore/break store
+# loop 3: click each category ---> grab item data
+
 
 
 ##### Close Selenium server -----
