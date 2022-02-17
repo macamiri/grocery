@@ -84,8 +84,7 @@ rem_store_details <- remDr$findElements(using = "class name",
 
 store_details <- rem_store_details %>% 
   map(~ .$getElementText()) %>% 
-  unlist() %>% 
-  str_replace_all("\n", " ")
+  unlist()
 
 ### Collect category data from each store
 # Click on store ---> categories
@@ -110,7 +109,15 @@ category_image <- magick::image_read(path = category_image %>% unlist())
 
 
 # Click on a specific store category (e.g., snacks)
-# continue...
+category_element <- rem_category_title %>% 
+  map(., ~ .$getElementText()) %>% 
+  unlist() %>% 
+  stringr::str_detect(., stringr::regex(".*snacks*", ignore_case = TRUE)) %>% 
+  which()
+
+category_selected <- rem_category_title[[category_element]]
+
+scroll_to_element(remDr, category_selected)
 
 
 
