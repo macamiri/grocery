@@ -15,6 +15,48 @@ nytnyt <- function(period = c(1, 2)){
   Sys.sleep(tictoc)
 }
 
+# Get the html elementS using rvest & chosen selector
+get_html_elements <- function(remDr, ..., type = "text", attribute_selector) {
+  page <- remDr$getPageSource() %>% 
+    .[[1]] %>% 
+    read_html() %>% 
+    html_elements(...)
+  
+  if(type == "text") {
+    page %>% 
+      html_text()
+  } else if(type == "attribute") {
+    page %>% 
+      html_attr(attribute_selector)
+  } else if(type == "attributes") {
+    page %>% 
+      html_attrs()
+  } else {
+    cat(crayon::red("Type must be 1 of these: text, attribute, attributes"))
+  }
+}
+
+# Get the html elemenT using rvest & chosen selector
+get_html_element <- function(remDr, ..., type = "text", attribute_selector) {
+  page <- remDr$getPageSource() %>% 
+    .[[1]] %>% 
+    read_html() %>% 
+    html_element(...)
+  
+  if(type == "text") {
+    page %>% 
+      html_text()
+  } else if(type == "attribute") {
+    page %>% 
+      html_attr(attribute_selector)
+  } else if(type == "attributes") {
+    page %>% 
+      html_attrs()
+  } else {
+    cat(crayon::red("Type must be 1 of these: text, attribute, attributes"))
+  }
+}
+
 # Scroll to & highlight element
 scroll_to_element <- function(remDr, webElem) {
   remDr$executeScript("arguments[0].scrollIntoView(true);",
