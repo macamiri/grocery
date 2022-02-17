@@ -88,12 +88,29 @@ store_details <- rem_store_details %>%
   str_replace_all("\n", " ")
 
 ### Collect category data from each store
+# Click on store ---> categories
+rem_store_details[[1]]$clickElement()
+rem_category_link <- remDr$findElement(using = "class name", 
+                                       value = "category-link")
+rem_category_link$clickElement()
+
+# What categories are available
+rem_category_title <- remDr$findElements(using = "tag name", 
+                                         value = "h3")
+store_categories <- rem_category_title %>% 
+  map(~ .$getElementText()) %>% 
+  unlist()
+
+# Grab the categories images
+rem_category_images <- remDr$findElements(using = "css selector", 
+                                          value = "img.center")
+
+category_image <- rem_category_images[[1]]$getElementAttribute("src")
+category_image <- magick::image_read(path = category_image %>% unlist())
+
+
+# Click on a specific store category (e.g., snacks)
 # continue...
-
-
-
-
-
 
 
 
