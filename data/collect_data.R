@@ -1,21 +1,62 @@
 ##### Load packages -----
 # Main packages loaded: robotstxt, Selenium, rvest, purrr
 # Packages used with namespace: netstat, crayon
-pacman::p_load(robotstxt, RSelenium, rvest, purrr)
+pacman::p_load(robotstxt, RSelenium, rvest, purrr, stringr)
 
 ##### Misc. functions -----
-# nytnyt: sleep & print it time
+# Sleep & print time
 nytnyt <- function(period = c(1, 2)){
   tictoc <- runif(1, period[1], period[2])
-  cat(paste0(">>> Sleeping for ", round(tictoc, 2), "seconds\n"))
+  cat(crayon::green(paste0(">>> Sleeping for ", round(tictoc, 2), " seconds\n")))
   Sys.sleep(tictoc)
 }
 
-# scroll_to_element: scrolls to & highlights element
+# Scroll to & highlight element
 scroll_to_element <- function(remDr, webElem) {
   remDr$executeScript("arguments[0].scrollIntoView(true);",
                       args = list(webElem))
   webElem$highlightElement()
+}
+
+# Scroll to bottom of page and dynamically load more results
+scroll_down_and_load <- function(remDr){
+  
+  last_height <- 
+    remDr$executeScript("return document.body.scrollHeight") %>% 
+    unlist()
+  
+  new_height <- 0
+  
+  while(TRUE){
+    remDr$executeScript(
+      script = "window.scrollTo(0, document.body.scrollHeight)")
+    
+    Sys.sleep(2)
+    
+    new_height <- 
+      remDr$executeScript("return document.body.scrollHeight") %>% 
+      unlist()
+    
+    print(list(old = last_height, new = new_height))
+    
+    if(new_height == last_height){
+      break
+    }
+    
+    last_height <- new_height
+  }
+  return(last_height)
+}
+
+# Number of times to go back
+go_back <- function(remDr, 
+                    times = length(store_subcategories) + 1, 
+                    min = 5, 
+                    max = 10) {
+  walk(1:times, function(x) {
+    remDr$goBack()
+    nytnyt(c(min, max))
+  })
 }
 
 ##### Check which webpages are not bot friendly -----
@@ -84,7 +125,8 @@ rem_store_details <- remDr$findElements(using = "class name",
 
 store_details <- rem_store_details %>% 
   map(~ .$getElementText()) %>% 
-  unlist()
+  unlist() %>% 
+  str_replace_all("\n", " ")
 
 ### Collect category data from each store
 # Click on store ---> categories
@@ -100,31 +142,109 @@ store_categories <- rem_category_title %>%
   map(~ .$getElementText()) %>% 
   unlist()
 
+# Choose a specific store category (e.g., snacks OR store_categories[[i]])
+category_element <- rem_category_title %>% 
+  map(., ~ .$getElementText()) %>% 
+  unlist() %>% 
+  str_detect(., regex("\\s{0}snacks\\s{0}", ignore_case = TRUE)) %>% 
+  which()
+
+rem_category_selected <- rem_category_title[[category_element]]
+scroll_to_element(remDr, rem_category_selected)
+
 # Grab the categories images
 rem_category_images <- remDr$findElements(using = "css selector", 
                                           value = "img.center")
 
-category_image <- rem_category_images[[1]]$getElementAttribute("src")
-category_image <- magick::image_read(path = category_image %>% unlist())
+category_image_link <- rem_category_images[1] %>% 
+  map(., ~ .$getElementAttribute("src"))
+category_image <- magick::image_read(path = category_image_link %>% 
+                                       unlist())
 
+# Click on chosen category
+rem_category_selected$clickElement()
 
-# Click on a specific store category (e.g., snacks)
-category_element <- rem_category_title %>% 
+# How many "sub-categories" /{all}
+rem_subcategory_title <- remDr$findElements(using = "class name", 
+                                            value = "text-primery-1")
+
+store_subcategories <- rem_subcategory_title %>% 
   map(., ~ .$getElementText()) %>% 
-  unlist() %>% 
-  stringr::str_detect(., stringr::regex(".*snacks*", ignore_case = TRUE)) %>% 
+  unlist()
+length(store_subcategories)
+
+# Choose a specific store subcategory (e.g., sweets OR store_subcategories[[i]])
+subcategory_element <- store_subcategories %>% 
+  str_detect(., regex("\\s{0}sweets\\s{0}", ignore_case = TRUE)) %>% 
   which()
 
-category_selected <- rem_category_title[[category_element]]
+rem_subcategory_selected <- rem_subcategory_title[[subcategory_element]]
 
-scroll_to_element(remDr, category_selected)
+# Click on chosen subcategory
+rem_subcategory_selected$clickElement()
+scroll_to_element(remDr, rem_subcategory_selected)
+
+# Scroll to the bottom to dynamically load all of the items
+scroll_down_and_load(remDr)
+
+# Grab item title, weight, price, image
+rem_item_title <- remDr$findElements(using = "class name", 
+                                     value = "text-black")
+item_title <- rem_item_title %>% 
+  map(., ~ .$getElementText()) %>% 
+  unlist()
+
+rem_item_title <- remDr$findElements(using = "class name", 
+                                     value = "item-label")
+item_label <- rem_item_title %>% 
+  map(., ~ .$getElementText()) %>% 
+  unlist()
+
+rem_item_title <- remDr$findElements(using = "class name", 
+                                     value = "item-price")
+item_price <- rem_item_title %>% 
+  map(., ~ .$getElementText()) %>% 
+  unlist()
+
+rem_subcategory_images <- remDr$findElements(using = "css selector", 
+                                             value = "img.center")
+subcategory_image_link <- rem_subcategory_images %>% 
+  map(., ~ .$getElementAttribute("src"))
+subcategory_image <- magick::image_read(path = subcategory_image_link %>% 
+                                          unlist())
+
+tibble::tibble(item_title, item_label, item_price, subcategory_image_link)
+# Repeat above for each subcategory
+
+# Go back subcategory + 1 times
+go_back(remDr)
+
+# Repeat 127 "What categories are available" TO 214 for the next category
+
+# Go back to homepage ---> next location
+go_back(remDr, times = 1)
+
+# Repeat "Selenium to collect data" for each location 
 
 
-
+##### Close Selenium server -----
+remDr$close()
+remDr$closeWindow()
+system("kill /im java.exe /f")
+gc()
+##### Substitute Rselenium with Rvest where applicable -----
+# lines 180-183
+page <- 
+  remDr$getPageSource() %>% 
+  .[[1]] %>% 
+  read_html() %>% 
+  html_elements(css = ".text-black") %>% 
+  html_text()
 
 
 ##### All in 1 function -----
 rem_locations_links <- vector(mode = "list", length = length(locations))
+# use map/walk instead of for loop
 for(i in 1:4) {
   rem_locations_links[[i]] <- remDr$findElement(using = "link text", 
                                                 value = locations[[i]])
