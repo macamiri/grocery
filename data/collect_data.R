@@ -3,15 +3,18 @@
 # Packages used with namespace: netstat, crayon
 pacman::p_load(robotstxt, RSelenium, rvest, purrr, stringr)
 
+
 ##### 2: Misc. functions -----
 # Sleep & print time
 get_page_title <- function(remDr) {
   cat(crayon::blue(remDr$getTitle()))
 }
 
-nytnyt <- function(period = c(1, 2)){
+nytnyt <- function(period = c(1, 2), crayon_col = crayon::green, ...){
   tictoc <- runif(1, period[1], period[2])
-  cat(crayon::green(paste0(">>> Sleeping for ", round(tictoc, 2), " seconds\n")))
+  cat(crayon_col(paste0(">>> Sleeping for ", 
+                           round(tictoc, 2), 
+                           " seconds\n", ...)))
   Sys.sleep(tictoc)
 }
 
@@ -116,19 +119,27 @@ store_categories_url <- function(remDr) {
   url <- remDr$getCurrentUrl() %>% 
     unlist()
   
-  cat(crayon::blue("Saved url: ", url))
+  cat(crayon::blue("Saved url:", url))
   return(url)
+}
+
+# Get the current url in selenium
+current_url <- function(remDr) {
+  url <- remDr$getCurrentUrl() %>% 
+    unlist()
+  
+  cat(crayon::bgCyan("Currently on:", url, "\n"))
 }
 
 # Verify that output length from selenium & rvest match
 verify_length_match <- function(sel = num_of_stores_selenium, 
-                                rve = num_of_store_rvest) {
+                                rve = num_of_stores_rvest) {
   if(sel == rve) {
     cat(crayon::green("Success! Lengths match: ",  rve, "\n"))
   } else {
-    cat(crayon::red("Go Back! Lengths match DO NOT match:\n",
-                    "From sel: ", sel, "\n", 
-                    "From rve: ", rve,"\n"))
+    stop(crayon::red("Go Back! Lengths match DO NOT match:\n",
+                    "From sel:", sel, "\n", 
+                    "From rve:", rve))
   }
 }
 
@@ -166,6 +177,7 @@ category_element <- function(type = "category", element) {
          })
 }
 
+
 ##### 3: Check which webpages are not bot friendly -----
 url <- "https://www.elgrocer.com"
 
@@ -177,6 +189,7 @@ rtxt$permissions
 paths_allowed(domain = url, paths = c("/store", "/stores"))
 # We can collect data from the webpages we are interested in
 
+
 ##### 4: Initiate Selenium server -----
 initiate_server <- rsDriver(port = netstat::free_port(), 
                             browser = "firefox", 
@@ -186,184 +199,333 @@ initiate_server <- rsDriver(port = netstat::free_port(),
 remDr <- initiate_server$client
 remDr$open()
 
+
 ##### 5: Selenium to collect data -----
-### How many links to click in the '1st-layer'?
-remDr$navigate(url)
-get_page_title(remDr)
-
-# Find all available locations : 131 links in the '1st-layer'
-locations <- get_html_elements(remDr, 
-                               css = ".text-success", 
-                               type = "text")
-locations
 
 
-### Collect the store info for each location
-# Click on location link
-location_links <- get_html_elements(remDr, 
-                                    css = ".text-success", 
-                                    type = "attribute", 
-                                    attribute_selector = "href")
+### (A) Collect the locations and their links -----
+collect_location_links <- function() {
+  # Navigate to homepage
+  remDr$navigate(url)
+  get_page_title(remDr)
+  
+  # 131 total locations
+  locations <- get_html_elements(remDr, 
+                                 css = ".text-success", 
+                                 type = "text")
+  
+  # Collect 131 location links
+  location_links_extensions <- get_html_elements(remDr, 
+                                                 css = ".text-success", 
+                                                 type = "attribute", 
+                                                 attribute_selector = "href")
+  location_links <- paste0(url, location_links_extensions)
+  
+  tibble::tibble(location = locations, location_link = location_links)
+}
+location_tibble <- collect_location_links()
 
-remDr$navigate(paste0(url, location_links[[1]]))
+# Find the potential number of stores - to avoid recursively building tibble
+# 331
+# start <- Sys.time()
+# num_of_stores <- 
+#   location_links %>% 
+#   map(., function(.x) {
+#     cat(crayon::bgMagenta("Currently on:", .x, "\n"))
+#     nytnyt(c(2, 5))
+#     
+#     .x %>% 
+#       read_html() %>% 
+#       html_elements(css = "h2.text-black") %>% 
+#       length()
+#   }) %>% 
+#   reduce(.f = sum)
+# end <- Sys.time()
 
-# Click on 'i' icon: (1) click on each one, (2) collect data
-# (1) scroll to the title & click on each 'i' icon
-scroll_down_and_load(remDr)
-scroll_to_top()
-location_title <- get_html_element(remDr, css = "h1")
+### (B) Collect the store 'i' details, and links -----
+collect_stores_details <- function(links_to_use = location_tibble$link) {
+  links_to_use %>% 
+    map_dfr(., function(.x) {
+      # Navigate to the url
+      remDr$navigate(.x)
+      nytnyt(c(5, 10), crayon_col = crayon::blue, "Make sure page loads \n")
+      current_url(remDr)
+      
+      # Scroll
+      scroll_down_and_load(remDr)
+      scroll_to_top()
+      
+      # Grab location title
+      location_title <- get_html_element(remDr, css = "h1")
+      
+      # Number of stores - rvest
+      num_of_stores_rvest <- 
+        get_html_elements(remDr, css = "h2.text-black") %>% 
+        length()
+      
+      # Click on the 'i' icon to reveal more data
+      rem_store_info <- remDr$findElements(using = "class name", 
+                                           value = "store-info")
+      
+      rem_store_info %>% 
+        map(., ~ .$clickElement()) %>% 
+        unlist()
+      
+      # Number of stores - selenium
+      num_of_stores_selenium <- length(rem_store_info)
+      
+      # Verify that all stores' 'i' icon was clicked
+      verify_length_match(num_of_stores_rvest, num_of_stores_selenium)
+      
+      # Collect the extra 'i' icon data
+      store_details <- get_html_elements(remDr, css = ".store-detail")
+      nytnyt(c(2, 3), 
+             crayon_col = crayon::magenta, 
+             "Got details. Grab links in location:", 
+             which(.x == location_tibble$link), 
+             "out of ", 
+             length(location_tibble$link),
+             "\n")
+      store_links <- get_html_elements(remDr, 
+                                       css = ".store-grid", 
+                                       type = "attribute", 
+                                       attribute_selector = "href")
+      
+      # Store data in a tibble
+      tibble::tibble(location = rep(location_title, num_of_stores_rvest), 
+                     details = store_details, 
+                     store_link = paste0(url, store_links))
+    }
+    )
+  
+}
+store_tibble <- collect_stores_details()
 
-num_of_store_rvest <- 
-  get_html_elements(remDr, css = "h2.text-black") %>% 
-  length()
+### (C) Collect categories data (delete duplicates here) ----- 
+collect_categories <- function(links_to_use = store_tibble$store_link) {
+  # Category links
+  links <- paste0(links_to_use, "/categories")
+  unique_links <- unique(links)
+  
+  unique_links %>% 
+    map_dfr(., function(.x) {
+      remDr$navigate(.x)
+      nytnyt(c(5, 10), crayon_col = crayon::blue, "Make sure page loads \n")
+      current_url(remDr)
+      
+      # Grab store name
+      store_name <- 
+        get_html_element(remDr, css = "h2.text-black") %>% 
+        str_trim(side = "both") %>% 
+        str_remove(" Product Categories")
+      
+      # Scroll
+      scroll_down_and_load(remDr)
+      scroll_to_top()
+      
+      # Grab category image links
+      category_image_links <- get_html_elements(remDr, 
+                                                css = "img.center", 
+                                                type = "attribute", 
+                                                attribute_selector = "src")
+      
+      # Grab the category titles
+      store_categories <- 
+        get_html_elements(remDr, css = "h3.text-black") %>% 
+        str_trim(side = "both")
+      
+      num_of_categories <- length(store_categories)
 
-rem_store_info <- remDr$findElements(using = "class name", 
-                                     value = "store-info")
-rem_store_info %>% 
-  map(~ .$clickElement()) %>% 
-  unlist()
+      # Grab the category links
+      category_link_ext <- get_html_elements(remDr, 
+                                             css = ".category-card", 
+                                             type = "attribute", 
+                                             attribute_selector = "href")
+      
+      category_links <- paste0(url, category_link_ext)
+      
+      # Verify that every category's link was collected
+      verify_length_match(sel = num_of_categories, 
+                          rve = length(category_links))
+      
+      # Sleep
+      nytnyt(c(2, 3),
+             crayon_col = crayon::magenta,
+             "Got category images, titles & links. Completed ",
+             which(.x == unique_links),
+             " out of ",
+             length(unique_links),
+             " links \n")
 
-num_of_stores_selenium <- length(rem_store_info)
+      
+      # Store data in a tibble
+      tibble::tibble(store_name = rep(store_name, num_of_categories), 
+                     category = store_categories, 
+                     category_link = category_links, 
+                     image_link = category_image_links, 
+                     num_of_categories = num_of_categories)
+    }
+    )
+}
+category_tibble <- collect_categories(store_tibble$store_link)
 
-# Verify correct number of stores
-verify_length_match()
+# Get number of categories in each store
+num_of_categories_tibble <- 
+  category_tibble %>% 
+    dplyr::group_by(store_name) %>% 
+    dplyr::summarise(num_of_categories = max(num_of_categories))
 
+category_tibble <- 
+  category_tibble %>% 
+  dplyr::mutate(num_of_categories = NULL)
 
-# (2) collect data
-store_details <- get_html_elements(remDr, css = ".store-detail")
-store_links <- get_html_elements(remDr, 
-                                 css = ".store-grid", 
-                                 type = "attribute", 
-                                 attribute_selector = "href")
+# Remove offer/promotion page
+category_tibble <- 
+  category_tibble %>% 
+    dplyr::filter(!str_detect(category_link, "promotion"))
 
-### Collect category data from each store
-# Click on store ---> categories
-remDr$navigate(paste0(url, store_links[[1]]))
-
-rem_category_link <- remDr$findElement(using = "class name", 
-                                       value = "category-link")
-rem_category_link$clickElement()
-
-current_store_categories_url <- store_categories_url(remDr)
-
-# Grab the categories image links
-category_image_links <- get_html_elements(remDr, 
-                                          css = "img.center", 
-                                          type = "attribute", 
-                                          attribute_selector = "src")
-
-# category_image <- magick::image_read(path = category_image_link %>% 
+# category_image <- magick::image_read(path = category_image_links %>% 
 #                                        unlist())
 
-# What categories are available
-store_categories <- 
-  get_html_elements(remDr, css = "h3.text-black") %>% 
-  str_trim(side = "both")
 
-# Grab the category links (e.g., snacks OR store_categories[[i]])
-scroll_down_and_load(remDr)
-scroll_to_top()
+### (D) Collect subcategories data -----
+collect_subcategories <- function(links_to_use = category_tibble$category_link) {
+  
+  links_to_use %>% 
+    map_dfr(., function(.x) {
+      # Navigate to subcategory
+      remDr$navigate(.x)
+      nytnyt(c(5, 10), crayon_col = crayon::blue, "Make sure page loads \n")
+      current_url(remDr)
+      
+      # Grab store name
+      store_title <- 
+        get_html_element(remDr, css = "h1.store-name") %>% 
+        str_trim(side = "both")
+      
+      # Scroll
+      scroll_down_and_load(remDr)
+      scroll_to_top()
+      
+      # Grab subcategory links /{all}
+      num_of_categories <- 
+        num_of_categories_tibble %>% 
+        dplyr::filter(str_to_lower(store_name) == str_to_lower(store_title)) %>% 
+        .[[2]]
+      
+      num_of_categories <- num_of_categories + 1
+      
+      subcategory_link_extensions <- 
+        get_html_elements(remDr, 
+                          css = "div.slider-item > a:nth-child(1)", 
+                          type = "attribute", 
+                          attribute_selector = "href") %>% 
+        .[-c(1:num_of_categories)]
+      
+      subcategory_links <- paste0(url, subcategory_link_extensions)
 
-category_links <- get_html_elements(remDr, 
-                                    css = ".category-card", 
-                                    type = "attribute", 
-                                    attribute_selector = "href")
+      # Count subcategories
+      store_subcategories <- 
+        get_html_elements(remDr, css = ".text-primery-1") %>% 
+        str_trim(side = "both")
+      
+      num_of_subcategories <- length(store_subcategories)
+      
+      # Verify that every subcategory's link was collected
+      verify_length_match(sel = num_of_subcategories, 
+                          rve = length(subcategory_links))
+      
+      # Sleep
+      nytnyt(c(2, 3),
+             crayon_col = crayon::magenta,
+             "Got subcategories. Completed ",
+             which(.x == links_to_use),
+             " out of ",
+             length(links_to_use),
+             " categories \n")
+      
+      
+      # Store data in a tibble
+      tibble::tibble(store_name = rep(store_name, num_of_subcategories), 
+                     subcategory = store_subcategories, 
+                     subcategory_link = subcategory_links)
+    }
+    )
+}
+subcategory_tibble <- collect_subcategories(category_tibble$category_link[34:38])
 
-verify_length_match(sel = length(store_categories), 
-                    rve = length(category_links))
-
-category_url <- category_element(type = "category", element = "snacks")
-
-# Click on chosen category
-remDr$navigate(category_url)
-
-# How many "sub-categories" /{all}
-store_subcategories <- 
-  get_html_elements(remDr, css = ".text-primery-1") %>% 
-  str_trim(side = "both")
-length(store_subcategories)
-
-subcategory_links <- 
-get_html_elements(remDr, 
-                    css = "div.ng-tns-c20-0>div:nth-child(1) > a:nth-child(1)", 
-                    type = "attribute", 
-                    attribute_selector = "href") %>% 
-  .[-1]
-
-verify_length_match(sel = length(store_subcategories), 
-                    rve = length(subcategory_links))
-
-# Choose a specific store subcategory (e.g., sweets OR store_subcategories[[i]])
-subcategory_url <- category_element(type = "subcategory", element = "biscuits")
-
-# Click on chosen subcategory
-remDr$navigate(subcategory_url)
-
-# Scroll to the bottom to dynamically load all of the items
-scroll_down_and_load(remDr)
-scroll_to_top()
-
-# Grab item title, weight, price, image
-item_title <- get_html_elements(remDr, css = "h2.text-black")
-item_weight <- get_html_elements(remDr, css = "div.item-label")
-item_price <- get_html_elements(remDr, css = "div.item-price")
-item_image_links <- get_html_elements(remDr, 
-                                      css = "img.center", 
-                                      type = "attribute", 
-                                      attribute_selector = "src")
+### (E) Collect item data -----
+collect_items <- function(links_to_use = subcategory_tibble$subcategory_link) {
+  
+  links_to_use %>% 
+    map_dfr(., function(.x) {
+      # Navigate to subcategory page
+      remDr$navigate(.x)
+      nytnyt(c(5, 10), crayon_col = crayon::blue, "Make sure page loads \n")
+      current_url(remDr)
+      
+      # Scroll
+      scroll_down_and_load(remDr)
+      scroll_to_top()
+      
+      # Grab title
+      item_title <- get_html_elements(remDr, css = "h2.text-black")
+      
+      # Grab weight
+      item_weight <- get_html_elements(remDr, css = "div.item-label")
+      
+      # Grab price
+      item_price <- get_html_elements(remDr, css = "div.item-price")
+      
+      # Grab image link
+      item_image_links <- get_html_elements(remDr, 
+                                            css = "img.center", 
+                                            type = "attribute", 
+                                            attribute_selector = "src")
+      
+      # Sleep
+      subcategory_title <- get_html_element(remDr, css = "h2.ng-star-inserted")
+      nytnyt(c(2, 3),
+             crayon_col = crayon::magenta,
+             "Got items. Completed ",
+             which(.x == links_to_use),
+             " out of ",
+             length(links_to_use),
+             " sub-subcategories \n", 
+             "Current subcategory:", subcategory_title, "\n")
+      
+      
+      # Store data in a tibble
+      tibble::tibble(subcategory_link = .x, 
+                     item = item_title, 
+                     weight = item_weight, 
+                     price = item_price, 
+                     item_image_link = item_image_links)
+    }
+    )
+}
+item_tibble <- collect_items()
 
 # item_image <- magick::image_read(path = item_image_links %>% 
 #                                    unlist())
-
-tibble::tibble(item_title, item_weight, item_price, item_image_links)
-# Repeat above for each subcategory
 
 # Go back subcategory + 1 times OR simply navigate to categories page
 go_back(remDr, times = length(subcategory_links) + 1)
 # OR
 remDr$navigate(current_store_categories_url)
 
-# Repeat 127 "What categories are available" TO 214 for the next category
-
 # Go back to homepage ---> next location
 go_back(remDr, times = 1)
 
-# Repeat "Selenium to collect data" for each location 
-
-# continue...
-# IF store info already collected ---> break from existing loop
-# loop 1: nest the locations
-# loop 2: if new store ---> info + click, else ignore/break store
-# loop 3: click each category ---> grab item data
 
 
-
-##### Close Selenium server -----
+##### 6: Close Selenium server -----
 remDr$close()
 remDr$closeWindow()
 system("kill /im java.exe /f")
 # system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)
 gc()
-##### Substitute Rselenium with Rvest where applicable -----
-# lines 180-183
-page <- 
-  remDr$getPageSource() %>% 
-  .[[1]] %>% 
-  read_html() %>% 
-  html_elements(css = ".text-black") %>% 
-  html_text()
 
 
-##### All in 1 function -----
-rem_locations_links <- vector(mode = "list", length = length(locations))
-# use map/walk instead of for loop
-for(i in 1:4) {
-  rem_locations_links[[i]] <- remDr$findElement(using = "link text", 
-                                                value = locations[[i]])
-  print(i)
-  rem_locations_links[[i]]$clickElement()
-  nytnyt(period = c(9,10))
-  remDr$goBack()
-  nytnyt(period = c(9,10))
-}
+##### After collecting data...clean -----
 
