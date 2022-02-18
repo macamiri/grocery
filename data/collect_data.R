@@ -1,7 +1,9 @@
 ##### 1: Load packages -----
-# Main packages loaded: robotstxt, Selenium, rvest, purrr
-# Packages used with namespace: netstat, crayon
+# Main packages loaded:robotstxt, Selenium, rvest, purrr
+# Packages used with namespace: etstat, crayon, tibble, dplyr, magick, progressr
 pacman::p_load(robotstxt, RSelenium, rvest, purrr, stringr)
+
+
 
 
 ##### 2: Misc. functions -----
@@ -143,6 +145,15 @@ verify_length_match <- function(sel = num_of_stores_selenium,
   }
 }
 
+# Sound when work complete in map
+sound_work_complete <- function(expr1, expr2) {
+  
+  if(expr1 == expr2) {
+    beepr::beep(sound = "complete", 
+                expr = cat(crayon::bgWhite$green$bold("Work Complete!")))
+  }
+}
+
 # Extract the link for a specific subcategory
 category_element <- function(type = "category", element) {
   if(!is.character(element)) {
@@ -178,6 +189,8 @@ category_element <- function(type = "category", element) {
 }
 
 
+
+
 ##### 3: Check which webpages are not bot friendly -----
 url <- "https://www.elgrocer.com"
 
@@ -190,6 +203,8 @@ paths_allowed(domain = url, paths = c("/store", "/stores"))
 # We can collect data from the webpages we are interested in
 
 
+
+
 ##### 4: Initiate Selenium server -----
 initiate_server <- rsDriver(port = netstat::free_port(), 
                             browser = "firefox", 
@@ -200,13 +215,13 @@ remDr <- initiate_server$client
 remDr$open()
 
 
+
 ##### 5: Selenium to collect data -----
-
-
 ### (A) Collect the locations and their links -----
 collect_location_links <- function() {
   # Navigate to homepage
   remDr$navigate(url)
+  nytnyt(c(5, 10), crayon_col = crayon::blue, "Make sure page loads \n")
   get_page_title(remDr)
   
   # 131 total locations
@@ -243,7 +258,8 @@ location_tibble <- collect_location_links()
 # end <- Sys.time()
 
 ### (B) Collect the store 'i' details, and links -----
-collect_stores_details <- function(links_to_use = location_tibble$link) {
+collect_stores_details <- function(links_to_use = location_tibble$location_link) {
+  
   links_to_use %>% 
     map_dfr(., function(.x) {
       # Navigate to the url
@@ -279,17 +295,21 @@ collect_stores_details <- function(links_to_use = location_tibble$link) {
       
       # Collect the extra 'i' icon data
       store_details <- get_html_elements(remDr, css = ".store-detail")
-      nytnyt(c(2, 3), 
+      nytnyt(c(0, 1), 
              crayon_col = crayon::magenta, 
              "Got details. Grab links in location:", 
-             which(.x == location_tibble$link), 
-             "out of ", 
-             length(location_tibble$link),
+             which(.x == links_to_use), 
+             " out of ", 
+             length(links_to_use),
              "\n")
+      
       store_links <- get_html_elements(remDr, 
                                        css = ".store-grid", 
                                        type = "attribute", 
                                        attribute_selector = "href")
+      
+      # Play sound only at end - when work complete
+      sound_work_complete(which(.x == links_to_use), length(links_to_use))
       
       # Store data in a tibble
       tibble::tibble(location = rep(location_title, num_of_stores_rvest), 
@@ -297,9 +317,8 @@ collect_stores_details <- function(links_to_use = location_tibble$link) {
                      store_link = paste0(url, store_links))
     }
     )
-  
 }
-store_tibble <- collect_stores_details()
+store_tibble <- collect_stores_details(location_tibble$location_link)
 
 ### (C) Collect categories data (delete duplicates here) ----- 
 collect_categories <- function(links_to_use = store_tibble$store_link) {
@@ -349,14 +368,16 @@ collect_categories <- function(links_to_use = store_tibble$store_link) {
                           rve = length(category_links))
       
       # Sleep
-      nytnyt(c(2, 3),
+      nytnyt(c(0, 1),
              crayon_col = crayon::magenta,
              "Got category images, titles & links. Completed ",
              which(.x == unique_links),
              " out of ",
              length(unique_links),
              " links \n")
-
+      
+      # Play sound only at end - when work complete
+      sound_work_complete(which(.x == unique_links), length(unique_links))
       
       # Store data in a tibble
       tibble::tibble(store_name = rep(store_name, num_of_categories), 
@@ -369,7 +390,7 @@ collect_categories <- function(links_to_use = store_tibble$store_link) {
 }
 category_tibble <- collect_categories(store_tibble$store_link)
 
-# Get number of categories in each store
+# Get number of categories in each store, then remove column
 num_of_categories_tibble <- 
   category_tibble %>% 
     dplyr::group_by(store_name) %>% 
@@ -436,7 +457,7 @@ collect_subcategories <- function(links_to_use = category_tibble$category_link) 
                           rve = length(subcategory_links))
       
       # Sleep
-      nytnyt(c(2, 3),
+      nytnyt(c(0, 1),
              crayon_col = crayon::magenta,
              "Got subcategories. Completed ",
              which(.x == links_to_use),
@@ -444,15 +465,17 @@ collect_subcategories <- function(links_to_use = category_tibble$category_link) 
              length(links_to_use),
              " categories \n")
       
+      # Play sound only at end - when work complete
+      sound_work_complete(which(.x == links_to_use), length(links_to_use))
       
       # Store data in a tibble
-      tibble::tibble(store_name = rep(store_name, num_of_subcategories), 
+      tibble::tibble(store_name = rep(.x, num_of_subcategories), 
                      subcategory = store_subcategories, 
                      subcategory_link = subcategory_links)
     }
     )
 }
-subcategory_tibble <- collect_subcategories(category_tibble$category_link[34:38])
+subcategory_tibble <- collect_subcategories(category_tibble$category_link)
 
 ### (E) Collect item data -----
 collect_items <- function(links_to_use = subcategory_tibble$subcategory_link) {
@@ -485,7 +508,7 @@ collect_items <- function(links_to_use = subcategory_tibble$subcategory_link) {
       
       # Sleep
       subcategory_title <- get_html_element(remDr, css = "h2.ng-star-inserted")
-      nytnyt(c(2, 3),
+      nytnyt(c(0, 1),
              crayon_col = crayon::magenta,
              "Got items. Completed ",
              which(.x == links_to_use),
@@ -494,6 +517,8 @@ collect_items <- function(links_to_use = subcategory_tibble$subcategory_link) {
              " sub-subcategories \n", 
              "Current subcategory:", subcategory_title, "\n")
       
+      # Play sound only at end - when work complete
+      sound_work_complete(which(.x == links_to_use), length(links_to_use))
       
       # Store data in a tibble
       tibble::tibble(subcategory_link = .x, 
@@ -504,18 +529,10 @@ collect_items <- function(links_to_use = subcategory_tibble$subcategory_link) {
     }
     )
 }
-item_tibble <- collect_items()
+item_tibble <- collect_items(subcategory_tibble$subcategory_link)
 
 # item_image <- magick::image_read(path = item_image_links %>% 
 #                                    unlist())
-
-# Go back subcategory + 1 times OR simply navigate to categories page
-go_back(remDr, times = length(subcategory_links) + 1)
-# OR
-remDr$navigate(current_store_categories_url)
-
-# Go back to homepage ---> next location
-go_back(remDr, times = 1)
 
 
 
@@ -527,5 +544,5 @@ system("kill /im java.exe /f")
 gc()
 
 
-##### After collecting data...clean -----
 
+##### After collecting data: clean in new file & put in package with misc. funcs
