@@ -546,3 +546,15 @@ gc()
 
 
 ##### After collecting data: clean in new file & put in package with misc. funcs
+
+# Save sample data tibbles to create clean up workflow
+data_tibbles <- list(location = location_tibble, 
+                     store = store_tibble, 
+                     category = category_tibble, 
+                     subcategory = subcategory_tibble, 
+                     item = item_tibble)
+
+data_tibbles %>% 
+  map2(., names(data_tibbles), function(.x, .y) {
+    readr::write_csv(.x, path = here::here(paste0("data/", .y, ".csv")))
+  })
