@@ -314,7 +314,8 @@ collect_stores_details <- function(links_to_use = location_tibble$location_link)
       # Store data in a tibble
       tibble::tibble(location = rep(location_title, num_of_stores_rvest), 
                      details = store_details, 
-                     store_link = paste0(url, store_links))
+                     store_link = paste0(url, store_links), 
+                     location_link = rep(.x, num_of_stores_rvest))
     }
     )
 }
@@ -384,7 +385,8 @@ collect_categories <- function(links_to_use = store_tibble$store_link) {
                      category = store_categories, 
                      category_link = category_links, 
                      image_link = category_image_links, 
-                     num_of_categories = num_of_categories)
+                     num_of_categories = num_of_categories, 
+                     store_link = rep(.x, num_of_categories))
     }
     )
 }
@@ -469,9 +471,9 @@ collect_subcategories <- function(links_to_use = category_tibble$category_link) 
       sound_work_complete(which(.x == links_to_use), length(links_to_use))
       
       # Store data in a tibble
-      tibble::tibble(store_name = rep(.x, num_of_subcategories), 
-                     subcategory = store_subcategories, 
-                     subcategory_link = subcategory_links)
+      tibble::tibble(subcategory = store_subcategories, 
+                     subcategory_link = subcategory_links, 
+                     category_link = rep(.x, num_of_subcategories))
     }
     )
 }
@@ -521,7 +523,7 @@ collect_items <- function(links_to_use = subcategory_tibble$subcategory_link) {
       sound_work_complete(which(.x == links_to_use), length(links_to_use))
       
       # Store data in a tibble
-      tibble::tibble(subcategory_link = .x, 
+      tibble::tibble(subcategory_link = rep(.x, length(item_title)), 
                      item = item_title, 
                      weight = item_weight, 
                      price = item_price, 
