@@ -1,7 +1,7 @@
 ##### 1: Load packages -----
-# Main packages loaded:robotstxt, Selenium, rvest, purrr
+# Main packages loaded:robotstxt, Selenium, rvest, purrr, readr
 # Packages used with namespace: etstat, crayon, tibble, dplyr, magick, progressr
-pacman::p_load(robotstxt, RSelenium, rvest, purrr, stringr)
+pacman::p_load(robotstxt, RSelenium, rvest, purrr, stringr, readr)
 
 
 
@@ -82,7 +82,9 @@ scroll_down_and_load <- function(remDr){
     remDr$executeScript(
       script = "window.scrollTo(0, document.body.scrollHeight)")
     
-    nytnyt(c(2, 3))
+    nytnyt(c(2, 3), 
+           crayon_col = crayon::green, 
+           "Scrolling to the bottom of the page\n")
     
     new_height <- 
       remDr$executeScript("return document.body.scrollHeight") %>% 
@@ -98,6 +100,56 @@ scroll_down_and_load <- function(remDr){
   }
   nytnyt(period = c(2,5))
   return(last_height)
+}
+
+# Scroll from top to bottom
+scroll_down_page_perc <- function(remDr, perc = seq(.01, 1, .01)) {
+  
+  scroll_to_top()
+  
+  last_height <- 
+    remDr$executeScript("return document.body.scrollHeight") %>% 
+    unlist()
+  
+  map(perc, function(.x) {
+    last_height <- last_height * .x
+    remDr$executeScript(
+      script = str_glue("window.scrollTo({{
+                        left: 0, 
+                        top: {last_height}, 
+                        behavior: 'smooth'
+                        }});"))
+    
+    nytnyt(c(2, 3), crayon_col = crayon::yellow, "Scrolled down ", 
+           .x * 100, "%\n")
+  }
+  )
+  cat(crayon::green("Reached bottom of page \n"))
+}
+
+# Scroll from bottom to top
+scroll_up_page_perc <- function(remDr, perc = seq(.01, 1, .01)) {
+  
+  scroll_down_and_load(remDr)
+  
+  last_height <- 
+    remDr$executeScript("return document.body.scrollHeight") %>% 
+    unlist()
+  
+  map(rev(perc), function(.x) {
+    last_height <- last_height * .x
+    remDr$executeScript(
+      script = str_glue("window.scrollTo({{
+                        left: 0, 
+                        top: {last_height}, 
+                        behavior: 'smooth'
+                        }});"))
+    
+    nytnyt(c(1, 1.5), crayon_col = crayon::yellow, "Scrolled up ", 
+           100 - (.x * 100), "%\n")
+  }
+  )
+  cat(crayon::green("Reached top of page \n"))
 }
 
 # Scroll to the top of the page
@@ -133,7 +185,7 @@ current_url <- function(remDr) {
   cat(crayon::bgCyan("Currently on:", url, "\n"))
 }
 
-# Verify that output length from selenium & rvest match
+# Verify that output length from selenium & rvest match - 2 objects
 verify_length_match <- function(sel = num_of_stores_selenium, 
                                 rve = num_of_stores_rvest) {
   if(sel == rve) {
@@ -142,6 +194,26 @@ verify_length_match <- function(sel = num_of_stores_selenium,
     stop(crayon::red("Go Back! Lengths match DO NOT match:\n",
                     "From sel:", sel, "\n", 
                     "From rve:", rve))
+  }
+}
+
+# Verify that output length - 5 objects
+verify_ocado_length_match <- function(obj1 = length(product_title), 
+                                      obj2 = length(product_weight), 
+                                      obj3 = length(product_price), 
+                                      obj4 = length(product_images), 
+                                      obj5 = length(product_links)) {
+  if(obj1 == obj2 && obj2 == obj3 && obj3 == obj4 && obj4 == obj5) {
+    cat(crayon::green("Success! All 5 lengths match: ",  
+                      obj1, 
+                      "items found", "\n"))
+  } else {
+    stop(crayon::red("Go Back! Lengths match DO NOT match:\n",
+                     "Title:", obj1, "\n", 
+                     "Weight:", obj2, "\n", 
+                     "Price:", obj3, "\n", 
+                     "Images:", obj4, "\n", 
+                     "Links:", obj5, "\n"))
   }
 }
 
@@ -188,6 +260,27 @@ category_element <- function(type = "category", element) {
          })
 }
 
+# Click on the 'show more' button on ocado.com
+click_show_more <- function() {
+  i <- 0
+  repeat({
+    output_click <- tryCatch(
+      expr = {
+        remDr$findElement(using = "css", 
+                          value = "button.show-more")$clickElement()
+        i <- i + 1
+        cat(crayon::bgCyan("Clicked ", i, " times\n"))
+        nytnyt(c(5, 10))
+        paste("clicked")
+      }, 
+      error = function(e) {
+        cat(crayon::bgRed("No show more button. Time to collect data. \n"))
+      }
+    )
+    if(is_null(output_click)) {break}
+  })
+}
+
 
 
 
@@ -201,8 +294,6 @@ rtxt$permissions
 
 paths_allowed(domain = url, paths = c("/store", "/stores"))
 # We can collect data from the webpages we are interested in
-
-
 
 
 ##### 4: Initiate Selenium server -----
@@ -538,7 +629,167 @@ item_tibble <- collect_items(subcategory_tibble$subcategory_link)
 
 
 
-##### 6: Close Selenium server -----
+
+
+##### 6: Collect more data from Ocado.com -----
+# Check bot friendly?
+url2 <- "https://www.ocado.com"
+
+rtxt <- robotstxt(domain = url2)
+rtxt$comments
+rtxt$crawl_delay
+rtxt$permissions
+paths_allowed(domain = url, paths = c("/browse"))
+
+# Browse shop
+remDr$navigate(url2)
+
+# Accept all cookies
+remDr$findElement(using = "xpath", 
+                  value = "//*[@id='onetrust-accept-btn-handler']")$clickElement()
+
+# Click on browse shop
+remDr$findElement(using = "link text", 
+                  value = "Browse Shop")$clickElement()
+
+# Get categories info
+ocado_category_name <- get_html_elements(remDr, 
+                                         css = ".level-item-link")
+
+ocado_category_ext <- get_html_elements(remDr, 
+                                        css = ".level-item-link", 
+                                        type = "attribute", 
+                                        attribute_selector = "href")
+ocado_category_link <- paste0(url2, ocado_category_ext)
+
+ocado_category <- tibble::tibble(category = ocado_category_name, 
+                                 link = ocado_category_link)
+
+# Visit each category ---> grab product info
+collect_category_data <- function(links_to_use = ocado_category_link) {
+  
+  links_to_use %>% 
+    map_dfr(., function(.x) {
+      
+      # Navigate to page
+      remDr$navigate(.x)
+      nytnyt(c(10, 15), crayon_col = crayon::blue, "Make sure page loads \n")
+      current_url(remDr)
+      
+      # Count number of items written on top of page
+      ocado_category_count <- 
+        get_html_element(remDr, 
+                         css = ".total-product-number") %>% 
+        parse_number()
+      
+      # Page title
+      get_page_title(remDr)
+      cat(crayon::blue("Collecting data from:", 
+                       ocado_category_name[which(.x == links_to_use)], 
+                       "\n", 
+                       "Total products:", ocado_category_count, "\n"))
+      
+      # Click on 'show more' until there's no more 'show more'
+      click_show_more()
+      
+      # Slowly scroll down then up to load all products
+      scroll_down_page_perc(remDr)
+      scroll_up_page_perc(remDr)
+      
+      # Grab title
+      product_title <- 
+        get_html_elements(remDr, 
+                          css = "h4.fop-title", 
+                          type = "attribute", 
+                          attribute_selector = "title") %>% 
+        .[-c(1:3)]
+      
+      nytnyt(c(6, 11), crayon_col = crayon::yellow, "Got titles\n")
+      
+      # Grab weight
+      product_weight <- 
+        get_html_elements(remDr, 
+                          css = ".fop-catch-weight") %>% 
+        .[-c(1:3)]
+      
+      nytnyt(c(6, 11), crayon_col = crayon::cyan, "Got weights\n")
+      
+      # Grab price
+      product_price <- 
+        get_html_elements(remDr, 
+                          css = ".fop-price") %>% 
+        .[-c(1:3)]
+      
+      nytnyt(c(6, 11), crayon_col = crayon::silver, "Got prices\n")
+      
+      # Grab shelf life
+      product_shelf_life <- 
+        get_html_elements(remDr, 
+                          css = ".fop-pack-info") %>% 
+        dplyr::na_if("") %>% 
+        .[-c(1:3)]
+      
+      # Grab images
+      product_images <- 
+        get_html_elements(remDr, 
+                          css = "img.fop-img", 
+                          type = "attribute", 
+                          attribute_selector = "src") %>% 
+        paste0(url2, .) %>% 
+        .[-c(1:3)]
+      
+      nytnyt(c(6, 11), crayon_col = crayon::blue, "Got images\n")
+      
+      # Grab product links
+      product_links <- 
+        get_html_elements(remDr, 
+                          css = "li.fops-item > div:nth-child(2) > div:nth-child(1) > a:nth-child(1)", 
+                          type = "attribute", 
+                          attribute_selector = "href") %>% 
+        paste0(url2, .)
+      
+      nytnyt(c(12, 20), crayon_col = crayon::green, "Got product links\n")
+      
+      # Verify lenghts match
+      verify_ocado_length_match(
+        length(product_title), 
+        length(product_weight), 
+        length(product_price), 
+        length(product_images), 
+        length(product_links)
+      )
+      
+      # Sleep
+      nytnyt(c(0, 1),
+             crayon_col = crayon::magenta,
+             "Got items from ", 
+             ocado_category_name[which(.x == links_to_use)], 
+             "\n", 
+             "Completed ",
+             which(.x == links_to_use),
+             " out of ",
+             length(links_to_use),
+             "\n")
+      
+      # Play sound only at end - when work complete
+      sound_work_complete(which(.x == links_to_use), length(links_to_use))
+      
+      # Store data in a tibble
+      tibble::tibble(title = product_title, 
+                     weight = product_weight, 
+                     price = product_price, 
+                     shelf_life = product_shelf_life, 
+                     images = product_images, 
+                     product_links = product_links, 
+                     category_links = rep(.x, length(product_title)))
+    }
+    )
+}
+hi <- collect_category_data(ocado_category_link)
+
+# WIP...Visit each product_link ---> badges/kcals/rating/counts/reviews
+
+##### 7: Close Selenium server -----
 remDr$close()
 remDr$closeWindow()
 system("kill /im java.exe /f")
