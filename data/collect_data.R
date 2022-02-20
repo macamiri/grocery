@@ -36,8 +36,11 @@ get_html_elements <- function(remDr, ..., type = "text", attribute_selector) {
   } else if(type == "attributes") {
     page %>% 
       html_attrs()
+  } else if(type == "table") {
+    page %>% 
+      html_table()
   } else {
-    cat(crayon::red("Type must be 1 of these: text, attribute, attributes"))
+    cat(crayon::red("Type must be: text, attribute, attributes or table"))
   }
 }
 
@@ -57,8 +60,11 @@ get_html_element <- function(remDr, ..., type = "text", attribute_selector) {
   } else if(type == "attributes") {
     page %>% 
       html_attrs()
+  } else if(type == "table") {
+    page %>% 
+      html_table()
   } else {
-    cat(crayon::red("Type must be 1 of these: text, attribute, attributes"))
+    cat(crayon::red("Type must be: text, attribute, attributes or table"))
   }
 }
 
@@ -639,7 +645,7 @@ rtxt <- robotstxt(domain = url2)
 rtxt$comments
 rtxt$crawl_delay
 rtxt$permissions
-paths_allowed(domain = url, paths = c("/browse"))
+paths_allowed(domain = url2, paths = c("/browse"))
 
 # Browse shop
 remDr$navigate(url2)
@@ -780,14 +786,55 @@ collect_category_data <- function(links_to_use = ocado_category_link) {
                      price = product_price, 
                      shelf_life = product_shelf_life, 
                      images = product_images, 
-                     product_links = product_links, 
-                     category_links = rep(.x, length(product_title)))
+                     product_link = product_links, 
+                     category_link = rep(.x, length(product_title)))
     }
     )
 }
 hi <- collect_category_data(ocado_category_link)
 
 # WIP...Visit each product_link ---> badges/kcals/rating/counts/reviews
+ocado_category_data <- read_csv(here::here("data/ocado.csv"))
+
+collect_item_data <- function(links_to_use = ocado_category_data$product_links) {
+  
+  links_to_use %>% 
+    map_dfr(., function(.x) {
+      # Navigate to page
+      remDr$navigate(.x)
+      nytnyt(c(10, 15), crayon_col = crayon::blue, "Make sure page loads \n")
+      current_url(remDr)
+
+      # Page title
+      get_page_title(remDr)
+      cat(crayon::blue("Collecting data from:", 
+                       ocado_category_name[which(.x == links_to_use)], 
+                       "\n", 
+                       "Total products:", ocado_category_count, "\n"))
+      
+      # Grab bop badges: vegetarian, etc...
+      product_badges <- 
+        get_html_elements(remDr, 
+                          css = ".bop-badges > img", 
+                          type = "attribute", 
+                          attribute_selector = "title")
+    
+      # Grab nutrition table
+      nutrition_table <- 
+        get_html_element(remDr, 
+                         css = ".bop-nutritionData__origin", 
+                         type = "table")
+      
+      
+      
+      
+      
+      
+    })
+}
+
+
+#
 
 ##### 7: Close Selenium server -----
 remDr$close()
