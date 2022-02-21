@@ -108,7 +108,7 @@ scroll_down_and_load <- function(remDr){
   return(last_height)
 }
 
-# Scroll from top to bottom
+# Scroll from top to bottom to ensure all products load
 scroll_down_page_perc <- function(remDr, perc = seq(.01, 1, .01)) {
   
   scroll_to_top()
@@ -126,15 +126,15 @@ scroll_down_page_perc <- function(remDr, perc = seq(.01, 1, .01)) {
                         behavior: 'smooth'
                         }});"))
     
-    nytnyt(c(2, 3), crayon_col = crayon::yellow, "Scrolled down ", 
+    nytnyt(c(4, 6), crayon_col = crayon::yellow, "Scrolled down ", 
            .x * 100, "%\n")
   }
   )
   cat(crayon::green("Reached bottom of page \n"))
 }
 
-# Scroll from bottom to top
-scroll_up_page_perc <- function(remDr, perc = seq(.01, 1, .01)) {
+# Scroll from bottom to top to double ensure all products load
+scroll_up_page_perc <- function(remDr, perc = seq(.01, 1, .005)) {
   
   scroll_down_and_load(remDr)
   
@@ -151,7 +151,7 @@ scroll_up_page_perc <- function(remDr, perc = seq(.01, 1, .01)) {
                         behavior: 'smooth'
                         }});"))
     
-    nytnyt(c(1, 1.5), crayon_col = crayon::yellow, "Scrolled up ", 
+    nytnyt(c(2, 3), crayon_col = crayon::yellow, "Scrolled up ", 
            100 - (.x * 100), "%\n")
   }
   )
@@ -228,7 +228,7 @@ sound_work_complete <- function(expr1, expr2) {
   
   if(expr1 == expr2) {
     beepr::beep(sound = "complete", 
-                expr = cat(crayon::bgWhite$green$bold("Work Complete!")))
+                expr = cat(crayon::bgWhite$green$bold("Work Complete!\n")))
   }
 }
 
@@ -276,11 +276,11 @@ click_show_more <- function() {
                           value = "button.show-more")$clickElement()
         i <- i + 1
         cat(crayon::bgCyan("Clicked ", i, " times\n"))
-        nytnyt(c(5, 10))
+        nytnyt(c(2, 5))
         paste("clicked")
       }, 
       error = function(e) {
-        cat(crayon::bgRed("No show more button. Time to collect data. \n"))
+        cat(crayon::bgYellow("No show more button. Time to scroll down and up the page to load all products.\n"))
       }
     )
     if(is_null(output_click)) {break}
@@ -699,7 +699,7 @@ ocado_category_link <- paste0(url2, ocado_category_ext)
 ocado_category <- tibble::tibble(category = ocado_category_name, 
                                  link = ocado_category_link)
 
-# Visit each category ---> grab product info
+### (A) Grab product data in each category
 collect_category_data <- function(links_to_use = ocado_category_link) {
   
   links_to_use %>% 
@@ -707,7 +707,7 @@ collect_category_data <- function(links_to_use = ocado_category_link) {
       
       # Navigate to page
       remDr$navigate(.x)
-      nytnyt(c(10, 15), crayon_col = crayon::blue, "Make sure page loads \n")
+      nytnyt(c(1, 5), crayon_col = crayon::blue, "Make sure page loads \n")
       current_url(remDr)
       
       # Count number of items written on top of page
@@ -819,13 +819,13 @@ collect_category_data <- function(links_to_use = ocado_category_link) {
     }
     )
 }
-hi <- collect_category_data(ocado_category_link)
+ocado_category_data <- collect_category_data(ocado_category_link)
+# write_csv(ocado_category_data, here::here("data/ocado_category.csv"))
+# ocado_category_data <- read_csv(here::here("data/ocado_category.csv"))
 
-# Grab reviews
-ocado_category_data <- read_csv(here::here("data/ocado.csv"))
-
-# Grab product details
-collect_item_data <- function(links_to_use = ocado_category_data$product_links) {
+### (B) Grab product details
+# Using selenium get_html_elements: faster than 2 below
+collect_product_data_1 <- function(links_to_use = ocado_category_data$product_link) {
   
   links_to_use %>% 
     map_dfr(., function(.x) {
@@ -851,9 +851,10 @@ collect_item_data <- function(links_to_use = ocado_category_data$product_links) 
       product_ingredients <- 
         get_html_elements(remDr, 
                           css = "#productInformation") %>% 
-        str_extract("(?<=IngredientsIngredients|Product detailsSpecifications).*(?=Allergen Information)") %>% 
+        str_extract("(?<=IngredientsIngredients).*$") %>% 
         empty_to_na()
       cat(crayon::yellow("Got ingredients\n"))
+      
       
       # Grab brand
       product_brand <- 
@@ -898,6 +899,115 @@ collect_item_data <- function(links_to_use = ocado_category_data$product_links) 
       cat(crayon::yellow("Got recommend %\n"))
       
       # Sleep
+      
+      nytnyt(c(0, 1),
+             crayon_col = crayon::magenta,
+             "Adding new data to tibble\n", 
+             "Completed ", 
+             tryCatch(
+               expr = {
+                 which(.x == links_to_use)
+               }, 
+               warning = function(w) {
+                 cat(crayon::blue("Duplicate of product found\n"))
+               }), 
+             " out of ",
+             length(links_to_use),
+             "\n")
+      
+      # Play sound only at end - when work complete
+      sound_work_complete(which(.x == links_to_use), length(links_to_use))
+      
+      # Store data in a list
+      tibble::tibble(
+        product_link = .x, 
+        badge = product_badges, 
+        ingredient = product_ingredients, 
+        brand = product_brand, 
+        country = product_country, 
+        rating = prodcut_rating, 
+        count = product_count, 
+        recommend = product_recommend)
+    })
+}
+# Using rvest: slower than 1 above
+collect_product_data_2 <- function(links_to_use = ocado_category_data$product_link) {
+  
+  links_to_use %>% 
+    map_dfr(., function(.x) {
+      # Grab bop badges: vegetarian, etc...
+      product_badges <- 
+        .x %>% 
+        read_html() %>% 
+        html_elements(css = ".bop-badges > img") %>% 
+        html_attr("title") %>% 
+        paste(., sep = ", ", collapse = ", ") %>% 
+        empty_to_na()
+      cat(crayon::yellow("Got badges\n"))
+      
+      # Grab ingredients
+      product_ingredients <- 
+        .x %>% 
+        read_html() %>% 
+        html_elements(css = "#productInformation") %>% 
+        html_text() %>% 
+        str_extract("(?<=IngredientsIngredients|Product detailsSpecifications).*(?=Allergen Information)") %>% 
+        empty_to_na()
+      cat(crayon::yellow("Got ingredients\n"))
+      
+      # Grab brand
+      product_brand <- 
+        .x %>% 
+        read_html() %>% 
+        html_elements(css = ".bop-tags") %>% 
+        html_text() %>% 
+        str_subset("(?<=Brands).*$") %>% 
+        str_extract("(?<=Brands).*$") %>% 
+        empty_to_na()
+      cat(crayon::yellow("Got brand\n"))
+      
+      # Grab country of origin
+      product_country <- 
+        .x %>% 
+        read_html() %>% 
+        html_elements(css = "#productInformation") %>% 
+        html_text() %>% 
+        str_extract("(?<=Country of Origin).{100}") %>% 
+        str_extract(country_names) %>% 
+        keep(.p = ~ !is.na(.)) %>% 
+        paste(., sep = ", ", collapse = ", ") %>% 
+        empty_to_na()
+      cat(crayon::yellow("Got country of origin\n"))
+      
+      # Grab rating
+      prodcut_rating <- 
+        .x %>% 
+        read_html() %>% 
+        html_elements(css = ".bop-reviewSummary__kpiBall[itemprop='ratingValue']") %>% 
+        html_text() %>% 
+        empty_to_na()
+      cat(crayon::yellow("Got rating\n"))
+      
+      # Grab count
+      product_count <- 
+        .x %>% 
+        read_html() %>% 
+        html_elements(css = ".bop-reviewSummary__kpiBall[itemprop='ratingCount']") %>% 
+        html_text() %>% 
+        empty_to_na()
+      cat(crayon::yellow("Got count\n"))
+      
+      # Grab recommend %
+      product_recommend <- 
+        .x %>% 
+        read_html() %>% 
+        html_elements(css = ".bop-reviewSummary__recommendationsNumber") %>% 
+        html_text() %>% 
+        parse_number() %>% 
+        empty_to_na()
+      cat(crayon::yellow("Got recommend %\n"))
+      
+      # Sleep
       nytnyt(c(0, 1),
              crayon_col = crayon::magenta,
              "Adding new data to tibble\n", 
@@ -912,7 +1022,7 @@ collect_item_data <- function(links_to_use = ocado_category_data$product_links) 
       
       # Store data in a list
       tibble::tibble(
-        title = .x, 
+        product_link = .x, 
         badge = product_badges, 
         ingredient = product_ingredients, 
         brand = product_brand, 
@@ -922,9 +1032,18 @@ collect_item_data <- function(links_to_use = ocado_category_data$product_links) 
         recommend = product_recommend)
     })
 }
-hi <- collect_item_data(links_to_use = sample_links$links)
 
-# Grab product reviews
+# Compare the 2 versions above ---> delete (_2) after data cleaning workflow
+# microbenchmark::microbenchmark(
+#   uno = collect_product_data_1(ocado_category_data$product_link[1:5]),
+#   deux = collect_product_data_2(ocado_category_data$product_link[1:5]), 
+#   times = 5
+# )
+ocado_product_data <- collect_product_data_1(ocado_category_data$product_link)
+# write_csv(ocado_product_data, here::here("data/ocado_product.csv"))
+# ocado_product_data <- read_csv(here::here("data/ocado_product.csv"))
+
+### (C) Grab product reviews
 collect_product_reviews <- function(links_to_use = ocado_category_data$product_link) {
   
   links_to_use %>% 
@@ -1024,12 +1143,14 @@ collect_product_reviews <- function(links_to_use = ocado_category_data$product_l
         dplyr::bind_cols(product = .x, 
                          reviews = NA) 
       } else {
-        dplyr::bind_cols(product = rep(.x, length(product_reviews$reviews)), 
+        dplyr::bind_cols(product_link = rep(.x, length(product_reviews$reviews)), 
                          reviews = product_reviews) 
       }
     })
 }
-hi <- collect_product_reviews(sample_links$links)
+ocado_review_data <- collect_product_reviews(ocado_category_data$product_link)
+# write_csv(ocado_review_data, here::here("data/ocado_review.csv"))
+# ocado_review_data <- read_csv(here::here("data/ocado_review.csv"))
 
 # Grab nutrition table
 collect_nutrition_table <- function(links_to_use = ocado_category_data$product_link) {
@@ -1053,13 +1174,26 @@ collect_nutrition_table <- function(links_to_use = ocado_category_data$product_l
         pluck(1)
       cat(crayon::yellow("Got nutrition table\n"))
       
+      # Sleep
+      nytnyt(c(0, 1),
+             crayon_col = crayon::magenta,
+             "Completed ", 
+             which(.x == links_to_use),
+             " out of ",
+             length(links_to_use),
+             "\n")
+      
+      # Play sound only at end - when work complete
+      sound_work_complete(which(.x == links_to_use), length(links_to_use))
+      
       tibble::tibble(nutrition_table)
       }) %>% 
     set_names(links_to_use)
 }
-hi <- collect_nutrition_table(sample_links$links[4:1])
-hi[[sample_links$links[[4]]]]
-#
+ocado_nutrition_table <- collect_nutrition_table(ocado_category_data$product_link[c(1:3, 3000, 3456:3460, 5000)])
+# write_rds(ocado_nutrition_table, here::here("data/ocado_nutrition.rds"))
+# ocado_nutrition_table <- read_rds(here::here("data/ocado_nutrition.rds"))
+ocado_nutrition_table[[ocado_category_data$product_link[[3456]]]]
 
 ##### 7: Close Selenium server -----
 remDr$close()
