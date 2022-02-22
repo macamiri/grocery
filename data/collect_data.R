@@ -383,7 +383,8 @@ location_tibble <- collect_location_links()
 # end <- Sys.time()
 
 ### (B) Collect the store 'i' details, and links -----
-collect_stores_details <- function(links_to_use = location_tibble$location_link) {
+collect_stores_details <- function(links_to_use = location_tibble$location_link, 
+                                   sleep_min = 0, sleep_max = 1) {
   
   links_to_use %>% 
     map_dfr(., function(.x) {
@@ -420,7 +421,7 @@ collect_stores_details <- function(links_to_use = location_tibble$location_link)
       
       # Collect the extra 'i' icon data
       store_details <- get_html_elements(remDr, css = ".store-detail")
-      nytnyt(c(0, 1), 
+      nytnyt(c(sleep_min, sleep_max), 
              crayon_col = crayon::magenta, 
              "Got details. Grab links in location:", 
              which(.x == links_to_use), 
@@ -447,7 +448,8 @@ collect_stores_details <- function(links_to_use = location_tibble$location_link)
 store_tibble <- collect_stores_details(location_tibble$location_link)
 
 ### (C) Collect categories data (delete duplicates here) ----- 
-collect_categories <- function(links_to_use = store_tibble$store_link) {
+collect_categories <- function(links_to_use = store_tibble$store_link, 
+                               sleep_min = 0, sleep_max = 1) {
   # Category links
   links <- paste0(links_to_use, "/categories")
   unique_links <- unique(links)
@@ -494,7 +496,7 @@ collect_categories <- function(links_to_use = store_tibble$store_link) {
                           rve = length(category_links))
       
       # Sleep
-      nytnyt(c(0, 1),
+      nytnyt(c(sleep_min, sleep_max),
              crayon_col = crayon::magenta,
              "Got category images, titles & links. Completed ",
              which(.x == unique_links),
@@ -537,7 +539,8 @@ category_tibble <-
 
 
 ### (D) Collect subcategories data -----
-collect_subcategories <- function(links_to_use = category_tibble$category_link) {
+collect_subcategories <- function(links_to_use = category_tibble$category_link, 
+                                  sleep_min = 0, sleep_max = 1) {
   
   links_to_use %>% 
     map_dfr(., function(.x) {
@@ -584,7 +587,7 @@ collect_subcategories <- function(links_to_use = category_tibble$category_link) 
                           rve = length(subcategory_links))
       
       # Sleep
-      nytnyt(c(0, 1),
+      nytnyt(c(sleep_min, sleep_max),
              crayon_col = crayon::magenta,
              "Got subcategories. Completed ",
              which(.x == links_to_use),
@@ -605,7 +608,8 @@ collect_subcategories <- function(links_to_use = category_tibble$category_link) 
 subcategory_tibble <- collect_subcategories(category_tibble$category_link)
 
 ### (E) Collect item data -----
-collect_items <- function(links_to_use = subcategory_tibble$subcategory_link) {
+collect_items <- function(links_to_use = subcategory_tibble$subcategory_link, 
+                          sleep_min = 0, sleep_max = 1) {
   
   links_to_use %>% 
     map_dfr(., function(.x) {
@@ -635,7 +639,7 @@ collect_items <- function(links_to_use = subcategory_tibble$subcategory_link) {
       
       # Sleep
       subcategory_title <- get_html_element(remDr, css = "h2.ng-star-inserted")
-      nytnyt(c(0, 1),
+      nytnyt(c(sleep_min, sleep_max),
              crayon_col = crayon::magenta,
              "Got items. Completed ",
              which(.x == links_to_use),
@@ -700,7 +704,8 @@ ocado_category <- tibble::tibble(category = ocado_category_name,
                                  link = ocado_category_link)
 
 ### (A) Grab product data in each category
-collect_category_data <- function(links_to_use = ocado_category_link) {
+collect_category_data <- function(links_to_use = ocado_category_link, 
+                                  sleep_min = 0, sleep_max = 1) {
   
   links_to_use %>% 
     map_dfr(., function(.x) {
@@ -782,7 +787,7 @@ collect_category_data <- function(links_to_use = ocado_category_link) {
                           attribute_selector = "href") %>% 
         paste0(url2, .)
       
-      nytnyt(c(12, 20), crayon_col = crayon::green, "Got product links\n")
+      nytnyt(c(6, 11), crayon_col = crayon::green, "Got product links\n")
       
       # Verify lenghts match
       verify_ocado_length_match(
@@ -794,7 +799,7 @@ collect_category_data <- function(links_to_use = ocado_category_link) {
       )
       
       # Sleep
-      nytnyt(c(0, 1),
+      nytnyt(c(sleep_min, sleep_max),
              crayon_col = crayon::magenta,
              "Got items from ", 
              ocado_category_name[which(.x == links_to_use)], 
@@ -825,7 +830,8 @@ ocado_category_data <- collect_category_data(ocado_category_link)
 
 ### (B) Grab product details
 # Using selenium get_html_elements: faster than 2 below
-collect_product_data_1 <- function(links_to_use = ocado_category_data$product_link) {
+collect_product_data_1 <- function(links_to_use = ocado_category_data$product_link, 
+                                   sleep_min = 0, sleep_max = 1) {
   
   links_to_use %>% 
     map_dfr(., function(.x) {
@@ -900,7 +906,7 @@ collect_product_data_1 <- function(links_to_use = ocado_category_data$product_li
       
       # Sleep
       
-      nytnyt(c(0, 1),
+      nytnyt(c(sleep_min, sleep_max),
              crayon_col = crayon::magenta,
              "Adding new data to tibble\n", 
              "Completed ", 
@@ -1044,7 +1050,8 @@ ocado_product_data <- collect_product_data_1(ocado_category_data$product_link)
 # ocado_product_data <- read_csv(here::here("data/ocado_product.csv"))
 
 ### (C) Grab product reviews
-collect_product_reviews <- function(links_to_use = ocado_category_data$product_link) {
+collect_product_reviews <- function(links_to_use = ocado_category_data$product_link, 
+                                    sleep_min = 0, sleep_max = 1) {
   
   links_to_use %>% 
     map_dfr(., function(.x) {
@@ -1126,7 +1133,7 @@ collect_product_reviews <- function(links_to_use = ocado_category_data$product_l
       }
       
       # Sleep
-      nytnyt(c(0, 1),
+      nytnyt(c(sleep_min, sleep_max),
              crayon_col = crayon::magenta,
              "Adding new data to tibble\n", 
              "Completed ", 
@@ -1153,7 +1160,8 @@ ocado_review_data <- collect_product_reviews(ocado_category_data$product_link)
 # ocado_review_data <- read_csv(here::here("data/ocado_review.csv"))
 
 # Grab nutrition table
-collect_nutrition_table <- function(links_to_use = ocado_category_data$product_link) {
+collect_nutrition_table <- function(links_to_use = ocado_category_data$product_link, 
+                                    sleep_min = 0, sleep_max = 1) {
   
   links_to_use %>% 
     map(., function(.x) {
@@ -1175,7 +1183,7 @@ collect_nutrition_table <- function(links_to_use = ocado_category_data$product_l
       cat(crayon::yellow("Got nutrition table\n"))
       
       # Sleep
-      nytnyt(c(0, 1),
+      nytnyt(c(sleep_min, sleep_max),
              crayon_col = crayon::magenta,
              "Completed ", 
              which(.x == links_to_use),
