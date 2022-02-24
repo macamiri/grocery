@@ -832,6 +832,7 @@ collect_category_data <- function(links_to_use = ocado_category_link,
     }
     )
 }
+# Select 3 categories to collect data from (total ~ 9000-10000 products)
 chosen_category_links <- c(1, 3, 6)
 ocado_product_general <- collect_category_data(ocado_category_link[chosen_category_links])
 write_csv(ocado_product_general, here::here("data/ocado_product_general.csv"))
@@ -945,115 +946,8 @@ collect_product_data <- function(links_to_use = ocado_product_general$product_li
         recommend = product_recommend)
     })
 }
-# Using rvest: slower than 1 above
-collect_product_data_2 <- function(links_to_use = ocado_category_data$product_link) {
-  
-  links_to_use %>% 
-    map_dfr(., function(.x) {
-      # Grab bop badges: vegetarian, etc...
-      product_badges <- 
-        .x %>% 
-        read_html() %>% 
-        html_elements(css = ".bop-badges > img") %>% 
-        html_attr("title") %>% 
-        paste(., sep = ", ", collapse = ", ") %>% 
-        empty_to_na()
-      cat(crayon::yellow("Got badges\n"))
-      
-      # Grab ingredients
-      product_ingredients <- 
-        .x %>% 
-        read_html() %>% 
-        html_elements(css = "#productInformation") %>% 
-        html_text() %>% 
-        str_extract("(?<=IngredientsIngredients|Product detailsSpecifications).*(?=Allergen Information)") %>% 
-        empty_to_na()
-      cat(crayon::yellow("Got ingredients\n"))
-      
-      # Grab brand
-      product_brand <- 
-        .x %>% 
-        read_html() %>% 
-        html_elements(css = ".bop-tags") %>% 
-        html_text() %>% 
-        str_subset("(?<=Brands).*$") %>% 
-        str_extract("(?<=Brands).*$") %>% 
-        empty_to_na()
-      cat(crayon::yellow("Got brand\n"))
-      
-      # Grab country of origin
-      product_country <- 
-        .x %>% 
-        read_html() %>% 
-        html_elements(css = "#productInformation") %>% 
-        html_text() %>% 
-        str_extract("(?<=Country of Origin).{100}") %>% 
-        str_extract(country_names) %>% 
-        keep(.p = ~ !is.na(.)) %>% 
-        paste(., sep = ", ", collapse = ", ") %>% 
-        empty_to_na()
-      cat(crayon::yellow("Got country of origin\n"))
-      
-      # Grab rating
-      prodcut_rating <- 
-        .x %>% 
-        read_html() %>% 
-        html_elements(css = ".bop-reviewSummary__kpiBall[itemprop='ratingValue']") %>% 
-        html_text() %>% 
-        empty_to_na()
-      cat(crayon::yellow("Got rating\n"))
-      
-      # Grab count
-      product_count <- 
-        .x %>% 
-        read_html() %>% 
-        html_elements(css = ".bop-reviewSummary__kpiBall[itemprop='ratingCount']") %>% 
-        html_text() %>% 
-        empty_to_na()
-      cat(crayon::yellow("Got count\n"))
-      
-      # Grab recommend %
-      product_recommend <- 
-        .x %>% 
-        read_html() %>% 
-        html_elements(css = ".bop-reviewSummary__recommendationsNumber") %>% 
-        html_text() %>% 
-        parse_number() %>% 
-        empty_to_na()
-      cat(crayon::yellow("Got recommend %\n"))
-      
-      # Sleep
-      nytnyt(c(0, 1),
-             crayon_col = crayon::magenta,
-             "Adding new data to tibble\n", 
-             "Completed ", 
-             which(.x == links_to_use),
-             " out of ",
-             length(links_to_use),
-             "\n")
-      
-      # Play sound only at end - when work complete
-      sound_work_complete(which(.x == links_to_use), length(links_to_use))
-      
-      # Store data in a list
-      tibble::tibble(
-        product_link = .x, 
-        badge = product_badges, 
-        ingredient = product_ingredients, 
-        brand = product_brand, 
-        country = product_country, 
-        rating = prodcut_rating, 
-        count = product_count, 
-        recommend = product_recommend)
-    })
-}
 
-# Compare the 2 versions above ---> delete (_2) after data cleaning workflow
-# microbenchmark::microbenchmark(
-#   uno = collect_product_data(ocado_category_data$product_link[1:5]),
-#   deux = collect_product_data_2(ocado_category_data$product_link[1:5]), 
-#   times = 5
-# )
+# Randomly select 1000 products
 set.seed(511)
 random_product_links <- sample(1:length(ocado_product_general$product_link), 
                                    1000, replace = FALSE)
@@ -1225,7 +1119,6 @@ collect_nutrition_table <- function(links_to_use = ocado_product_general$product
 ocado_nutrition_table <- collect_nutrition_table(ocado_product_general$product_link[random_product_links])
 write_rds(ocado_nutrition_table, here::here("data/ocado_nutrition.rds"))
 # ocado_nutrition_table <- read_rds(here::here("data/ocado_nutrition.rds"))
-ocado_nutrition_table[[ocado_product_general$product_link[[3456]]]]
 
 
 ##### 7: Close Selenium server -----
@@ -1234,19 +1127,3 @@ remDr$closeWindow()
 system("kill /im java.exe /f")
 # system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)
 gc()
-
-
-
-##### After collecting data: clean in new file & put in package with misc. funcs
-
-# Save sample data tibbles to create clean up workflow
-data_tibbles <- list(location = location_tibble, 
-                     store = store_tibble, 
-                     category = category_tibble, 
-                     subcategory = subcategory_tibble, 
-                     item = item_tibble)
-
-data_tibbles %>% 
-  map2(., names(data_tibbles), function(.x, .y) {
-    readr::write_csv(.x, path = here::here(paste0("data/", .y, ".csv")))
-  })
