@@ -109,7 +109,7 @@ scroll_down_and_load <- function(remDr){
 }
 
 # Scroll from top to bottom to ensure all products load
-scroll_down_page_perc <- function(remDr, perc = seq(.01, 1, .01)) {
+scroll_down_page_perc <- function(remDr, perc = seq(.01, 1, .005)) {
   
   scroll_to_top()
   
@@ -134,7 +134,7 @@ scroll_down_page_perc <- function(remDr, perc = seq(.01, 1, .01)) {
 }
 
 # Scroll from bottom to top to double ensure all products load
-scroll_up_page_perc <- function(remDr, perc = seq(.01, 1, .005)) {
+scroll_up_page_perc <- function(remDr, perc = seq(.01, 1, .0025)) {
   
   scroll_down_and_load(remDr)
   
@@ -363,27 +363,11 @@ collect_location_links <- function() {
   
   tibble::tibble(location = locations, location_link = location_links)
 }
-location_tibble <- collect_location_links()
-
-# Find the potential number of stores - to avoid recursively building tibble
-# 331
-# start <- Sys.time()
-# num_of_stores <- 
-#   location_links %>% 
-#   map(., function(.x) {
-#     cat(crayon::bgMagenta("Currently on:", .x, "\n"))
-#     nytnyt(c(2, 5))
-#     
-#     .x %>% 
-#       read_html() %>% 
-#       html_elements(css = "h2.text-black") %>% 
-#       length()
-#   }) %>% 
-#   reduce(.f = sum)
-# end <- Sys.time()
+grocer_location <- collect_location_links()
+# write_csv(grocer_location, here::here("data/grocer_location.csv"))
 
 ### (B) Collect the store 'i' details, and links -----
-collect_stores_details <- function(links_to_use = location_tibble$location_link, 
+collect_stores_details <- function(links_to_use = grocer_location$location_link, 
                                    sleep_min = 0, sleep_max = 1) {
   
   links_to_use %>% 
@@ -421,6 +405,7 @@ collect_stores_details <- function(links_to_use = location_tibble$location_link,
       
       # Collect the extra 'i' icon data
       store_details <- get_html_elements(remDr, css = ".store-detail")
+      
       nytnyt(c(sleep_min, sleep_max), 
              crayon_col = crayon::magenta, 
              "Got details. Grab links in location:", 
@@ -439,16 +424,17 @@ collect_stores_details <- function(links_to_use = location_tibble$location_link,
       
       # Store data in a tibble
       tibble::tibble(location = rep(location_title, num_of_stores_rvest), 
-                     details = store_details, 
+                     detail = store_details, 
                      store_link = paste0(url, store_links), 
                      location_link = rep(.x, num_of_stores_rvest))
     }
     )
 }
-store_tibble <- collect_stores_details(location_tibble$location_link)
+grocer_store <- collect_stores_details(grocer_location$location_link)
+# write_csv(grocer_store, here::here("data/grocer_store.csv"))
 
 ### (C) Collect categories data (delete duplicates here) ----- 
-collect_categories <- function(links_to_use = store_tibble$store_link, 
+collect_categories <- function(links_to_use = grocer_store$store_link, 
                                sleep_min = 0, sleep_max = 1) {
   # Category links
   links <- paste0(links_to_use, "/categories")
@@ -493,7 +479,11 @@ collect_categories <- function(links_to_use = store_tibble$store_link,
       
       # Verify that every category's link was collected
       verify_length_match(sel = num_of_categories, 
-                          rve = length(category_links))
+                          rve = if(category_links == url) {
+                            0
+                          } else {
+                            length(category_links)
+                          })
       
       # Sleep
       nytnyt(c(sleep_min, sleep_max),
@@ -512,34 +502,15 @@ collect_categories <- function(links_to_use = store_tibble$store_link,
                      category = store_categories, 
                      category_link = category_links, 
                      image_link = category_image_links, 
-                     num_of_categories = num_of_categories, 
                      store_link = rep(.x, num_of_categories))
     }
     )
 }
-category_tibble <- collect_categories(store_tibble$store_link)
+grocer_category <- collect_categories(grocer_store$store_link)
+# write_csv(grocer_category, here::here("data/grocer_category.csv"))
 
-# Get number of categories in each store, then remove column
-num_of_categories_tibble <- 
-  category_tibble %>% 
-    dplyr::group_by(store_name) %>% 
-    dplyr::summarise(num_of_categories = max(num_of_categories))
-
-category_tibble <- 
-  category_tibble %>% 
-  dplyr::mutate(num_of_categories = NULL)
-
-# Remove offer/promotion page
-category_tibble <- 
-  category_tibble %>% 
-    dplyr::filter(!str_detect(category_link, "promotion"))
-
-# category_image <- magick::image_read(path = category_image_links %>% 
-#                                        unlist())
-
-
-### (D) Collect subcategories data -----
-collect_subcategories <- function(links_to_use = category_tibble$category_link, 
+### (D) Collect subcategories data from 100 links-----
+collect_subcategories <- function(links_to_use = grocer_category$category_link, 
                                   sleep_min = 0, sleep_max = 1) {
   
   links_to_use %>% 
@@ -554,61 +525,76 @@ collect_subcategories <- function(links_to_use = category_tibble$category_link,
         get_html_element(remDr, css = "h1.store-name") %>% 
         str_trim(side = "both")
       
-      # Scroll
-      scroll_down_and_load(remDr)
-      scroll_to_top()
-      
       # Grab subcategory links /{all}
-      num_of_categories <- 
-        num_of_categories_tibble %>% 
-        dplyr::filter(str_to_lower(store_name) == str_to_lower(store_title)) %>% 
-        .[[2]]
+      num_of_categories_tibble <- 
+        grocer_category %>% 
+        dplyr::count(store_name)
       
-      num_of_categories <- num_of_categories + 1
       
-      subcategory_link_extensions <- 
-        get_html_elements(remDr, 
-                          css = "div.slider-item > a:nth-child(1)", 
-                          type = "attribute", 
-                          attribute_selector = "href") %>% 
-        .[-c(1:num_of_categories)]
-      
-      subcategory_links <- paste0(url, subcategory_link_extensions)
-
-      # Count subcategories
-      store_subcategories <- 
-        get_html_elements(remDr, css = ".text-primery-1") %>% 
-        str_trim(side = "both")
-      
-      num_of_subcategories <- length(store_subcategories)
-      
-      # Verify that every subcategory's link was collected
-      verify_length_match(sel = num_of_subcategories, 
-                          rve = length(subcategory_links))
-      
-      # Sleep
-      nytnyt(c(sleep_min, sleep_max),
-             crayon_col = crayon::magenta,
-             "Got subcategories. Completed ",
-             which(.x == links_to_use),
-             " out of ",
-             length(links_to_use),
-             " categories \n")
-      
-      # Play sound only at end - when work complete
-      sound_work_complete(which(.x == links_to_use), length(links_to_use))
-      
-      # Store data in a tibble
-      tibble::tibble(subcategory = store_subcategories, 
-                     subcategory_link = subcategory_links, 
-                     category_link = rep(.x, num_of_subcategories))
+      tryCatch(
+        expr = {
+          num_of_categories <- 
+            num_of_categories_tibble %>% 
+            dplyr::filter(str_to_lower(store_name) == str_to_lower(store_title)) %>% 
+            .[[2]]
+          
+          num_of_categories <- num_of_categories + 1
+          
+          subcategory_link_extensions <- 
+            get_html_elements(remDr, 
+                              css = "div.slider-item > a:nth-child(1)", 
+                              type = "attribute", 
+                              attribute_selector = "href") %>% 
+            .[-c(1:num_of_categories)]
+          
+          subcategory_links <- paste0(url, subcategory_link_extensions)
+          
+          # Count subcategories
+          store_subcategories <- 
+            get_html_elements(remDr, css = ".text-primery-1") %>% 
+            str_trim(side = "both")
+          
+          num_of_subcategories <- length(store_subcategories)
+          
+          # Verify that every subcategory's link was collected
+          verify_length_match(sel = num_of_subcategories, 
+                              rve = if(subcategory_links == url) {
+                                0
+                              } else {
+                                length(subcategory_links)
+                              })
+          
+          # Sleep
+          nytnyt(c(sleep_min, sleep_max),
+                 crayon_col = crayon::magenta,
+                 "Got subcategories. Completed ",
+                 which(.x == links_to_use),
+                 " out of ",
+                 length(links_to_use),
+                 " categories \n")
+          
+          # Play sound only at end - when work complete
+          sound_work_complete(which(.x == links_to_use), length(links_to_use))
+          
+          # Store data in a tibble
+          tibble::tibble(subcategory = store_subcategories, 
+                         subcategory_link = subcategory_links, 
+                         category_link = rep(.x, num_of_subcategories))
+        }, 
+        error = function(e) {}
+      )
     }
     )
 }
-subcategory_tibble <- collect_subcategories(category_tibble$category_link)
+random_category_links <- sample(1:length(grocer_category$category_link),
+                                300, replace = FALSE)
+tictoc::tic()
+grocer_subcategory <- collect_subcategories(grocer_category$category_link[random_category_links])
+tictoc::toc()
+write_csv(grocer_subcategory, here::here("data/grocer_subcategory.csv"))
 
 ### (E) Collect item data -----
-collect_items <- function(links_to_use = subcategory_tibble$subcategory_link, 
+collect_items <- function(links_to_use = grocer_subcategory$subcategory_link, 
                           sleep_min = 0, sleep_max = 1) {
   
   links_to_use %>% 
@@ -622,48 +608,65 @@ collect_items <- function(links_to_use = subcategory_tibble$subcategory_link,
       scroll_down_and_load(remDr)
       scroll_to_top()
       
-      # Grab title
-      item_title <- get_html_elements(remDr, css = "h2.text-black")
-      
-      # Grab weight
-      item_weight <- get_html_elements(remDr, css = "div.item-label")
-      
-      # Grab price
-      item_price <- get_html_elements(remDr, css = "div.item-price")
-      
-      # Grab image link
-      item_image_links <- get_html_elements(remDr, 
-                                            css = "img.center", 
-                                            type = "attribute", 
-                                            attribute_selector = "src")
-      
-      # Sleep
-      subcategory_title <- get_html_element(remDr, css = "h2.ng-star-inserted")
-      nytnyt(c(sleep_min, sleep_max),
-             crayon_col = crayon::magenta,
-             "Got items. Completed ",
-             which(.x == links_to_use),
-             " out of ",
-             length(links_to_use),
-             " sub-subcategories \n", 
-             "Current subcategory:", subcategory_title, "\n")
-      
-      # Play sound only at end - when work complete
-      sound_work_complete(which(.x == links_to_use), length(links_to_use))
-      
-      # Store data in a tibble
-      tibble::tibble(subcategory_link = rep(.x, length(item_title)), 
-                     item = item_title, 
-                     weight = item_weight, 
-                     price = item_price, 
-                     item_image_link = item_image_links)
+      tryCatch(
+        expr = {
+          
+          # Grab title
+          item_title <- get_html_elements(remDr, css = "h2.text-black")
+          
+          # Grab weight
+          item_weight <- get_html_elements(remDr, css = "div.item-label")
+          
+          # Grab price
+          item_price <- get_html_elements(remDr, css = "div.item-price")
+          
+          # Grab image link
+          item_image_links <- get_html_elements(remDr, 
+                                                css = "img.center", 
+                                                type = "attribute", 
+                                                attribute_selector = "src")
+          
+          # Sleep
+          subcategory_title <- get_html_element(remDr, css = "h2.ng-star-inserted")
+          nytnyt(c(sleep_min, sleep_max),
+                 crayon_col = crayon::magenta,
+                 "Got items. Completed ",
+                 which(.x == links_to_use),
+                 " out of ",
+                 length(links_to_use),
+                 " sub-subcategories \n", 
+                 "Current subcategory:", subcategory_title, "\n")
+          
+          # Play sound only at end - when work complete
+          sound_work_complete(which(.x == links_to_use), length(links_to_use))
+          
+          # Store data in a tibble
+          tibble::tibble(subcategory_link = rep(.x, length(item_title)), 
+                         item = item_title, 
+                         weight = item_weight, 
+                         price = item_price, 
+                         item_image_link = item_image_links)
+          
+        }, 
+        error = function(e) {}
+      )
     }
     )
 }
-item_tibble <- collect_items(subcategory_tibble$subcategory_link)
+random_subcategory_links <- sample(1:length(grocer_subcategory$subcategory_link), 
+                                   1000, replace = FALSE)
+tictoc::tic()
+grocer_item <- collect_items(grocer_subcategory$subcategory_link[random_subcategory_links])
+tictoc::toc()
+write_csv(grocer_item, here::here("data/grocer_item.csv"))
 
 # item_image <- magick::image_read(path = item_image_links %>% 
 #                                    unlist())
+
+
+
+# fs::dir_delete(here::here("data/category.csv"))
+
 
 
 
@@ -680,20 +683,24 @@ rtxt$permissions
 paths_allowed(domain = url2, paths = c("/browse"))
 
 # Browse shop
+url2 <- "https://www.ocado.com"
 remDr$navigate(url2)
 
 # Accept all cookies
+nytnyt(c(5, 10))
 remDr$findElement(using = "xpath", 
                   value = "//*[@id='onetrust-accept-btn-handler']")$clickElement()
 
 # Click on browse shop
+nytnyt(c(5,10))
 remDr$findElement(using = "link text", 
                   value = "Browse Shop")$clickElement()
 
 # Get categories info
+nytnyt(c(5,10))
 ocado_category_name <- get_html_elements(remDr, 
                                          css = ".level-item-link")
-
+nytnyt(c(5,10))
 ocado_category_ext <- get_html_elements(remDr, 
                                         css = ".level-item-link", 
                                         type = "attribute", 
@@ -702,6 +709,7 @@ ocado_category_link <- paste0(url2, ocado_category_ext)
 
 ocado_category <- tibble::tibble(category = ocado_category_name, 
                                  link = ocado_category_link)
+write_csv(ocado_category, here::here("data/ocado_category.csv"))
 
 ### (A) Grab product data in each category
 collect_category_data <- function(links_to_use = ocado_category_link, 
@@ -712,7 +720,7 @@ collect_category_data <- function(links_to_use = ocado_category_link,
       
       # Navigate to page
       remDr$navigate(.x)
-      nytnyt(c(1, 5), crayon_col = crayon::blue, "Make sure page loads \n")
+      nytnyt(c(3, 5), crayon_col = crayon::blue, "Make sure page loads \n")
       current_url(remDr)
       
       # Count number of items written on top of page
@@ -824,20 +832,21 @@ collect_category_data <- function(links_to_use = ocado_category_link,
     }
     )
 }
-ocado_category_data <- collect_category_data(ocado_category_link)
-# write_csv(ocado_category_data, here::here("data/ocado_category.csv"))
-# ocado_category_data <- read_csv(here::here("data/ocado_category.csv"))
+chosen_category_links <- c(1, 3, 6)
+ocado_product_general <- collect_category_data(ocado_category_link[chosen_category_links])
+write_csv(ocado_product_general, here::here("data/ocado_product_general.csv"))
+# ocado_product_general <- read_csv(here::here("data/ocado_product_general.csv"))
 
 ### (B) Grab product details
 # Using selenium get_html_elements: faster than 2 below
-collect_product_data_1 <- function(links_to_use = ocado_category_data$product_link, 
+collect_product_data <- function(links_to_use = ocado_product_general$product_link, 
                                    sleep_min = 0, sleep_max = 1) {
   
   links_to_use %>% 
     map_dfr(., function(.x) {
       # Navigate to page
       remDr$navigate(.x)
-      nytnyt(c(1, 5), crayon_col = crayon::blue, "Make sure page loads \n")
+      nytnyt(c(3, 5), crayon_col = crayon::blue, "Make sure page loads \n")
       current_url(remDr)
 
       # Page title
@@ -1041,16 +1050,25 @@ collect_product_data_2 <- function(links_to_use = ocado_category_data$product_li
 
 # Compare the 2 versions above ---> delete (_2) after data cleaning workflow
 # microbenchmark::microbenchmark(
-#   uno = collect_product_data_1(ocado_category_data$product_link[1:5]),
+#   uno = collect_product_data(ocado_category_data$product_link[1:5]),
 #   deux = collect_product_data_2(ocado_category_data$product_link[1:5]), 
 #   times = 5
 # )
-ocado_product_data <- collect_product_data_1(ocado_category_data$product_link)
-# write_csv(ocado_product_data, here::here("data/ocado_product.csv"))
-# ocado_product_data <- read_csv(here::here("data/ocado_product.csv"))
+set.seed(511)
+random_product_links <- sample(1:length(ocado_product_general$product_link), 
+                                   1000, replace = FALSE)
+ocado_product_extra1 <- collect_product_data(ocado_product_general$product_link[random_product_links[1:250]])
+write_csv(ocado_product_extra1, here::here("data/ocado_product_extra1.csv"))
+ocado_product_extra2 <- collect_product_data(ocado_product_general$product_link[random_product_links[251:500]])
+write_csv(ocado_product_extra2, here::here("data/ocado_product_extra2.csv"))
+ocado_product_extra3 <- collect_product_data(ocado_product_general$product_link[random_product_links[501:750]])
+write_csv(ocado_product_extra3, here::here("data/ocado_product_extra3.csv"))
+ocado_product_extra4 <- collect_product_data(ocado_product_general$product_link[random_product_links[751:1000]])
+write_csv(ocado_product_extra4, here::here("data/ocado_product_extra4.csv"))
+# ocado_product_extra <- read_csv(here::here("data/ocado_product_extra.csv"))
 
 ### (C) Grab product reviews
-collect_product_reviews <- function(links_to_use = ocado_category_data$product_link, 
+collect_product_reviews <- function(links_to_use = ocado_product_general$product_link, 
                                     sleep_min = 0, sleep_max = 1) {
   
   links_to_use %>% 
@@ -1058,7 +1076,7 @@ collect_product_reviews <- function(links_to_use = ocado_category_data$product_l
       
       # Navigate to page
       remDr$navigate(.x)
-      nytnyt(c(1, 5), crayon_col = crayon::blue, "Make sure page loads \n")
+      nytnyt(c(3, 5), crayon_col = crayon::blue, "Make sure page loads \n")
       current_url(remDr)
       
       # Grab reviews based on: (A) any reviews?, (B) # of review pages
@@ -1155,19 +1173,25 @@ collect_product_reviews <- function(links_to_use = ocado_category_data$product_l
       }
     })
 }
-ocado_review_data <- collect_product_reviews(ocado_category_data$product_link)
-# write_csv(ocado_review_data, here::here("data/ocado_review.csv"))
-# ocado_review_data <- read_csv(here::here("data/ocado_review.csv"))
+ocado_review1 <- collect_product_reviews(ocado_product_general$product_link[random_product_links[1:250]])
+write_csv(ocado_review1, here::here("data/ocado_review1.csv"))
+ocado_review2 <- collect_product_reviews(ocado_product_general$product_link[random_product_links[251:500]])
+write_csv(ocado_review2, here::here("data/ocado_review2.csv"))
+ocado_review3 <- collect_product_reviews(ocado_product_general$product_link[random_product_links[501:750]])
+write_csv(ocado_review3, here::here("data/ocado_review3.csv"))
+ocado_review4 <- collect_product_reviews(ocado_product_general$product_link[random_product_links[751:1000]])
+write_csv(ocado_review4, here::here("data/ocado_review4.csv"))
+# ocado_review <- read_csv(here::here("data/ocado_review.csv"))
 
 # Grab nutrition table
-collect_nutrition_table <- function(links_to_use = ocado_category_data$product_link, 
+collect_nutrition_table <- function(links_to_use = ocado_product_general$product_link, 
                                     sleep_min = 0, sleep_max = 1) {
   
   links_to_use %>% 
     map(., function(.x) {
       # Navigate to page
       remDr$navigate(.x)
-      nytnyt(c(1, 5), crayon_col = crayon::blue, "Make sure page loads \n")
+      nytnyt(c(3, 5), crayon_col = crayon::blue, "Make sure page loads \n")
       current_url(remDr)
       
       # Page title
@@ -1198,10 +1222,11 @@ collect_nutrition_table <- function(links_to_use = ocado_category_data$product_l
       }) %>% 
     set_names(links_to_use)
 }
-ocado_nutrition_table <- collect_nutrition_table(ocado_category_data$product_link[c(1:3, 3000, 3456:3460, 5000)])
-# write_rds(ocado_nutrition_table, here::here("data/ocado_nutrition.rds"))
+ocado_nutrition_table <- collect_nutrition_table(ocado_product_general$product_link[random_product_links])
+write_rds(ocado_nutrition_table, here::here("data/ocado_nutrition.rds"))
 # ocado_nutrition_table <- read_rds(here::here("data/ocado_nutrition.rds"))
-ocado_nutrition_table[[ocado_category_data$product_link[[3456]]]]
+ocado_nutrition_table[[ocado_product_general$product_link[[3456]]]]
+
 
 ##### 7: Close Selenium server -----
 remDr$close()
