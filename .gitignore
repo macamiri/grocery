@@ -22,3 +22,4 @@ docs/
 po/*~
 rsconnect/
 /*_files/
+.DS_Store
