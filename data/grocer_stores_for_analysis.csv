@@ -1,0 +1,338 @@
+location,city,store_name,min_order_amount,delivery_within,delivery_start,delivery_end,payment_method,store_link
+Abu Dhabi,Abu Dhabi,Al Ain Coop - Al Aqabia,75,2 hours,09:00:00,22:00:00,Credit Card on delivery Cash on delivery Online Payment,https://www.elgrocer.com/store/al-ain-coop-al-aqabia
+Abu Dhabi,Abu Dhabi,Al Ain Coop - Jimmi,35,2 hours,08:00:00,20:59:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/al-ain-coop-jimmi
+Abu Dhabi,Abu Dhabi,Al Ain Coop Al Hayer,30,2 hours,07:00:00,23:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/al-ain-coop-al-hayer
+Abu Dhabi,Abu Dhabi,Al Ain Coop Al Wagan,30,2 hours,07:00:00,23:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/al-ain-coop-al-wagan
+Abu Dhabi,Abu Dhabi,Al Ain Coop Sweihan,30,2 hours,07:00:00,23:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/al-ain-coop-sweihan
+Abu Dhabi,Abu Dhabi,Al Ain Coop Umm Ghaffa,25,2 hours,07:00:00,23:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/al-ain-coop-umm-ghaffa
+Abu Dhabi,Abu Dhabi,Al Baylasan Fruits & Vegetables,30,2 hours,08:00:00,23:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/al-baylasan-fruits-vegetables
+Abu Dhabi,Abu Dhabi,Al Khalil Supermarket,100,2 hours,00:00:00,23:59:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-khalil
+Abu Dhabi,Abu Dhabi,Biorganic - Abu Dhabi,50,2 hours,10:00:00,19:00:00,Online Payment,https://www.elgrocer.com/store/biorganic-abu-dhabi
+Abu Dhabi,Abu Dhabi,Earth Supermarket Souq Al jami,35,2 hours,08:30:00,20:00:00,Cash on delivery Online Payment Credit Card on delivery,https://www.elgrocer.com/store/earth-supermarket-szgm
+Abu Dhabi,Abu Dhabi,Healthy Food Shelf,50,2 hours,10:00:00,21:00:00,Credit Card on delivery Online Payment Cash on delivery,https://www.elgrocer.com/store/healthy-food-shelf
+Abu Dhabi,Abu Dhabi,Organic & Natural,150,2 hours,10:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/organicnatural
+Abu Dhabi,Abu Dhabi,Select - Airport Rd,35,2 hours,09:30:00,20:30:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/select-airport-rd
+Abu Dhabi,Abu Dhabi,Select - Al Reef,0,2 hours,07:30:00,21:30:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/select-al-reef
+Abu Dhabi,Abu Dhabi,Select Market,0,2 hours,06:30:00,20:30:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/select-market
+Abu Dhabi,Abu Dhabi,Select Market - Muroor,100,2 hours,09:31:00,20:30:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/select-market-muroor
+Abu Hail,Dubai,Al Douri Abu Baker,50,2 hours,08:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/al-douri-abu-baker
+Abu Hail,Dubai,Union Coop - Abu Hail,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-abu-hail
+Al Ain,Al Ain,Green Liwa Supermarket,0,2 hours,10:00:00,21:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/
+Al Ain,Al Ain,Talha Supermarket,0,2 hours,10:00:00,21:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/talha-supermarket
+Al Ain,Al Ain,Wahat Al Ain Markets,0,2 hours,10:00:00,21:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/wahat-al-ain-markets
+Al Bada A,Dubai,Union Coop - Al Wasl,50,2 hours,10:00:00,21:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-al-wasl
+Al Baraha Muteena,Dubai,Union Coop - Abu Hail,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-abu-hail
+Al Barsha 1,Dubai,Al Adil - Barsha,50,2 hours,09:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-barsha
+Al Barsha 1,Dubai,Biorganic,125,2 hours,10:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/biorganic-276
+Al Barsha 1,Dubai,daLe Demo Test Store,30,2 hours,00:00:00,23:59:00,Cash on delivery Credit Card on delivery,https://www.elgrocer.com/store/dale-demo-test-store
+Al Barsha 1,Dubai,Grandiose - Barsha,0,2 hours,11:00:00,14:30:00,Cash on delivery Online Payment Credit Card on delivery,https://www.elgrocer.com/store/grandiose-barsha
+Al Barsha 1,Dubai,New W Mart - Al Barsha,75,2 hours,10:00:00,22:00:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/new-w-mart-al-barsha
+Al Barsha 1,Dubai,Pets Plus Dubai,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/pets-plus-dubai
+Al Barsha 2,Dubai,Al Adil - Barsha,50,2 hours,09:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-barsha
+Al Barsha 2,Dubai,New W Mart - Al Barsha,75,2 hours,10:00:00,22:00:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/new-w-mart-al-barsha
+Al Barsha 3,Dubai,Al Adil - Barsha,50,2 hours,09:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-barsha
+Al Barsha 3,Dubai,Al Dayaa Butchery - Hessa Street,50,2 hours,10:00:00,21:00:00,Cash on delivery Credit Card on delivery Online Payment,https://www.elgrocer.com/store/al-dayaa-butchery-hessa-street
+Al Barsha 3,Dubai,New W Mart - Al Barsha,75,2 hours,10:00:00,22:00:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/new-w-mart-al-barsha
+Al Barsha South 1,Dubai,Al Adil - Barsha,50,2 hours,09:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-barsha
+Al Barsha South 1,Dubai,Biorganic,75,2 hours,10:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/biorganic-276
+Al Barsha South 1,Dubai,Pets Plus Dubai,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/pets-plus-dubai
+Al Barsha South 1,Dubai,Union Coop - Barsha South,50,2 hours,10:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha-south
+Al Barsha South 2,Dubai,Al Adil - Barsha,50,2 hours,09:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-barsha
+Al Barsha South 2,Dubai,Biorganic,75,2 hours,10:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/biorganic-276
+Al Barsha South 2,Dubai,Pets Plus Dubai,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/pets-plus-dubai
+Al Barsha South 3,Dubai,Al Adil - Barsha,50,2 hours,09:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-barsha
+Al Barsha South 3,Dubai,Biorganic,75,2 hours,10:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/biorganic-276
+Al Barsha South 3,Dubai,Pets Plus Dubai,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/pets-plus-dubai
+Al Dhaid,Sharjah,Sharjah Coop - Al Dhaid,75,2 hours,10:00:00,22:00:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/sharjah-coop-al-dhaid
+Al Falah,Abu Dhabi,Mobasch Market Al Falah City,30,2 hours,07:00:00,23:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/mobasch-market-al-falah-city
+Al Falah,Abu Dhabi,Select Market,0,2 hours,06:30:00,20:30:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/select-market
+Al Garhoud,Dubai,8 Supermarket Garhoud,50,2 hours,10:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/8-supermarket
+Al Garhoud,Dubai,Lifco Supermarket - Garhoud,250,2 hours,08:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/lifco-supermarket-garhoud
+Al Jafiliya,Dubai,Biorganic,75,2 hours,10:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/biorganic-276
+Al Karama,Dubai,Al Adil Karama,50,2 hours,09:00:00,22:00:00,Credit Card on delivery Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-karama
+Al Karama,Dubai,Biorganic,400,2 hours,10:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/biorganic-276
+Al Karama,Dubai,E-City Supermarket,50,2 hours,10:00:00,20:59:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/e-city-supermarket
+Al Karama,Dubai,Viva Supermarket - Karama,50,2 hours,10:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/viva-supermarket-karama
+Al Karama,Dubai,VLCC - Trade Center,50,2 hours,10:00:00,19:59:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/vlcc-trade-center
+Al Khabaisi,Dubai,Union Coop - Abu Hail,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-abu-hail
+Al Manara,Dubai,Pets Plus Dubai,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/pets-plus-dubai
+Al Manara,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Al Mizhar,Dubai,Marks & Spencer - DFC,50,2 hours,10:00:00,20:59:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/marks-spencer-dfc
+Al Muraqqabat,Dubai,Union Coop - Abu Hail,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-abu-hail
+Al Murar,Dubai,Union Coop - Abu Hail,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-abu-hail
+Al Nahda,Sharjah,Ansar Mall - Sharjah,50,2 hours,10:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/ansar-mall-sharjah
+Al Nahda,Sharjah,Biorganic,75,2 hours,10:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/biorganic-276
+Al Nahda,Sharjah,Paul Bakery Sharjah,50,2 hours,10:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/paul-bakery-sharjah
+Al Nahda,Sharjah,Sharjah Coop - Halwan,50,2 hours,10:00:00,22:00:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/sharjah-coop-halwan
+Al Nahda,Sharjah,Viva Supermarket - RAK,50,2 hours,10:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/viva-supermarket-rak
+Al Nahda,Sharjah,Viva Supermarket - UAQ,50,2 hours,10:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/viva-supermarket-uaq
+Al Nahda 1,Dubai,Ali Ismail Grocery,30,2 hours,07:00:00,23:00:00,Credit Card on delivery Online Payment Cash on delivery,https://www.elgrocer.com/store/ali-ismail-grocery
+Al Nahda 1,Dubai,Union Coop - Abu Hail,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-abu-hail
+Al Nahda 2,Dubai,Union Coop - Abu Hail,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-abu-hail
+Al Nekhailat,Sharjah,Sharjah Coop - Halwan,50,2 hours,10:00:00,22:00:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/sharjah-coop-halwan
+Al Quoz,Dubai,elMarket - Dubai,50,2 hours,09:00:00,22:00:00,Online Payment,https://www.elgrocer.com/store/elmart
+Al Quoz,Dubai,Nesto Dubai,50,2 hours,10:00:00,20:00:00,Credit Card on delivery Online Payment,https://www.elgrocer.com/store/nesto-alquoz
+Al Quoz,Dubai,Ripe Organic-Manara,50,2 hours,08:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/ripe-organic-manara
+Al Quoz 1,Dubai,Mamalu Kitchen,0,2 hours,09:00:00,20:00:00,Online Payment,https://www.elgrocer.com/store/mamalu-kitchen
+Al Quoz 1,Dubai,Ripe Organic-Manara,50,2 hours,08:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/ripe-organic-manara
+Al Quoz 1,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Al Quoz 2,Dubai,Ripe Organic-Manara,50,2 hours,08:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/ripe-organic-manara
+Al Quoz 2,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Al Quoz 3,Dubai,Kratemore Butchery,50,2 hours,08:00:00,16:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/kratemore-butchery
+Al Quoz 3,Dubai,Ripe Organic-Manara,50,2 hours,08:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/ripe-organic-manara
+Al Quoz 4,Dubai,Ripe Organic-Manara,50,2 hours,08:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/ripe-organic-manara
+Al Quoz Industrial Area 1,Dubai,Hyperama Supermarket,50,2 hours,10:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/hyperama-supermarket
+Al Quoz Industrial Area 1,Dubai,Ripe Organic-Manara,50,2 hours,08:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/ripe-organic-manara
+Al Quoz Industrial Area 2,Dubai,Ripe Organic-Manara,50,2 hours,08:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/ripe-organic-manara
+Al Quoz Industrial Area 3,Dubai,Ripe Organic-Manara,50,2 hours,08:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/ripe-organic-manara
+Al Quoz Industrial Area 4,Dubai,Ripe Organic-Manara,50,2 hours,08:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/ripe-organic-manara
+Al Quoz Industrial Area 4,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Al Qusais 1,Dubai,Union Coop - Abu Hail,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-abu-hail
+Al Qusais 2,Dubai,Union Coop - Abu Hail,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-abu-hail
+Al Rigga,Dubai,Union Coop - Abu Hail,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-abu-hail
+Al Safa,Dubai,Pets Plus Dubai,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/pets-plus-dubai
+Al Safa,Dubai,Ripe Organic-Manara,50,2 hours,08:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/ripe-organic-manara
+Al Safa,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Al Safa 1,Dubai,Ripe Organic-Manara,50,2 hours,08:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/ripe-organic-manara
+Al Safa 1,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Al Safa 2,Dubai,Ripe Organic-Manara,50,2 hours,08:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/ripe-organic-manara
+Al Safa 2,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Al Satwa,Dubai,Union Coop - Al Wasl,50,2 hours,10:00:00,21:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-al-wasl
+Al Sufouh,Dubai,aswaaq Sofouh,50,2 hours,09:00:00,21:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/aswaaq-sofouh
+Al Sufouh 1,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Al Sufouh 2,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Al Twar 1,Dubai,Union Coop - Abu Hail,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-abu-hail
+Al Twar 2,Dubai,Union Coop - Abu Hail,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-abu-hail
+Al Waheda,Dubai,Union Coop - Abu Hail,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-abu-hail
+Al Warqa,Dubai,aswaaq Mizhar,0,2 hours,09:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/aswaaq-mizhar
+Al Warqa,Dubai,aswaaq Warqa,50,2 hours,10:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/aswaaq-warqa
+Al Wasl,Dubai,FMART - Al Wasl,50,2 hours,10:00:00,21:00:00,Credit Card on delivery Online Payment Cash on delivery,https://www.elgrocer.com/store/fmart-al-wasl
+Al Wasl,Dubai,Union Coop - Al Wasl,50,2 hours,10:00:00,21:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-al-wasl
+Al Wasl,Dubai,Yamanote Atelier - Al Wasl,75,2 hours,10:00:00,20:59:00,Online Payment,https://www.elgrocer.com/store/yamanote-atelier-al-wasl
+Arabian Ranches,Dubai,Al Adil - Barsha,50,2 hours,09:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-barsha
+Arabian Ranches,Dubai,Karakoy Gourmet - Cityland Mall,50,2 hours,11:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/karakoy-gourmet-cityland-mall
+Arabian Ranches,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Barsha 2,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Barsha 3,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Barsha Heights,Dubai,New W Mart - Al Barsha,75,2 hours,10:00:00,22:00:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/new-w-mart-al-barsha
+Barsha Heights,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Barsha South,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Barsha1,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Bur Dubai,Dubai,Al Samadi Sweets,50,2 hours,09:00:00,22:00:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/al-samadi-sweets
+Business Bay,Dubai,Al Adil - Business Bay,50,2 hours,10:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-business-bay
+Business Bay,Dubai,Grandiose Downtown,50,2 hours,10:00:00,20:59:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/grandiose-downtown
+Business Bay,Dubai,Marks & Spencer - DFC,50,2 hours,10:00:00,20:59:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/marks-spencer-dfc
+Business Bay,Dubai,Pets Plus Dubai,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/pets-plus-dubai
+Business Bay,Dubai,Union Coop - Al Wasl,50,2 hours,10:00:00,21:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-al-wasl
+Deira,Dubai,Union Coop - Abu Hail,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-abu-hail
+Difc,Dubai,Union Coop - Al Wasl,50,2 hours,10:00:00,21:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-al-wasl
+Discovery Gardens,Dubai,Al Adil - Discovery Gardens,50,2 hours,10:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-discovery-gardens
+Downtown Burj Khalifa,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Downtown Dubai,Dubai,Al Douri - Ajman,50,2 hours,10:00:00,20:59:00,Online Payment,https://www.elgrocer.com/store/al-douri-ajman
+Downtown Dubai,Dubai,Al Douri - Al Qasimia,50,2 hours,09:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/al-douri-al-qasimia
+Downtown Dubai,Dubai,Al Rifai Roastery - Fujairah City Center,50,2 hours,11:00:00,20:59:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-rifai-roastery-fujairah-city-center
+Downtown Dubai,Dubai,Al Rifai Roastery - Matajer Juraina,50,2 hours,10:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-rifai-roastery-matajer-juraina
+Downtown Dubai,Dubai,Al Rifai Roastery Al Ain,50,2 hours,22:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-rifai-roastery-al-ain
+Downtown Dubai,Dubai,Al Rifai Roastery Barsha Mall,50,2 hours,10:00:00,20:59:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-rifai-roastery-barsha-mall
+Downtown Dubai,Dubai,Al Rifai Roastery Mirdif,50,2 hours,10:00:00,22:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-rifai-roastery-mirdif
+Downtown Dubai,Dubai,aswaaq-Ajman,50,2 hours,10:00:00,20:59:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/aswaaq-barsha-south-29967
+Downtown Dubai,Dubai,Benoit Bakery and Pastry Ingredients,50,2 hours,10:00:00,18:30:00,Online Payment,https://www.elgrocer.com/store/benoit-bakery-and-pastry-ingredients
+Downtown Dubai,Dubai,Biorganic,400,2 hours,10:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/biorganic-276
+Downtown Dubai,Dubai,Delicia food,150,2 hours,08:00:00,23:30:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/delicia
+Downtown Dubai,Dubai,Doha Vegetables & Fruits,35,2 hours,08:00:00,23:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/doha-vegetables-fruits
+Downtown Dubai,Dubai,Earth Supermarket - Khalifa City,50,2 hours,09:00:00,21:00:00,Cash on delivery Online Payment Credit Card on delivery,https://www.elgrocer.com/store/earth-supermarket-khalifia-city
+Downtown Dubai,Dubai,Eataly Dubai Mall,0,2 hours,10:00:00,22:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/eataly-dubai-mall
+Downtown Dubai,Dubai,Euromercato,0,2 hours,10:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/euromercato-Dubai
+Downtown Dubai,Dubai,FMART - Business Bay,50,2 hours,10:00:00,21:00:00,Credit Card on delivery Online Payment Cash on delivery,https://www.elgrocer.com/store/fmart-business-bay
+Downtown Dubai,Dubai,Fresh Fruit Mart,60,2 hours,08:00:00,23:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/fresh-fruit-mart
+Downtown Dubai,Dubai,Fruit Bazar,35,2 hours,08:00:00,23:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/fruit-bazar
+Downtown Dubai,Dubai,Grandiose Downtown,50,2 hours,10:00:00,20:59:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/grandiose-downtown
+Downtown Dubai,Dubai,Grandiose Jumeriah 2,50,2 hours,10:00:00,20:59:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/grandiose-jumeriah-2
+Downtown Dubai,Dubai,Karakoy Gourmet - Cityland Mall,50,2 hours,11:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/karakoy-gourmet-cityland-mall
+Downtown Dubai,Dubai,Karakoy Gourmet - Marina,50,2 hours,10:00:00,21:00:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/karakoy-gourmet-marina
+Downtown Dubai,Dubai,Karakoy Gourmet - SZR,50,2 hours,09:00:00,22:00:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/karakoy-gourmet-szr
+Downtown Dubai,Dubai,Khadi Organique,50,2 hours,08:00:00,22:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/khadi-organique
+Downtown Dubai,Dubai,Kobeya - Gluten Free,75,2 hours,09:00:00,22:00:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/kobeya-gluten-free
+Downtown Dubai,Dubai,Las Pampas - Premium Meats,200,2 hours,10:00:00,17:00:00,Credit Card on delivery Online Payment Cash on delivery,https://www.elgrocer.com/store/las-pampas-premium-meats
+Downtown Dubai,Dubai,Lebanon Flower Bakery  Defense Road,50,2 hours,10:00:00,21:00:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/lebanon-flower-bakery-defense-road
+Downtown Dubai,Dubai,Lets Organic,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Cash on delivery Online Payment,https://www.elgrocer.com/store/lets-organic
+Downtown Dubai,Dubai,Marks & Spencer - DFC,50,2 hours,10:00:00,20:59:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/marks-spencer-dfc
+Downtown Dubai,Dubai,NESCAFE Dolce Gusto - Al Barsha,50,2 hours,08:00:00,23:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/nescafe-dolce-gusto-al-barsha
+Downtown Dubai,Dubai,New Shanghai,50,2 hours,10:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/new-shanghai
+Downtown Dubai,Dubai,NRTC Fresh,60,2 hours,10:00:00,17:59:00,Credit Card on delivery Cash on delivery Online Payment,https://www.elgrocer.com/store/nrtc-fresh
+Downtown Dubai,Dubai,Nuts Arabia,50,2 hours,09:00:00,18:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/nuts-arabia
+Downtown Dubai,Dubai,Organic Foods & Cafe - Cityland,50,2 hours,10:00:00,18:00:00,Online Payment,https://www.elgrocer.com/store/organic-foods-cafe-cityland
+Downtown Dubai,Dubai,Paul Bakery - Arabian Ranches,50,2 hours,10:00:00,21:00:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/paul-bakery-arabian-ranches
+Downtown Dubai,Dubai,Paul Bakery - Deira City Center,50,2 hours,10:00:00,21:00:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/paul-bakery-deira-city-center
+Downtown Dubai,Dubai,Paul Bakery - Ibn Battuta,50,2 hours,10:00:00,14:30:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/paul-bakery-ibn-battuta
+Downtown Dubai,Dubai,Paul Bakery Wafi Mall,50,2 hours,10:00:00,18:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/paul-bakery-wafi-mall
+Downtown Dubai,Dubai,Pet Corner Barsha,50,2 hours,10:00:00,19:00:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/pet-corner-barsha
+Downtown Dubai,Dubai,Pet Corner DIP,50,2 hours,10:00:00,19:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/pet-corner-dip
+Downtown Dubai,Dubai,Pet Corner Sheikh Zayed,50,2 hours,10:00:00,21:00:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/pet-corner-sheikh-zayed
+Downtown Dubai,Dubai,Pet Corner Warsan,75,2 hours,10:00:00,19:00:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/pet-corner-warsan
+Downtown Dubai,Dubai,Prime Gourmet - Springs Souq,50,2 hours,10:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/prime-gourmet-springs-souq
+Downtown Dubai,Dubai,Prime Gourmet - Town Center,50,2 hours,10:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/prime-gourmet-town-center
+Downtown Dubai,Dubai,Prime Gourmet Umm Suqeim,50,2 hours,10:00:00,19:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/prime-gourmet-umm-suqeim
+Downtown Dubai,Dubai,Smorrebrod-Hungarian Games,50,2 hours,08:00:00,23:30:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/smorrebrod-hungarian-games
+Downtown Dubai,Dubai,Souq Al Jubail,50,2 hours,10:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/souq-al-jubail
+Downtown Dubai,Dubai,Souq Planet Dubai,50,2 hours,08:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/souq-planet-dark-store
+Downtown Dubai,Dubai,Sweets and Snacks-BMB Group,50,2 hours,10:00:00,17:00:00,Online Payment,https://www.elgrocer.com/store/baklawa-made-better-bmb-group
+Downtown Dubai,Dubai,The Butcher Shop & Grill - Mall of Emirates - UAE,50,2 hours,10:00:00,16:00:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/the-butcher-shop-grill
+Downtown Dubai,Dubai,The Empress Market,50,2 hours,10:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/the-empress-market
+Downtown Dubai,Dubai,The Fabrique,0,2 hours,08:00:00,23:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/food-fabrique
+Downtown Dubai,Dubai,The Pet Shop - Dalma Abu Dhabi,50,2 hours,10:00:00,22:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/the-pet-shop-dalma-abu-dhabi
+Downtown Dubai,Dubai,Thimaar Fresh Fruits & Vegetables UAE,50,2 hours,09:00:00,18:00:00,Credit Card on delivery Cash on delivery Online Payment,https://www.elgrocer.com/store/thimaar-fresh-fruits-vegetables-other-emirates
+Downtown Dubai,Dubai,Union Coop - Al Wasl,50,2 hours,10:00:00,21:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-al-wasl
+Downtown Dubai,Dubai,Vegan Way,50,2 hours,08:00:00,18:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/vegan-way
+Dubai,Abu Dhabi,Al Douri - Al Wahda Sharjah,50,2 hours,09:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/al-douri-al-wahda-sharjah
+Dubai,Abu Dhabi,Al Douri - International City,50,2 hours,08:00:00,20:00:00,Online Payment,https://www.elgrocer.com/store/al-douri-international-city
+Dubai,Abu Dhabi,Jones The Grocer - Al Raha,50,2 hours,08:00:00,22:00:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/jones-the-grocer-al-raha
+Dubai,Abu Dhabi,Paul Bakery Dubai Mall,50,2 hours,10:00:00,18:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/paul-bakery-dubai-mall
+Dubai,Abu Dhabi,Paul Bakery Mall Of Emirates,50,2 hours,10:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/paul-bakery-mall-of-emirates
+Dubai,Abu Dhabi,Paul Bakery Meaisem,50,2 hours,10:00:00,18:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/paul-bakery-meaisem
+Dubai,Abu Dhabi,Paul Bakery Mirdif,50,2 hours,10:00:00,15:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/paul-bakery-mirdif
+Dubai,Abu Dhabi,Safest way JAM Marina,50,2 hours,08:00:00,20:00:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/w-mart-marina
+Dubai,Abu Dhabi,The Butcher Shop & Grill - JBR,50,2 hours,11:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/the-butcher-shop-grill-jbr
+Dubai,Abu Dhabi,The Pet Shop - Al Wasl,50,2 hours,09:00:00,18:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/the-pet-shop-al-wasl
+Dubai,Abu Dhabi,The Pet Shop DIP,50,2 hours,09:00:00,18:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/the-pet-shop-dip
+Dubai,Abu Dhabi,W Mart DIFC,50,2 hours,07:00:00,23:00:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/w-mart-difc
+Dubai,Abu Dhabi,West Zone Business Bay,50,2 hours,07:00:00,23:00:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/west-zone-business-bay
+Dubai Festival City,Dubai,Lifco Supermarket - Garhoud,250,2 hours,08:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/lifco-supermarket-garhoud
+Dubai Festival City,Dubai,Marks & Spencer - DFC,50,2 hours,10:00:00,20:59:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/marks-spencer-dfc
+Dubai Internet City,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Dubai Internet City,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Dubai Marina,Dubai,Al Adil - Discovery Gardens,50,2 hours,10:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-discovery-gardens
+Dubai Marina,Dubai,Grandiose - Marina Walk,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Online Payment Cash on delivery,https://www.elgrocer.com/store/grandiose-marina-walk
+Dubai Marina,Dubai,Grandiose Marina,50,2 hours,11:00:00,14:30:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/grandiose-marina
+Dubai Marina,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Dubai Motor City,Dubai,Al Adil - Barsha,50,2 hours,09:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-barsha
+Dubai Motor City,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Dubai Silicon Oasis,Dubai,Al Adil - Silicon Oasis,50,2 hours,10:00:00,22:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-silicon-oasis
+Dubai Silicon Oasis,Dubai,Grandiose Silicon Oasis,50,2 hours,10:00:00,20:59:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/grandiose-silicon-oasis
+Dubai Silicon Oasis,Dubai,Viva Supermarket - Silicon Oasis,50,2 hours,10:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/viva-supermarket-silicon-oasis
+Dubai Sports City,Dubai,Al Adil - Barsha,50,2 hours,09:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-barsha
+Dubai Sports City,Dubai,Grandiose - Sports City,50,2 hours,10:00:00,21:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/grandiose-sports-city
+Dubai Sports City,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Dubai Studio City,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Dubai World Trade Centre,Dubai,1004 Gourmet - Asian Speciality,75,2 hours,10:00:00,22:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/1004-gourmet-asian-speciality
+Dubai World Trade Centre,Dubai,Baladi Butchery,100,2 hours,09:00:00,21:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/baladi-butchery
+Dubai World Trade Centre,Dubai,Mazaree Al Sham Butcher Shop,50,2 hours,10:00:00,22:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/mazaree-al-sham-butcher-shop
+Dwc Al Maktoum International Airport,Dubai,8 Supermarket JVT,50,2 hours,10:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/8-supermarket-jvt
+Dwc Al Maktoum International Airport,Dubai,Al Adil - Mussafah,50,2 hours,10:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-mussafah
+Dwc Al Maktoum International Airport,Dubai,Al Bayader,50,2 hours,08:00:00,18:59:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/al-bayader
+Dwc Al Maktoum International Airport,Dubai,Al Douri - Barsha,50,2 hours,08:00:00,16:00:00,Online Payment,https://www.elgrocer.com/store/al-douri-barsha
+Dwc Al Maktoum International Airport,Dubai,Bikanervala - Silicon Oasis,50,2 hours,10:00:00,22:00:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/bikanervala-silicon-oasis
+Dwc Al Maktoum International Airport,Dubai,Bloombox,0,2 hours,12:00:00,16:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/bloombox
+Dwc Al Maktoum International Airport,Dubai,Eataly - Abu Dhabi,50,2 hours,10:00:00,22:59:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/eataly-abu-dhabi
+Dwc Al Maktoum International Airport,Dubai,Godiva CIty Walk,50,2 hours,00:00:00,23:59:00,Online Payment,https://www.elgrocer.com/store/godiva
+Dwc Al Maktoum International Airport,Dubai,Grandiose - Marina Walk,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Online Payment Cash on delivery,https://www.elgrocer.com/store/grandiose-marina-walk
+Dwc Al Maktoum International Airport,Dubai,Grandiose Hypermarket Abu Dhabi,50,2 hours,10:00:00,20:59:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/grandiose-al-sahel
+Dwc Al Maktoum International Airport,Dubai,Grandiose Supermarket - Majan,50,2 hours,10:00:00,21:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/grandiose-majan
+Dwc Al Maktoum International Airport,Dubai,Gulf Fruits Market - UAE,50,2 hours,10:00:00,19:00:00,Credit Card on delivery Cash on delivery Online Payment,https://www.elgrocer.com/store/gulf-fruits-market-uae
+Dwc Al Maktoum International Airport,Dubai,Gulf Seafood,50,2 hours,11:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/gulf-seafood
+Dwc Al Maktoum International Airport,Dubai,HomeStyle - Al Ain,100,2 hours,10:00:00,22:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/homestyle-al-ain
+Dwc Al Maktoum International Airport,Dubai,Marks & Spencer - Dubai Mall,0,2 hours,10:00:00,20:59:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/marks-spencer-dubai-mall
+Dwc Al Maktoum International Airport,Dubai,Marks & Spencer - Springs Souq,50,2 hours,10:00:00,14:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/marks-spencer-springs-souq
+Dwc Al Maktoum International Airport,Dubai,Oushe Gourmet Bakery,100,2 hours,09:00:00,18:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/oushe-gourmet-bakery
+Dwc Al Maktoum International Airport,Dubai,Skinny Genie,75,2 hours,00:00:00,12:00:00,Online Payment,https://www.elgrocer.com/store/skinny-genie
+Dwc Al Maktoum International Airport,Dubai,Tavola Shop - Spring Souk,50,2 hours,10:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/tavola-shop-spring-souk
+Dwc Al Maktoum International Airport,Dubai,The Pet Shop SZR,50,2 hours,10:00:00,21:00:00,Credit Card on delivery Online Payment Cash on delivery,https://www.elgrocer.com/store/the-pet-shop-szr
+Dwc Al Maktoum International Airport,Dubai,Yamanote Atelier - Dubai Mall,50,2 hours,10:00:00,22:00:00,Online Payment,https://www.elgrocer.com/store/yamanote-atelier-dubai-mall
+Electra Street,Abu Dhabi,Al Adil - Electra,50,2 hours,09:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-electra
+Emirates Hills,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Festival City,Dubai,aswaaq Mizhar,0,2 hours,09:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/aswaaq-mizhar
+Festival City,Dubai,Lifco Supermarket - Garhoud,250,2 hours,08:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/lifco-supermarket-garhoud
+Furjan,Dubai,Ryan Market Test Store,0,2 hours,00:01:00,23:59:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/ryan-market-test-store
+Green Community East,Dubai,Julius Meinl,120,2 hours,00:00:00,11:59:00,Online Payment,https://www.elgrocer.com/store/julius-meinl
+Hor Al Anz East,Dubai,Union Coop - Abu Hail,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-abu-hail
+Jbr,Dubai,Grandiose Marina,50,2 hours,11:00:00,14:30:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/grandiose-marina
+Jlt,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Jumeirah,Dubai,Grandiose Jumeirah,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Online Payment Cash on delivery,https://www.elgrocer.com/store/grandiose-jumeirah
+Jumeirah 1,Dubai,Grandiose Jumeirah,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Online Payment Cash on delivery,https://www.elgrocer.com/store/grandiose-jumeirah
+Jumeirah 2,Dubai,Grandiose Jumeirah,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Online Payment Cash on delivery,https://www.elgrocer.com/store/grandiose-jumeirah
+Jumeirah 3,Dubai,Grandiose Jumeirah,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Online Payment Cash on delivery,https://www.elgrocer.com/store/grandiose-jumeirah
+Jumeirah Beach Residences Jbr,Dubai,Al Adil - Discovery Gardens,50,2 hours,10:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-discovery-gardens
+Jumeirah Beach Residences Jbr,Dubai,Grandiose Marina,50,2 hours,11:00:00,14:30:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/grandiose-marina
+Jumeirah Beach Residences Jbr,Dubai,Pets Plus Dubai,0,2 hours,10:00:00,20:59:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/pets-plus-dubai
+Jumeirah Beach Residences Jbr,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Jumeirah Islands,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Jumeirah Lakes Towers Jlt,Dubai,Al Adil - Discovery Gardens,50,2 hours,10:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-discovery-gardens
+Jumeirah Lakes Towers Jlt,Dubai,Grandiose Marina,50,2 hours,11:00:00,14:30:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/grandiose-marina
+Jumeirah Lakes Towers Jlt,Dubai,Park n Shop,50,2 hours,10:00:00,21:00:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/Park%20&%20Shop
+Jumeirah Lakes Towers Jlt,Dubai,Pets Plus Dubai,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/pets-plus-dubai
+Jumeirah Lakes Towers Jlt,Dubai,The Meat Avenue,50,2 hours,10:00:00,21:00:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/the-meat-avenue
+Jumeirah Lakes Towers Jlt,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Jumeirah Park,Dubai,Grandiose Marina,50,2 hours,11:00:00,14:30:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/grandiose-marina
+Jumeirah Park,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Jumeirah Village Circle,Dubai,Cart Supermarket,30,2 hours,09:00:00,23:00:00,Cash on delivery Online Payment,https://www.elgrocer.com/store/cart-supermarket
+Jumeirah Village Circle,Dubai,Karakoy Gourmet - Cityland Mall,50,2 hours,11:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/karakoy-gourmet-cityland-mall
+Jumeirah Village Circle,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Jumeirah Village Triangle,Dubai,Grandiose - Sports City,50,2 hours,10:00:00,21:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/grandiose-sports-city
+Jumeirah Village Triangle,Dubai,Karakoy Gourmet - Cityland Mall,50,2 hours,11:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/karakoy-gourmet-cityland-mall
+Jumeirah Village Triangle 234,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Jurf,Ajman,Ajman Coop  - Jurf,75,2 hours,10:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/ajman-coop-jurf-329
+Jurf,Ajman,Sharjah Coop - Kalba,75,2 hours,10:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/sharjah-coop-kalba
+Jurf,Ajman,Viva Supermarket - Fujairah,50,2 hours,10:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/viva-supermarket-fujairah
+Khalidiya,Abu Dhabi,Abela Khalidiya,100,2 hours,10:00:00,22:00:00,Credit Card on delivery Online Payment Cash on delivery,https://www.elgrocer.com/store/abela-khalidiya
+Khalidiya,Abu Dhabi,Viva Supermarket - Abu Dhabi,50,2 hours,10:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/viva-supermarket-abu-dhabi
+Khalifa City,Abu Dhabi,Mobasch Market - Khalifa City,30,2 hours,10:00:00,23:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/mobasch-express-supermarket
+Khalifa City,Abu Dhabi,Select Market,0,2 hours,06:30:00,20:30:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/select-market
+Khawaneej,Dubai,aswaaq Mizhar,0,2 hours,09:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/aswaaq-mizhar
+Layan Community,Dubai,Pets Plus Dubai,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/pets-plus-dubai
+Marina,Dubai,FMART - Marina,50,2 hours,10:00:00,14:30:00,Credit Card on delivery Online Payment Cash on delivery,https://www.elgrocer.com/store/fmart-marina
+Meadows,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Mirdif,Dubai,aswaaq Mizhar,0,2 hours,09:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/aswaaq-mizhar
+Mirdif,Dubai,Marks & Spencer - DFC,50,2 hours,10:00:00,20:59:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/marks-spencer-dfc
+Mirdif,Dubai,The Butcher Shop & Grill - Mirdif,50,2 hours,10:00:00,19:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/the-butcher-shop-grill-mirdif
+Mizhar,Dubai,aswaaq Mizhar,0,2 hours,09:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/aswaaq-mizhar
+Motor City,Dubai,Karakoy Gourmet - Cityland Mall,50,2 hours,11:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/karakoy-gourmet-cityland-mall
+Muhaisnah 255,Dubai,aswaaq Mizhar,0,2 hours,09:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/aswaaq-mizhar
+Muwaillah,Sharjah,Al Adil - Abu Shagara,50,2 hours,10:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-national-paints
+Muwaillah,Sharjah,Nesto Sharjah,50,2 hours,10:00:00,21:00:00,Credit Card on delivery Online Payment,https://www.elgrocer.com/store/nesto-sharjah
+Muwaillah,Sharjah,Sharjah Coop - Muwailah,75,2 hours,10:00:00,22:00:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/sharjah-coop-muwailah
+Muwaillah,Sharjah,Sharjah Coop - Rahmania,50,2 hours,10:00:00,21:00:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/sharjah-coop-rahmania
+Muwaillah,Sharjah,Viva Supermarket - Abu Shagara,50,2 hours,10:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/viva-supermarket-abu-shagara
+Muwaillah,Sharjah,Viva Supermarket - Muweilah,50,2 hours,10:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/viva-supermarket-muweilah
+Nad Al Hamar,Dubai,aswaaq Mizhar,0,2 hours,09:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/aswaaq-mizhar
+Nad Al Hammar,Dubai,Nesto Nad Al Hamar,50,2 hours,10:00:00,20:00:00,Online Payment Credit Card on delivery,https://www.elgrocer.com/store/nesto-nad-al-hamar
+Nad Al Sheba,Dubai,Pets Plus Dubai,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/pets-plus-dubai
+Rashidiya,Dubai,aswaaq Mizhar,0,2 hours,09:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/aswaaq-mizhar
+Reem Island 283,Abu Dhabi,Grandiose Horizon Tower,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Online Payment Cash on delivery,https://www.elgrocer.com/store/grandiose-horizon-tower
+Rumailah,Ajman,Ajman Coop - Rumailah,75,2 hours,10:00:00,21:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/ajman-coop-rumailah
+Rumailah,Ajman,Viva Supermarket - Ajman One,50,2 hours,10:00:00,21:00:00,Online Payment,https://www.elgrocer.com/store/viva-supermarket-ajman-one
+Sheikh Zayed Road Difc Side,Dubai,Grandiose Downtown,50,2 hours,10:00:00,20:59:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/grandiose-downtown
+Sheikh Zayed Road Difc Side,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Sheikh Zayed Road Satwa Side,Dubai,Grandiose Downtown,50,2 hours,10:00:00,20:59:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/grandiose-downtown
+Silicon Oasis,Dubai,Al Adil - Silicon Oasis,50,2 hours,10:00:00,22:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-silicon-oasis
+Sports City,Dubai,Grandiose - Sports City,50,2 hours,10:00:00,21:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/grandiose-sports-city
+Sports City,Dubai,Karakoy Gourmet - Cityland Mall,50,2 hours,11:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/karakoy-gourmet-cityland-mall
+Springs,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Sufouh,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Tecom,Dubai,Al Adil - Barsha,50,2 hours,09:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-barsha
+Tecom,Dubai,Biorganic,75,2 hours,10:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/biorganic-276
+Tecom,Dubai,Pets Plus Dubai,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/pets-plus-dubai
+Tecom 236,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+The Gardens,Dubai,Al Adil - Discovery Gardens,50,2 hours,10:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-discovery-gardens
+The Greens,Dubai,Al Adil - Discovery Gardens,50,2 hours,10:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-discovery-gardens
+The Greens,Dubai,Pets Plus Dubai,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/pets-plus-dubai
+The Greens,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+The Lakes,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+The Lakes 235,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+The Palm Deira,Dubai,aswaaq Waterfront,50,2 hours,10:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/aswaaq-waterfront
+The Palm Jumeirah,Dubai,Al Adil - Discovery Gardens,50,2 hours,10:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-discovery-gardens
+The Palm Jumeirah,Dubai,Pets Plus Dubai,50,2 hours,10:00:00,20:59:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/pets-plus-dubai
+The Palm Jumeirah,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+The Views,Dubai,Union Coop - Barsha,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-barsha
+Umm Ramool,Dubai,aswaaq Mizhar,0,2 hours,09:00:00,21:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/aswaaq-mizhar
+Umm Suqeim,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Umm Suqeim 1,Dubai,Al Adil - Barsha,50,2 hours,09:00:00,22:30:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/al-adil-barsha
+Umm Suqeim 1,Dubai,Jones The Grocer SZR,75,2 hours,10:00:00,20:59:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/jones-the-grocer-szr
+Umm Suqeim 1,Dubai,Ripe Organic-Manara,50,2 hours,08:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/ripe-organic-manara
+Umm Suqeim 1,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Umm Suqeim 2,Dubai,Ripe Organic-Manara,50,2 hours,08:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/ripe-organic-manara
+Umm Suqeim 2,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Umm Suqeim 3,Dubai,Ripe Organic-Manara,50,2 hours,08:00:00,20:00:00,Online Payment Cash on delivery,https://www.elgrocer.com/store/ripe-organic-manara
+Umm Suqeim 3,Dubai,Union Coop USQ,50,2 hours,09:00:00,22:00:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/union-coop-usq
+Wadi Alamardi,Dubai,Ryan Market Test Store,0,2 hours,00:01:00,23:59:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/ryan-market-test-store
+Wadi Alamardi,Dubai,Test DarkStore Inventory limit,0,2 hours,08:00:00,23:58:00,Online Payment Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/test-darkstore-inventory-limit
+Waha,Sharjah,Sharjah Coop - Halwan,50,2 hours,10:00:00,22:00:00,Credit Card on delivery Cash on delivery,https://www.elgrocer.com/store/sharjah-coop-halwan
