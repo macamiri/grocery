@@ -1,6 +1,6 @@
 ##### 1: Load packages -----
-# Main packages loaded:robotstxt, Selenium, rvest, purrr, readr
-# Packages used with namespace: etstat, crayon, tibble, dplyr, magick, progressr
+# Main packages loaded: robotstxt, RSelenium, rvest, purrr, stringr, readr
+# Packages used with namespace: pacman, netstat, crayon, tibble, dplyr, beepr
 pacman::p_load(robotstxt, RSelenium, rvest, purrr, stringr, readr)
 
 
@@ -666,6 +666,7 @@ write_csv(grocer_item, here::here("data/grocer_item.csv"))
 
 
 # fs::dir_delete(here::here("data/category.csv"))
+
 
 
 
