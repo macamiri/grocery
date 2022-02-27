@@ -147,39 +147,22 @@ clean_grocer_store <-
 
 # JOIN category, subcategory, item tables
 grocer_products <- 
-  clean_grocer_item %>% 
-    left_join(clean_grocer_subcategory, by = "subcategory_link") %>% 
-    left_join(clean_grocer_category, by = "category_link") %>% 
+  clean_grocer_category %>% 
+    left_join(clean_grocer_subcategory, by = "category_link") %>% 
+    left_join(clean_grocer_item, by = "subcategory_link") %>% 
     select(store_name, category, subcategory, 
            item, weight, price, 
            category_image_link, item_image_link, 
            store_link) %>% 
-  arrange(store_name, category, subcategory, item, price)
+    arrange(store_name, category, subcategory, item, price)
 
 # Keep stores table
 grocer_stores <- 
   clean_grocer_store %>% 
   select(-c(delivery_timezone, location_link)) %>% 
-  arrange(location, city, store_name)
-# separate_rows(payment_method, sep = str_glue("(?<={separator_payment})\\s(?={separator_payment})")) %>% 
-# mutate(payment_method = str_trim(payment_method, "both"))
-
-# Write tables for analysis
-write_csv(grocer_products, here::here("data/grocer_products_for_analysis.csv"))
-write_csv(grocer_stores, here::here("data/grocer_stores_for_analysis.csv"))
-
-# Remove unwanted data
-# rm(clean_grocer_category, clean_grocer_subcategory, clean_grocer_item, 
-#    clean_grocer_location, clean_grocer_store, data_list)
-
-
-
-
-
-
-
-
-
+  arrange(location, city, store_name) # separate the payment method %>% 
+  #separate_rows(payment_method, sep = str_glue("(?<={separator_payment})\\s(?={separator_payment})")) %>% 
+  #mutate(payment_method = str_trim(payment_method, "both"))
 
 
 ##### 4B: Clean ocado data -----
@@ -247,20 +230,3 @@ ocado_data_for_analysis <-
            rating, num_of_reviews, recommend, ingredient, #12
            reviews, nutrition, #14
            image_link, product_link, category_link)#17
-
-write_rds(ocado_data_for_analysis, 
-          here::here("data/ocado_data_for_analysis.rds"))
-
-
-##### continue...analysis -----
-
-# separate_rows(badge, sep = ", ")
-
-# category_image <- magick::image_read(path = category_image_links %>% 
-#                                        unlist())
-
-# grocer_stores %>% 
-#   .[c(-1,-2)] %>% 
-#   distinct(store_link, payment_method, .keep_all = T) %>% 
-#   select(store_name, payment_method) %>% 
-#   arrange(store_name)
