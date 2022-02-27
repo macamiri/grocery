@@ -588,10 +588,9 @@ collect_subcategories <- function(links_to_use = grocer_category$category_link,
 }
 random_category_links <- sample(1:length(grocer_category$category_link),
                                 300, replace = FALSE)
-tictoc::tic()
+
 grocer_subcategory <- collect_subcategories(grocer_category$category_link[random_category_links])
-tictoc::toc()
-write_csv(grocer_subcategory, here::here("data/grocer_subcategory.csv"))
+# write_csv(grocer_subcategory, here::here("data/grocer_subcategory.csv"))
 
 ### (E) Collect item data -----
 collect_items <- function(links_to_use = grocer_subcategory$subcategory_link, 
@@ -655,22 +654,10 @@ collect_items <- function(links_to_use = grocer_subcategory$subcategory_link,
 }
 random_subcategory_links <- sample(1:length(grocer_subcategory$subcategory_link), 
                                    1000, replace = FALSE)
-tictoc::tic()
+
 grocer_item <- collect_items(grocer_subcategory$subcategory_link[random_subcategory_links])
-tictoc::toc()
-write_csv(grocer_item, here::here("data/grocer_item.csv"))
 
-# item_image <- magick::image_read(path = item_image_links %>% 
-#                                    unlist())
-
-
-
-# fs::dir_delete(here::here("data/category.csv"))
-
-
-
-
-
+# write_csv(grocer_item, here::here("data/grocer_item.csv"))
 
 
 ##### 6: Collect more data from Ocado.com -----
@@ -953,13 +940,13 @@ set.seed(511)
 random_product_links <- sample(1:length(ocado_product_general$product_link), 
                                    1000, replace = FALSE)
 ocado_product_extra1 <- collect_product_data(ocado_product_general$product_link[random_product_links[1:250]])
-write_csv(ocado_product_extra1, here::here("data/ocado_product_extra1.csv"))
+# write_csv(ocado_product_extra1, here::here("data/ocado_product_extra1.csv"))
 ocado_product_extra2 <- collect_product_data(ocado_product_general$product_link[random_product_links[251:500]])
-write_csv(ocado_product_extra2, here::here("data/ocado_product_extra2.csv"))
+# write_csv(ocado_product_extra2, here::here("data/ocado_product_extra2.csv"))
 ocado_product_extra3 <- collect_product_data(ocado_product_general$product_link[random_product_links[501:750]])
-write_csv(ocado_product_extra3, here::here("data/ocado_product_extra3.csv"))
+# write_csv(ocado_product_extra3, here::here("data/ocado_product_extra3.csv"))
 ocado_product_extra4 <- collect_product_data(ocado_product_general$product_link[random_product_links[751:1000]])
-write_csv(ocado_product_extra4, here::here("data/ocado_product_extra4.csv"))
+# write_csv(ocado_product_extra4, here::here("data/ocado_product_extra4.csv"))
 # ocado_product_extra <- read_csv(here::here("data/ocado_product_extra.csv"))
 
 ### (C) Grab product reviews
@@ -1069,13 +1056,13 @@ collect_product_reviews <- function(links_to_use = ocado_product_general$product
     })
 }
 ocado_review1 <- collect_product_reviews(ocado_product_general$product_link[random_product_links[1:250]])
-write_csv(ocado_review1, here::here("data/ocado_review1.csv"))
+# write_csv(ocado_review1, here::here("data/ocado_review1.csv"))
 ocado_review2 <- collect_product_reviews(ocado_product_general$product_link[random_product_links[251:500]])
-write_csv(ocado_review2, here::here("data/ocado_review2.csv"))
+# write_csv(ocado_review2, here::here("data/ocado_review2.csv"))
 ocado_review3 <- collect_product_reviews(ocado_product_general$product_link[random_product_links[501:750]])
-write_csv(ocado_review3, here::here("data/ocado_review3.csv"))
+# write_csv(ocado_review3, here::here("data/ocado_review3.csv"))
 ocado_review4 <- collect_product_reviews(ocado_product_general$product_link[random_product_links[751:1000]])
-write_csv(ocado_review4, here::here("data/ocado_review4.csv"))
+# write_csv(ocado_review4, here::here("data/ocado_review4.csv"))
 # ocado_review <- read_csv(here::here("data/ocado_review.csv"))
 
 # Grab nutrition table
@@ -1118,7 +1105,7 @@ collect_nutrition_table <- function(links_to_use = ocado_product_general$product
     set_names(links_to_use)
 }
 ocado_nutrition_table <- collect_nutrition_table(ocado_product_general$product_link[random_product_links])
-write_rds(ocado_nutrition_table, here::here("data/ocado_nutrition.rds"))
+# write_rds(ocado_nutrition_table, here::here("data/ocado_nutrition.rds"))
 # ocado_nutrition_table <- read_rds(here::here("data/ocado_nutrition.rds"))
 
 
