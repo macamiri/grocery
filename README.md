@@ -3,8 +3,6 @@
 
 ## Roadmap
 
-------------------------------------------------------------------------
-
 Each of the first 5 stages focuses on a broad task for the project,
 while 7 & 8 include extra project-wide information:  
 1. [Collect data from 2 online grocery services](#collect-online-data)  
