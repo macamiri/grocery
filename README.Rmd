@@ -4,7 +4,9 @@ output:
     keep_md: TRUE
 ---
 
-
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
 
 # Collect, Generate, Analyze & Report on Online Grocery Data
 
