@@ -10,7 +10,7 @@ while 7 & 8 include extra project-wide information:
 2. [Clean collected data](#clean-collected-data)  
 3. [Generate fake data](#generate-fake-data)  
 4. [Analyze grocery data](#analyze-grocery-data)  
-5. [Grocery Dashboard](#grocery-dashboard) 
+5. [Grocery Dashboard](#grocery-dashboard)  
 6. [Build Automation Tools](#build-automation-tools)  
 7. [Extra: R Packages used](#r-packages-used)  
 8. [Extra: Notes & FAQs](#notes-and-faqs)  
