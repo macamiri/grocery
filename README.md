@@ -45,15 +45,14 @@ elGrocer data collected:
 Ocado data collected:  
 - All categories available  
 - Product details for 1,000 products (i.e., name, price, weight, nutrition 
-table, ingredients, country of origin)  
-- Text reviews for the same 1,000 products  
-The 1,000 products were randomly selected from 3 (of the 13) categories due 
-to the large number of products available. All products would have taken > 
-11 hours to collect (regardless of hardware) because the system/bot was 
-instructured to sleep witthin each collector function to prevent overloading 
-the website. The time would be less with parallel processing (i.e., opening 
-multiple RSelenium servers at once and using parallel functional 
-programming vua future package in R).  
+table, ingredients, country of origin, rating, text reviews)  
+    + The 1,000 products were randomly selected from 3 (of the 13) 
+    categories due to the large number of products available. All products 
+    would have taken > 11 hours to collect (regardless of hardware) because 
+    the system/bot was instructured to sleep within each collector function 
+    to prevent overloading the website. The time would be less with parallel 
+    processing (i.e., opening multiple RSelenium servers at once and using 
+    parallel functional programming vua future package in R).  
 
 Finally, we also collected country names and flags from 
 [worldometers](https://www.worldometers.info/geography/flags-of-the-world/). 
