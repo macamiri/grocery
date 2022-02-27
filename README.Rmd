@@ -1,8 +1,7 @@
-# Collect, Generate, Analyze & Report on Online Grocery Data
-
 ---
 output: github_document
 ---
+# Collect, Generate, Analyze & Report on Online Grocery Data
 
 ## Roadmap
 ***
@@ -17,7 +16,7 @@ while 7 & 8 include extra project-wide information:
 7. [Extra: R Packages used](#r-packages-used)  
 8. [Extra: Notes & FAQs](#notes-and-faqs)  
 
-## Collect Online Data
+### Collect Online Data
 ***
 Our first task is to find grocery data. In our case, we collected the data 
 by scraping 2 online gorcery services: [elGrocer](https://www.elgrocer.com) 
@@ -60,7 +59,7 @@ for the products on the Ocado website.
 Code found in: WIP  
 Collected data found in: WIP
 
-## Clean Collected Data
+### Clean Collected Data
 ***
 The data cleaning process led to 3 new data files that will be used to  
 generate fake customer data and in analysis.   
@@ -68,7 +67,7 @@ generate fake customer data and in analysis.
 Code found in: WIP  
 Collected data found in: WIP
 
-## Generate Fake Data
+### Generate Fake Data
 ***
 Fake orders were synthesized using the collected data:  
 - customer_db: customer details (i.e., id, name, longitude, latitude). 
@@ -100,7 +99,7 @@ price)
 To generate a new grocery dataset, visit 
 the [dashboard for this project](#grocery-dashboard).  
 
-## Analyze Grocery Data
+### Analyze Grocery Data
 ***
 - [ ] Summary Data  
 - [ ] Market Basket Analysis  
@@ -108,18 +107,18 @@ the [dashboard for this project](#grocery-dashboard).
 - [ ] Reviews' Text Analysis  
 Example of findings: 1-2 summary pics
 
-## Grocery Dashboard
+### Grocery Dashboard
 ***
 - [ ] R shiny
 - [ ] Grocery data generator
 - [ ] Automation tools
 
-## Build Automation Tools
+### Build Automation Tools
 ***
 - [ ] Report powerpoint generation  
 - [ ] Invoice pdf  
 
-## R Packages Used
+### R Packages Used
 ***
 |    **Stage**    | **Packages Loaded** | **Packages used with Namespace(::)** |
 |---|----------------------------------------------------|--------------------------------------|
@@ -129,7 +128,7 @@ Example of findings: 1-2 summary pics
 | 4 | WIP  | WIP |
 | 5 | WIP  | WIP |
 
-## Notes and FAQs
+### Notes and FAQs
 ***
 - [ ] Bibliography  
 - [ ] Session Info
