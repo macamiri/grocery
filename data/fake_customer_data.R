@@ -33,9 +33,9 @@ select_products <- function(id = order_db$customer_id, num_of_products_mean = 20
 
 
 ##### 3: Load grocery data *_for_analysis -----
-stores <- readr::read_csv(here::here("data/grocer_stores_for_analysis.csv"))
+stores <- readr::read_csv(here::here("data/clean_grocer_store.csv"))
 products <- readr::read_csv(here::here("data/grocer_products_for_analysis.csv"))
-ocado <- readr::read_csv(here::here("data/ocado_data_for_analysis.csv"))
+ocado <- readr::read_rds(here::here("data/ocado_data_for_analysis.rds"))
 
 ##### 4: NOTES -----
 ### order_db
@@ -64,14 +64,14 @@ store_prob <-
 product_prob <- 
   ocado %>% 
     dplyr::group_by(product) %>% 
-    dplyr::summarise(score = num_of_reviews + recommend) %>% 
+    dplyr::summarise(score = as.numeric(num_of_reviews) + as.numeric(recommend)) %>% 
     dplyr::filter(!is.na(score)) %>% 
     dplyr::ungroup() %>% 
     dplyr::mutate(probs = score / sum(score))%>% 
     dplyr::arrange(desc(score))
 
 
-##### 3: Create fake random customer data -----
+##### 5: Create fake random customer data -----
 num_of_customers <- 100000
 num_of_orders <- 250000
 
@@ -86,7 +86,7 @@ customer_db <- fabricate(
   dplyr::distinct(customer_name, .keep_all = TRUE) %>% 
   dplyr::rename("customer_id" = ID)
 
-readr::write_csv(customer_db, here::here("data/customer_db.csv"))
+# readr::write_csv(customer_db, here::here("data/customer_db.csv"))
 
 # Orders database table
 order_db <- fabricate(
@@ -114,7 +114,7 @@ order_db <- fabricate(
   tibble::as_tibble() %>% 
   dplyr::rename("order_id" = ID)
 
-readr::write_csv(order_db, here::here("data/order_db.csv"))
+# readr::write_csv(order_db, here::here("data/order_db.csv"))
 
 # Basket line item database table - join later if need more ocado product info
 basket_db <- fabricate(
@@ -128,4 +128,4 @@ basket_db <- fabricate(
   dplyr::select(1:3, price) %>% 
   dplyr::rename("basket_id" = ID)
 
-readr::write_csv(basket_db, here::here("data/basket_db.csv"))
+# readr::write_csv(basket_db, here::here("data/basket_db.csv"))
