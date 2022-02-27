@@ -248,8 +248,8 @@ ocado_data_for_analysis <-
            reviews, nutrition, #14
            image_link, product_link, category_link)#17
 
-write_csv(ocado_data_for_analysis, 
-          here::here("data/ocado_data_for_analysis.csv"))
+write_rds(ocado_data_for_analysis, 
+          here::here("data/ocado_data_for_analysis.rds"))
 
 
 ##### continue...analysis -----
