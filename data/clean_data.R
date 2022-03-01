@@ -92,7 +92,7 @@ clean_grocer_subcategory <-
 #          str_to_title())
 
 # ITEM: Price to numeric
-clean_grocer_item <-
+clean_grocer_product <-
   nested_grocery %>% 
     unnest_origin("grocer_item") %>% 
     mutate(price = parse_number(price))
@@ -119,8 +119,7 @@ new_col_names <- c("store_name", "min_order_amount", "delivery_within",
 
 new_delivery_names <- c("delivery_start", "delivery_end", "delivery_timezone")
 separator_delivery <- paste(" - ", " ", sep = "|", collapse = "|")
-separator_payment <- paste("Online Payment", "Credit Card on delivery", 
-                           "Cash on delivery", sep = "|", collapse = "|")
+
 clean_grocer_store <- 
   nested_grocery %>% 
     unnest_origin("grocer_store") %>% 
@@ -132,37 +131,6 @@ clean_grocer_store <-
            min_order_amount = parse_number(min_order_amount), 
            across(.cols = c("delivery_start", "delivery_end"), 
                   ~ hms::parse_hm(.)))
-
-
-# payment_method_tibble <- tibble::tribble(
-#   ~ index, ~ payment_method, 
-#   1, "Online Payment", 
-#   2, "Credit Card on delivery", 
-#   3, "Cash on delivery", 
-#   4, "Online Payment Credit Card on delivery", 
-#   5, "Online Payment Cash on delivery", 
-#   6, "Credit Card on delivery Cash on delivery", 
-#   7, "Online Payment Credit Card on delivery Cash on delivery"
-# )
-
-# JOIN category, subcategory, item tables
-grocer_products <- 
-  clean_grocer_category %>% 
-    left_join(clean_grocer_subcategory, by = "category_link") %>% 
-    left_join(clean_grocer_item, by = "subcategory_link") %>% 
-    select(store_name, category, subcategory, 
-           item, weight, price, 
-           category_image_link, item_image_link, 
-           store_link) %>% 
-    arrange(store_name, category, subcategory, item, price)
-
-# Keep stores table
-grocer_stores <- 
-  clean_grocer_store %>% 
-  select(-c(delivery_timezone, location_link)) %>% 
-  arrange(location, city, store_name) # separate the payment method %>% 
-  #separate_rows(payment_method, sep = str_glue("(?<={separator_payment})\\s(?={separator_payment})")) %>% 
-  #mutate(payment_method = str_trim(payment_method, "both"))
 
 
 ##### 4B: Clean ocado data -----
