@@ -39,9 +39,9 @@ elGrocer data collected:
 - Location (UAE) of grocery stores that elGrocer delivers from  
 - Details of each store (i.e., delivery times, minimum order amount)  
 - Random categories & subcategories of products available in each store
-    + All 3279 distinct categories were listed  
-    + Subcategory data was collected from 300 randomly chosen categories
-(from total of 3289). 1164 subcategories were collected  
+    + All 3278 distinct categories were listed  
+    + Subcategory data was collected from 300 randomly chosen categories 
+    (from total of 3278). 1164 subcategories were collected  
 - Product details for 17,114 products (i.e., name, price, weight, image
 link)  
     + The 17,114 products were collected from 1,000 randomly chosen 
