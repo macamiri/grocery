@@ -74,6 +74,7 @@ clean_grocer_location <-
 clean_grocer_category <- 
   nested_grocery %>% 
     unnest_origin("grocer_category") %>% 
+    distinct(store_name, category, .keep_all = TRUE) %>% 
     filter(!str_detect(category_link, "promotion")) %>% 
     rename("category_image_link" = image_link)
 
