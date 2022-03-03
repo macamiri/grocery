@@ -195,6 +195,8 @@ ocado_data_for_analysis <-
     left_join(clean_ocado_category, by = "category_link") %>% 
     left_join(clean_ocado_review, by = "product_link") %>% 
     left_join(clean_ocado_nutrition, by = "product_link") %>% 
+    mutate(across(.cols = c(rating, num_of_reviews, recommend), 
+                  ~ as.numeric(.x))) %>% 
     select(category, brand, product, price, weight, badge, shelf_life, country,  #8
            rating, num_of_reviews, recommend, ingredient, #12
            reviews, nutrition, #14
