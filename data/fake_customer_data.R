@@ -39,9 +39,13 @@ ocado <- readr::read_rds(here::here("data/ocado_data_for_analysis.rds"))
 
 ##### 4: NOTES -----
 ### order_db
-## order_date: 40% of orders from 2020 & 60% of orders from 2021
-# .4/366 #1-366
-# .6/365 #367-731
+## order_date: 
+# 40% of orders from 2020 & 60% of orders from 2021
+# 30% 1st half of the year, 70% second half of the year
+# (.4*.3)/183 #1-183
+# (.4*.7)/183 #184-366
+# (.6*.3)/183 #367-549
+# (.6*.7)/182 #550-731
 
 ## order_time: probability estimates
 # 5% of orders from 00:00 to 8:00 am - .05/80 (1-81)
@@ -96,8 +100,10 @@ order_db <- fabricate(
                           start = as.Date("2020-01-01"), 
                           k = 731, 
                           by = "1 day", 
-                          prob = c(rep(0.001092896, 366), 
-                                   rep(0.001643836, 365))), 
+                          prob = c(rep(0.0006557377, 183), 
+                                   rep(0.001530055, 183), 
+                                   rep(0.0009836066, 183), 
+                                   rep(0.002307692, 182))), 
   order_time = hour(n = N, 
                     x = seq(from = 0, to = 23.9, by = .1), 
                     prob = c(rep(0.000625, 80), 
