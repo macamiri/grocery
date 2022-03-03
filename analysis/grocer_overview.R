@@ -44,11 +44,13 @@ grocer_stores <-
 ##### 4: Analysis -----
 
 ### LOCATION
+# num of locations
 clean_grocer_location %>% 
   count(location) %>% 
   summarise(num_of_locations = sum(n))
 
 ### STORES
+# stores with 1, 2 or 3 payment methods
 grocer_stores %>% 
   distinct(store_name, payment_method) %>% 
   count(store_name) %>% 
@@ -77,6 +79,7 @@ clean_grocer_category %>%
   summarise(num_of_cat = sum(n))
 
 ### SUBCATEGORIES
+# Subategory buckets to split num of stores in each bucket
 clean_grocer_subcategory %>% 
   left_join(clean_grocer_category, by = "category_link") %>% 
   count(store_name) %>% 
@@ -94,11 +97,12 @@ clean_grocer_subcategory %>%
   summarise(num_of_subcat = sum(n))
 
 ### PRODUCTS
+# Top 10 expensive products
 clean_grocer_product %>% 
   slice_max(n = 10, order_by = price) %>% 
   select(-1)
 
-# Top 10 expensive stores
+# Top 10 expensive stores on average (from data collected - 17,114 products)
 clean_grocer_product %>% 
   left_join(clean_grocer_subcategory, by = "subcategory_link") %>% 
   left_join(clean_grocer_category, by = "category_link") %>% 
