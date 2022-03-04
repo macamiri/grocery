@@ -132,6 +132,7 @@ basket_db <- fabricate(
   tidyr::separate_rows(product, sep = "@") %>% 
   dplyr::left_join(ocado, by = "product") %>% 
   dplyr::select(1:3, price) %>% 
-  dplyr::rename("basket_id" = ID)
+  dplyr::rename("basket_id" = ID) %>% 
+  dplyr::distinct(basket_id, product, .keep_all = TRUE)
 
 # readr::write_csv(basket_db, here::here("data/basket_db.csv"))
