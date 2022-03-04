@@ -15,7 +15,7 @@ popular_order_time <- function(time_group = c(month, weekday, hour),
                 hour = hour(order_time), 
                 price = total_cost) %>% 
       group_by(store, {{ time_group }}) %>% 
-      summarise(n = n(), 
+      summarise(num_of_orders = n(), 
                 avg_price = mean(price))
   
   if(is.na(store_filter)) {
@@ -38,7 +38,7 @@ bucket_width <- function(column, bucket_size) {
 data_files <- fs::dir_ls(here::here("data"), regexp = "_db")
 file_names <- stringr::str_extract(data_files, "(?<=data/).*_db(?=\\..*)")
 
-# 5,117,570 products bought
+# 5,001,890 products bought
 basket_db <- read_csv(as.character(data_files[1]))
 # 96,614 customers
 customer_db <- read_csv(as.character(data_files[2]))
@@ -57,7 +57,7 @@ grocery <-
     left_join(customer_db, by = "customer_id")
 
 
-##### 4A: Analysis OVERVIEW -----
+##### 4A: Analysis OVERVIEW [confirms data generation rules] -----
 
 # Frequency of orders (i.e., 26 customers ordered 10 times)
 grocery %>% 
@@ -71,6 +71,7 @@ customer_buckets <-
     summarise(total_spent = sum(total_cost), 
               num_of_orders = n()) 
 
+# 50 or 100 bucket
 customer_buckets %>% 
   mutate(spent_bucket = cut(total_spent, 
                             breaks = bucket_width(total_spent, 50), 
@@ -86,18 +87,26 @@ order_db %>%
   group_by(year = year(order_date)) %>% 
   count(quarter = quarter(order_date), name = "orders")
 
-# Top 10 stores shopped at
+# Top stores shopped at
 order_db %>% 
   count(store, name = "orders") %>% 
-  slice_max(n = 10, order_by = orders)
+  mutate(order_perc = orders / sum(orders)) %>% 
+  arrange(desc(order_perc))
 
-# Top 10 bought products
+# Top products bought
 basket_db %>% 
   count(product, name = "baskets") %>% 
-  slice_max(n = 10, order_by = baskets) %>% 
+  mutate(basket_perc = baskets / sum(baskets)) %>% 
+  arrange(desc(basket_perc)) %>% 
   left_join(ocado, by = "product") %>% 
-  .[, c("product", "baskets", "image_link")] %>% 
-  distinct(product, .keep_all = TRUE)
+  .[, c("product", "baskets", "basket_perc", "image_link")]
+
+# Money spent on each product
+basket_db %>% 
+  group_by(product) %>% 
+  summarise(total_spent = sum(price)) %>% 
+  mutate(spent_perc = total_spent / sum(total_spent)) %>% 
+  arrange(desc(spent_perc))
 
 # Avg basket price & total num of orders by store
 grocery %>% 
@@ -112,20 +121,12 @@ grocery %>%
   count(store, customer_name, name = "num_of_orders") %>% 
   group_by(store) %>% 
   summarise(orders_per_customer = mean(num_of_orders)) %>% 
-  arrange(-orders_per_customer)
+  arrange(desc(orders_per_customer))
 
 # Popular order time for a store
 popular_order_time(time_group = month, store = "Union Coop - Barsha")
 popular_order_time(time_group = weekday, "Mamalu Kitchen")
 popular_order_time(time_group = hour, "Al Adil - Discovery Gardens")
-
-
-  
-  
-
-
-  
-
 
 ##### 4B: Analysis MARKET BASKET -----
 # continue...
