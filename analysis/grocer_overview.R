@@ -59,6 +59,11 @@ grocer_stores %>%
 grocer_stores %>% 
   distinct(store_name, payment_method) %>% 
   filter(store_name == "Al Adil - Discovery Gardens")
+# grocer_stores %>%
+#   .[c(-1,-2)] %>%
+#   distinct(store_link, payment_method, .keep_all = T) %>%
+#   select(store_name, payment_method) %>%
+#   arrange(store_name)
 
 ### CATEGORIES
 # Category buckets to split num of stores in each bucket
@@ -123,10 +128,4 @@ clean_grocer_product %>%
 
 # category_image <- magick::image_read(path = category_image_links %>% 
 #                                        unlist())
-
-# grocer_stores %>% 
-#   .[c(-1,-2)] %>% 
-#   distinct(store_link, payment_method, .keep_all = T) %>% 
-#   select(store_name, payment_method) %>% 
-#   arrange(store_name)
 
