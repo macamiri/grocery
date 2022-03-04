@@ -4,7 +4,7 @@ output: github_document
 # Collect, Generate, Analyze & Report on Online Grocery Data
 
 ## Roadmap
-Each of the first 5 stages focuses on a broad task for the project, 
+Each of the first 6 stages focuses on a broad task for the project, 
 while 7 & 8 include extra project-wide information:  
 1. [Collect data from 2 online grocery services](#collect-online-data)  
 2. [Clean collected data](#clean-collected-data)  
@@ -36,9 +36,9 @@ elGrocer data collected:
 - Location (UAE) of grocery stores that elGrocer delivers from  
 - Details of each store (i.e., delivery times, minimum order amount)  
 - Random categories & subcategories of products available in each store 
-    + All 3289 categories were listed  
+    + All 3279 distinct categories were listed  
     + Subcategory data was collected from 300 randomly chosen 
-    categories (from total of 3289). 1164 subcategories were collected    
+    categories (from total of 3289). 1164 subcategories were collected  
 - Product details for 17,114 products (i.e., name, price, weight, image link)  
     + The 17,114 products were collected from 1,000 randomly chosen 
     subcategories  
@@ -119,6 +119,7 @@ Example of findings: 1-2 summary pics
 
 ### Build Automation Tools
 ***
+- [ ] Generate random orders dataset  
 - [ ] Report powerpoint generation  
 - [ ] Invoice pdf  
 

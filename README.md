@@ -3,7 +3,7 @@
 
 ## Roadmap
 
-Each of the first 5 stages focuses on a broad task for the project,
+Each of the first 6 stages focuses on a broad task for the project,
 while 7 & 8 include extra project-wide information:  
 1. [Collect data from 2 online grocery services](#collect-online-data)  
 2. [Clean collected data](#clean-collected-data)  
@@ -39,25 +39,25 @@ elGrocer data collected:
 - Location (UAE) of grocery stores that elGrocer delivers from  
 - Details of each store (i.e., delivery times, minimum order amount)  
 - Random categories & subcategories of products available in each store
-    + All 3278 distinct categories were listed  
-    + Subcategory data was collected from 300 randomly chosen categories 
-    (from total of 3278). 1164 subcategories were collected  
++ All 3279 distinct categories were listed  
++ Subcategory data was collected from 300 randomly chosen categories
+(from total of 3289). 1164 subcategories were collected  
 - Product details for 17,114 products (i.e., name, price, weight, image
 link)  
-    + The 17,114 products were collected from 1,000 randomly chosen 
-    subcategories
++ The 17,114 products were collected from 1,000 randomly chosen
+subcategories
 
 Ocado data collected:  
 - All categories available  
 - Product details for 1,000 products (i.e., name, price, weight,
 nutrition table, ingredients, country of origin, rating, text reviews)  
-    + The 1,000 products were randomly selected from 3 (of the 13) 
-    categories due to the large number of products available. All products 
-    would have taken \> 11 hours to collect (regardless of hardware) because 
-    the system/bot was instructured to sleep within each collector function 
-    to prevent overloading the website. The time would be less with parallel 
-    processing (i.e., opening multiple RSelenium servers at once and using 
-    parallel functional programming vua future package in R).
++ The 1,000 products were randomly selected from 3 (of the 13)
+categories due to the large number of products available. All products
+would have taken \> 11 hours to collect (regardless of hardware) because
+the system/bot was instructured to sleep within each collector function
+to prevent overloading the website. The time would be less with parallel
+processing (i.e., opening multiple RSelenium servers at once and using
+parallel functional programming vua future package in R).
 
 Finally, we also collected country names and flags from
 [worldometers](https://www.worldometers.info/geography/flags-of-the-world/).
@@ -86,26 +86,26 @@ Fake orders were synthesized using the collected data:
 Location of long and lat is constrained within UAE.  
 - order_db: orders placed from 2020-01-01 to 2021-12-31 (i.e., id,
 customer id, date, time, store)  
-    + 97 available stores  
-    + 40% of orders from 2020 and 60% from 2021 + The probability of
++ 97 available stores  
++ 40% of orders from 2020 and 60% from 2021 + The probability of
 shopping at each store was calculated according to the # of products
 (i.e., more products available in a store —> higher probability of
 ordering from that store).  
-    + 5% of orders from 00:00 to 8:00 am  
-    + 20% of orders from 8:00 to 10:00 am  
-    + 25% of orders from 10:00 to 12:00 pm  
-    + 25% of orders from 12:00 to 6:00 pm  
-    + 15% of orders from 6:00 to 10:00 pm  
-    + 10% of orders from 10:00 to 12:00 am  
++ 5% of orders from 00:00 to 8:00 am  
++ 20% of orders from 8:00 to 10:00 am  
++ 25% of orders from 10:00 to 12:00 pm  
++ 25% of orders from 12:00 to 6:00 pm  
++ 15% of orders from 6:00 to 10:00 pm  
++ 10% of orders from 10:00 to 12:00 am  
 - basket_db: products bought in each order (i.e., id, order id, product,
 price)  
-    + 1,000 products to select from (see ‘Ocado data collected’ above)  
-    + The probability of ordering a product was based on a ‘score’ metric = 
-    nummber of reviews for that product + % of customers that recommend it 
-    (i.e., higher score for a product —> higher probability of ordering that 
-    product).  
-    + The number of products in each basket is normally distributed with a 
-    mean of 20 and standard deviation of 5 (minimum is 5 products/basket)
++ 1,000 products to select from (see ‘Ocado data collected’ above)  
++ The probability of ordering a product was based on a ‘score’ metric =
+nummber of reviews for that product + % of customers that recommend it
+(i.e., higher score for a product —> higher probability of ordering that
+product).  
++ The number of products in each basket is normally distributed with a
+mean of 20 and standard deviation of 5 (minimum is 5 products/basket)
 
 To generate a new grocery dataset, visit the [dashboard for this
 project](#grocery-dashboard).
@@ -132,6 +132,7 @@ project](#grocery-dashboard).
 
 ------------------------------------------------------------------------
 
+-   [ ] Generate random orders dataset  
 -   [ ] Report powerpoint generation  
 -   [ ] Invoice pdf
 
@@ -141,9 +142,9 @@ project](#grocery-dashboard).
 
 | **Stage** | **Packages Loaded**                                           | **Packages used with Namespace(::)**          |
 |-----------|---------------------------------------------------------------|-----------------------------------------------|
-| 1         | `robotstxt`, `RSelenium`, `rvest`, `purrr`, `stringr`, `readr`            | `pacman`, `netstat`, `crayon`, `tibble`, `dplyr`, `beepr` |
-| 2         | `dplyr`, `readr`, `stringr`, `tidyr`, `purrr`                           | `pacman`, `fs`, `here`                              |
-| 3         | `fabricatr`, `wakefield`, `randomNames`, `charlatan`, `magrittr`, `purrr` | `pacman`, `tibble`, `dplyr`                         |
+| 1         | robotstxt, RSelenium, rvest, purrr, stringr, readr            | pacman, netstat, crayon, tibble, dplyr, beepr |
+| 2         | dplyr, readr, stringr, tidyr, purrr                           | pacman, fs, here                              |
+| 3         | fabricatr, wakefield, randomNames, charlatan, magrittr, purrr | pacman, tibble, dplyr                         |
 | 4         | WIP                                                           | WIP                                           |
 | 5         | WIP                                                           | WIP                                           |
 
