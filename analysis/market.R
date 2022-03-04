@@ -1,6 +1,6 @@
 ##### 1: Load packages -----
 # Main packages loaded:
-# Packages used with namespace: pacman, fs, here
+# Packages used with namespace: pacman, fs, here, plyr
 pacman::p_load(dplyr, readr, stringr, lubridate)
 
 ##### 2: Misc Funcs -----
@@ -33,6 +33,16 @@ bucket_width <- function(column, bucket_size) {
   } else if(bucket_size == 100) {
     c(0, 100, 200, 300, 400, 500, max({{ column }}))
   }
+}
+
+unseparate_rows <- function(data = basket_db, 
+                            keep_cols = c("basket_id", "product")) {
+  data %>% 
+    select({{ keep_cols }}) %>% 
+    plyr::ddply(.variables = "basket_id", 
+                .fun = function(df1) {paste(df1$product, collapse = ",")}) %>% 
+    dplyr::as_tibble() %>% 
+    rename("itemset" = V1)
 }
 ##### 3: Load data -----
 data_files <- fs::dir_ls(here::here("data"), regexp = "_db")
@@ -108,7 +118,16 @@ basket_db %>%
   mutate(spent_perc = total_spent / sum(total_spent)) %>% 
   arrange(desc(spent_perc))
 
-# Avg basket price & total num of orders by store
+# How many items purchased per basket on average?
+# confirms normally distributed data generation
+basket_db %>% 
+  count(basket_id) %>% 
+  ungroup() %>% 
+  ggplot2::ggplot(ggplot2::aes(x = n)) + 
+  ggplot2::geom_histogram(fill = "skyblue") + 
+  ggplot2::geom_rug()
+
+# Avg order value & total num of orders by store
 grocery %>% 
   filter(store %in% c("Mamalu Kitchen")) %>% 
   group_by(store) %>% 
@@ -129,7 +148,18 @@ popular_order_time(time_group = weekday, "Mamalu Kitchen")
 popular_order_time(time_group = hour, "Al Adil - Discovery Gardens")
 
 ##### 4B: Analysis MARKET BASKET -----
-# continue...
+# Prepare data: remove commas in a product's name & collapse line items
+basket_item <- 
+  basket_db %>% 
+  mutate(product = str_replace_all(product, ", ", " ")) %>% 
+  unseparate_rows()
+
+
+# confidence: how likely to buy B, given bought A
+# (purchase involving A, is accompanied by B 75% of the time)
+# lift: how MUCH MORE likely to buy B, given bought A
+# (1.3 = 30% more likely to buy B if A already bought | .9 = 10% less likely |
+# 1 = occur together by chance)
 
 
 ##### 4C: Analysis SPATIAL -----
