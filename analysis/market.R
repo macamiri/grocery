@@ -1,7 +1,7 @@
 ##### 1: Load packages -----
 # Main packages loaded:
 # Packages used with namespace: pacman, fs, here, plyr
-pacman::p_load(dplyr, readr, stringr, lubridate)
+pacman::p_load(dplyr, readr, stringr, lubridate, arules)
 
 ##### 2: Misc Funcs -----
 popular_order_time <- function(time_group = c(month, weekday, hour), 
@@ -149,10 +149,42 @@ popular_order_time(time_group = hour, "Al Adil - Discovery Gardens")
 
 ##### 4B: Analysis MARKET BASKET -----
 # Prepare data: remove commas in a product's name & collapse line items
-basket_item <- 
-  basket_db %>% 
-  mutate(product = str_replace_all(product, ", ", " ")) %>% 
-  unseparate_rows()
+basket_item <-
+  basket_db %>%
+  mutate(product = str_replace_all(product, ",", " ")) %>% 
+  mutate(product = str_replace_all(product, "  ", " "))
+
+itemList <- plyr::ddply(basket_item, c("basket_id","product"),
+                        function(df1)paste(df1$product,
+                                           collapse = ","))
+
+write_csv(itemList, here::here("data/itemList.csv"))
+
+txn <-  read.transactions(here::here("data/itemList.csv"), 
+                          rm.duplicates = FALSE, 
+                          format = "single", 
+                          header = TRUE, 
+                          sep= ",", 
+                          cols = c(1,2))
+class(txn)
+txn
+inspect(head(txn, 2))
+size(head(txn, 5))
+LIST(head(txn, 2))
+itemFrequencyPlot(txn, topN = 5, "absolute")
+summary(txn)
+
+# APRIORI
+rules <- apriori(txn, parameter = list(support = .0001, conf = .25, maxlen = 5, maxtime = 10))
+
+rules_conf <- sort (rules, by="confidence", decreasing=TRUE) # 'high-confidence' rules.
+inspect(head(rules_conf))
+
+rules_lift <- sort (rules, by="lift", decreasing=TRUE) # 'high-lift' rules.
+inspect(head(rules_lift, 200))
+
+
+unlink(here::here("data/basket_item.csv"))
 
 
 # confidence: how likely to buy B, given bought A
@@ -160,7 +192,6 @@ basket_item <-
 # lift: how MUCH MORE likely to buy B, given bought A
 # (1.3 = 30% more likely to buy B if A already bought | .9 = 10% less likely |
 # 1 = occur together by chance)
-
 
 ##### 4C: Analysis SPATIAL -----
 # lat/long continue...
