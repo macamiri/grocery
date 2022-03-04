@@ -87,10 +87,11 @@ Location of long and lat is constrained within UAE.
 - order_db: orders placed from 2020-01-01 to 2021-12-31 (i.e., id,
 customer id, date, time, store)  
 + 97 available stores  
-+ 40% of orders from 2020 and 60% from 2021 + The probability of
-shopping at each store was calculated according to the # of products
-(i.e., more products available in a store —> higher probability of
-ordering from that store).  
++ 40% of orders from 2020 and 60% from 2021  
++ 30% 1st half of the year, 70% second half of the year  
++ The probability of shopping at each store was calculated according to
+the # of products (i.e., more products available in a store —> higher
+probability of ordering from that store).  
 + 5% of orders from 00:00 to 8:00 am  
 + 20% of orders from 8:00 to 10:00 am  
 + 25% of orders from 10:00 to 12:00 pm  
