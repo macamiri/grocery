@@ -9,18 +9,18 @@ unnest_origin <- function(main_table = nested_grocery, filter_table) {
     purrr::pluck(1)
 }
 
-select_products <- function(id = order_db$customer_id, num_of_products_mean = 20, sd = 5) {
+select_products <- function(id = order_db$customer_id, num_of_products_mean = 16, sd = 4) {
   id %>% 
     map(., function(.x) {
       num_of_products <- round(rnorm(1, mean = num_of_products_mean, sd = sd))
       
-      if(num_of_products > 5) {
+      if(num_of_products >= 5) {
         sample(product_prob$product, 
                size = num_of_products, 
                prob = product_prob$probs, 
                replace = FALSE)
       } else {
-        num_of_products <- 6
+        num_of_products <- 5
         sample(product_prob$product, 
                size = num_of_products, 
                prob = product_prob$probs, 
@@ -65,15 +65,47 @@ store_prob <-
     dplyr::arrange(desc(products))
 
 ### basket_db: prob of ordering a product is based on num of reviews + % recommend
+num_of_products <- 
+  products %>% 
+  dplyr::filter(!is.na(item)) %>% 
+  dplyr::distinct(item) %>% 
+  dplyr::rename("product" = item) %>% 
+  nrow()
+
+score_column <- 
+  sample(30:90, size = num_of_products, replace = TRUE) %>% 
+  tibble::tibble(score = .)
+
+grocer_products <- 
+  products %>% 
+    dplyr::filter(!is.na(item)) %>% 
+    dplyr::distinct(item) %>% 
+    dplyr::rename("product" = item) %>% 
+    dplyr::bind_cols(score_column)
+
 product_prob <- 
   ocado %>% 
     dplyr::group_by(product) %>% 
-    dplyr::summarise(score = as.numeric(num_of_reviews) + as.numeric(recommend)) %>% 
+    dplyr::summarise(score = (as.numeric(num_of_reviews) + as.numeric(recommend)) * .25) %>% 
     dplyr::filter(!is.na(score)) %>% 
     dplyr::ungroup() %>% 
-    dplyr::mutate(probs = score / sum(score))%>% 
+    dplyr::bind_rows(grocer_products) %>% 
+    dplyr::mutate(probs = score / sum(score)) %>% 
     dplyr::arrange(desc(score))
 
+# Prices for all 12,539 products
+prices <- 
+  ocado %>% 
+    dplyr::group_by(product) %>% 
+    dplyr::mutate(score = as.numeric(num_of_reviews) + as.numeric(recommend)) %>% 
+    dplyr::filter(!is.na(score)) %>% 
+    dplyr::ungroup() %>% 
+    dplyr::select(product, price) %>% 
+    dplyr::bind_rows(products %>% 
+                       dplyr::filter(!is.na(item)) %>% 
+                       dplyr::distinct(item, .keep_all = TRUE) %>% 
+                       dplyr::select(item, price) %>% 
+                       dplyr::rename("product" = item))
 
 ##### 5: Create fake random customer data -----
 num_of_customers <- 100000
@@ -130,7 +162,7 @@ basket_db <- fabricate(
 ) %>% 
   tibble::as_tibble() %>% 
   tidyr::separate_rows(product, sep = "@") %>% 
-  dplyr::left_join(ocado, by = "product") %>% 
+  dplyr::left_join(prices, by = "product") %>% 
   dplyr::select(1:3, price) %>% 
   dplyr::rename("basket_id" = ID) %>% 
   dplyr::distinct(basket_id, product, .keep_all = TRUE)
