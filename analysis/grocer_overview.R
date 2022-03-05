@@ -115,6 +115,12 @@ clean_grocer_product %>%
   summarise(avg_price = mean(price)) %>% 
   slice_max(n = 10, order_by = avg_price)
 
+# Number of products per store
+clean_grocer_product %>% 
+  left_join(clean_grocer_subcategory, by = "subcategory_link") %>% 
+  left_join(clean_grocer_category, by = "category_link") %>% 
+  count(store_name) %>% 
+  arrange(desc(n))
 
 
 
@@ -122,10 +128,4 @@ clean_grocer_product %>%
 
 # item_image <- magick::image_read(path = item_image_links %>% 
 #                                    unlist())
-
-
-##### continue...analysis -----
-
-# category_image <- magick::image_read(path = category_image_links %>% 
-#                                        unlist())
 
