@@ -99,6 +99,7 @@ score_column <-
   sample(1:39, size = num_of_products, replace = TRUE) %>% 
   tibble::tibble(score = .)
 
+# [remove same items across all stores]
 grocer_products <- 
   products %>% 
     dplyr::filter(!is.na(item)) %>% 
@@ -121,7 +122,7 @@ product_prob_funmart <-
     product = sample(product_prob$product, size = 200, replace = FALSE)) %>% 
     dplyr::mutate(probs = probs(j = 200))
 
-# Prices for all 12,539 products
+# Prices for all 12,539 products [remove same items across all stores]
 prices <- 
   ocado %>% 
     dplyr::group_by(product) %>% 
@@ -134,6 +135,7 @@ prices <-
                        dplyr::distinct(item, .keep_all = TRUE) %>% 
                        dplyr::select(item, price) %>% 
                        dplyr::rename("product" = item))
+  
 
 ##### 5A: Create fake random customer data -----
 num_of_customers <- 100000
@@ -257,3 +259,4 @@ basket_funmart_db <- fabricate(
   dplyr::distinct(basket_id, product, .keep_all = TRUE)
 
 # readr::write_csv(basket_funmart_db, here::here("data/basket_funmart_db.csv"))
+
