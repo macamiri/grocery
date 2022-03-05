@@ -48,7 +48,7 @@ unseparate_rows <- function(data = basket_db,
 data_files <- fs::dir_ls(here::here("data"), regexp = "_db")
 file_names <- stringr::str_extract(data_files, "(?<=data/).*_db(?=\\..*)")
 
-# 5,001,890 products bought
+# 6,501,624 products bought
 basket_db <- read_csv(as.character(data_files[1]))
 # 96,614 customers
 customer_db <- read_csv(as.character(data_files[2]))
@@ -166,6 +166,7 @@ txn <-  read.transactions(here::here("data/itemList.csv"),
                           header = TRUE, 
                           sep= ",", 
                           cols = c(1,2))
+
 class(txn)
 txn
 inspect(head(txn, 2))
@@ -175,14 +176,19 @@ itemFrequencyPlot(txn, topN = 5, "absolute")
 summary(txn)
 
 # APRIORI
-rules <- apriori(txn, parameter = list(support = .0001, conf = .25, maxlen = 5, maxtime = 10))
+rules <- apriori(txn, parameter = list(support = .00001, conf = .25, maxlen = 3))
+write(x = , here::here("data/rules.csv", sep = ","))
+inspect(head(rules))
+
+subset_rules <- which(colSums(is.subset(rules, rules)) > 1)
+length(subset_rules)
+rules <- rules[-subset_rules]
 
 rules_conf <- sort (rules, by="confidence", decreasing=TRUE) # 'high-confidence' rules.
-inspect(head(rules_conf))
+inspect(head(rules_conf, 5))
 
 rules_lift <- sort (rules, by="lift", decreasing=TRUE) # 'high-lift' rules.
-inspect(head(rules_lift, 200))
-
+inspect(head(rules_lift, 5))
 
 unlink(here::here("data/basket_item.csv"))
 
