@@ -93,13 +93,13 @@ Location of long and lat is constrained within UAE.
     + 10% of orders from 10:00 to 12:00 am  
 - basket_db: products bought in each order (i.e., id, order id, product, 
 price)  
-    + 1,000 products to select from (see 'Ocado data collected' above)  
+    + 12,539 products to select from (see 'Ocado data collected' above)  
     + The probability of ordering a product was based on a 'score' metric = 
     nummber of reviews for that product + % of customers that recommend it 
     (i.e., higher score for a product ---> higher probability of ordering 
     that product).  
     + The number of products in each basket is normally distributed with a 
-    mean of 20 and standard deviation of 5 (minimum is 5 products/basket)  
+    mean of 16 and standard deviation of 4 (minimum is 5 products/basket)  
 
 To generate a new grocery dataset, visit 
 the [dashboard for this project](#grocery-dashboard).  
