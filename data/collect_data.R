@@ -1,8 +1,10 @@
 ##### 1: Load packages -----
 # Main packages loaded: robotstxt, RSelenium, rvest, purrr, stringr, readr
-# Packages used with namespace: pacman, netstat, crayon, tibble, dplyr, beepr
+# Packages used with namespace: pacman, here, netstat, crayon, tibble, dplyr, beepr
+# install.packages("pacman")
+# pacman::p_install("robotstxt", "RSelenium", "rvest", "purrr", "stringr", "readr", 
+#                   "here", "netstat", "crayon", "tibble", "dplyr", "beepr")
 pacman::p_load(robotstxt, RSelenium, rvest, purrr, stringr, readr)
-
 
 
 
@@ -310,27 +312,17 @@ country_flags <-
   paste0("https://www.worldometers.info", .)
 
 # Sample links
-sample_links <- tibble::tibble(links = c("https://www.ocado.com/products/sanex-biome-protect-kids-head-to-toe-wash-55476011", 
-                                         "https://www.ocado.com/products/brabantia-12-litre-white-pedal-bin-362751011", 
-                                         "https://www.ocado.com/products/nurofen-day-night-cold-flu-relief-200mg-5mg-tablets-ibuprofen-203773011", 
-                                         "https://www.ocado.com/products/nestle-shreddies-the-original-cereal-10054011"))
+# sample_links <- tibble::tibble(links = c(
+#   "https://www.ocado.com/products/sanex-biome-protect-kids-head-to-toe-wash-55476011", 
+#   "https://www.ocado.com/products/brabantia-12-litre-white-pedal-bin-362751011", 
+#   "https://www.ocado.com/products/nurofen-day-night-cold-flu-relief-200mg-5mg-tablets-ibuprofen-203773011", 
+#   "https://www.ocado.com/products/nestle-shreddies-the-original-cereal-10054011"))
 
 
 
 
-##### 3: Check which webpages are not bot friendly -----
-url <- "https://www.elgrocer.com"
 
-rtxt <- robotstxt(domain = url)
-rtxt$comments
-rtxt$crawl_delay
-rtxt$permissions
-
-paths_allowed(domain = url, paths = c("/store", "/stores"))
-# We can collect data from the webpages we are interested in
-
-
-##### 4: Initiate Selenium server -----
+##### 3: Initiate Selenium server -----
 initiate_server <- rsDriver(port = netstat::free_port(), 
                             browser = "firefox", 
                             verbose = FALSE)
@@ -340,9 +332,22 @@ remDr <- initiate_server$client
 remDr$open()
 
 
+##### 4: Selenium to collect data from elgrocer.com -----
+# Check which webpages are not bot friendly
+url <- "https://www.elgrocer.com"
 
-##### 5: Selenium to collect data -----
-### (A) Collect the locations and their links -----
+rtxt <- robotstxt(domain = url)
+rtxt$comments
+rtxt$crawl_delay
+rtxt$permissions
+
+# We can collect data from the webpages we are interested in
+paths_allowed(domain = url, paths = c("/store", "/stores"))
+
+# Browse shop
+remDr$navigate(url)
+
+### (A) Collect the locations and their links: ALL -----
 collect_location_links <- function() {
   # Navigate to homepage
   remDr$navigate(url)
@@ -366,7 +371,7 @@ collect_location_links <- function() {
 grocer_location <- collect_location_links()
 # write_csv(grocer_location, here::here("data/grocer_location.csv"))
 
-### (B) Collect the store 'i' details, and links -----
+### (B) Collect the store 'i' details, and links: ALL -----
 collect_stores_details <- function(links_to_use = grocer_location$location_link, 
                                    sleep_min = 0, sleep_max = 1) {
   
@@ -433,7 +438,7 @@ collect_stores_details <- function(links_to_use = grocer_location$location_link,
 grocer_store <- collect_stores_details(grocer_location$location_link)
 # write_csv(grocer_store, here::here("data/grocer_store.csv"))
 
-### (C) Collect categories data (delete duplicates here) ----- 
+### (C) Collect categories data: ALL ----- 
 collect_categories <- function(links_to_use = grocer_store$store_link, 
                                sleep_min = 0, sleep_max = 1) {
   # Category links
@@ -509,7 +514,7 @@ collect_categories <- function(links_to_use = grocer_store$store_link,
 grocer_category <- collect_categories(grocer_store$store_link)
 # write_csv(grocer_category, here::here("data/grocer_category.csv"))
 
-### (D) Collect subcategories data from 100 links-----
+### (D) Collect subcategories data from 100 links: 300 CATEGORIES -----
 collect_subcategories <- function(links_to_use = grocer_category$category_link, 
                                   sleep_min = 0, sleep_max = 1) {
   
@@ -589,10 +594,11 @@ collect_subcategories <- function(links_to_use = grocer_category$category_link,
 random_category_links <- sample(1:length(grocer_category$category_link),
                                 300, replace = FALSE)
 
-grocer_subcategory <- collect_subcategories(grocer_category$category_link[random_category_links])
+grocer_subcategory <- 
+  collect_subcategories(grocer_category$category_link[random_category_links])
 # write_csv(grocer_subcategory, here::here("data/grocer_subcategory.csv"))
 
-### (E) Collect item data -----
+### (E) Collect item data: 1000 SUBCATEGORIES -----
 collect_items <- function(links_to_use = grocer_subcategory$subcategory_link, 
                           sleep_min = 0, sleep_max = 1) {
   
@@ -655,23 +661,25 @@ collect_items <- function(links_to_use = grocer_subcategory$subcategory_link,
 random_subcategory_links <- sample(1:length(grocer_subcategory$subcategory_link), 
                                    1000, replace = FALSE)
 
-grocer_item <- collect_items(grocer_subcategory$subcategory_link[random_subcategory_links])
+grocer_item <- 
+  collect_items(grocer_subcategory$subcategory_link[random_subcategory_links])
 
 # write_csv(grocer_item, here::here("data/grocer_item.csv"))
 
 
-##### 6: Collect more data from Ocado.com -----
-# Check bot friendly?
+##### 5: Selenium to collect data from Ocado.com -----
+# Check which webpages are not bot friendly
 url2 <- "https://www.ocado.com"
 
 rtxt <- robotstxt(domain = url2)
 rtxt$comments
 rtxt$crawl_delay
 rtxt$permissions
+
+# We can collect data from the webpages we are interested in
 paths_allowed(domain = url2, paths = c("/browse"))
 
 # Browse shop
-url2 <- "https://www.ocado.com"
 remDr$navigate(url2)
 
 # Accept all cookies
@@ -679,7 +687,7 @@ nytnyt(c(5, 10))
 remDr$findElement(using = "xpath", 
                   value = "//*[@id='onetrust-accept-btn-handler']")$clickElement()
 
-# Click on browse shop
+# Click on 'Browse Shop' menu
 nytnyt(c(5,10))
 remDr$findElement(using = "link text", 
                   value = "Browse Shop")$clickElement()
@@ -693,13 +701,15 @@ ocado_category_ext <- get_html_elements(remDr,
                                         css = ".level-item-link", 
                                         type = "attribute", 
                                         attribute_selector = "href")
+
 ocado_category_link <- paste0(url2, ocado_category_ext)
 
 ocado_category <- tibble::tibble(category = ocado_category_name, 
                                  link = ocado_category_link)
-write_csv(ocado_category, here::here("data/ocado_category.csv"))
 
-### (A) Grab product data in each category
+# write_csv(ocado_category, here::here("data/ocado_category.csv"))
+
+##### (A) Grab general product data: FROM 3 CATEGORIES (~10000 products) -----
 collect_category_data <- function(links_to_use = ocado_category_link, 
                                   sleep_min = 0, sleep_max = 1) {
   
@@ -820,14 +830,14 @@ collect_category_data <- function(links_to_use = ocado_category_link,
     }
     )
 }
+
 # Select 3 categories to collect data from (total ~ 9000-10000 products)
 chosen_category_links <- c(1, 3, 6)
-ocado_product_general <- collect_category_data(ocado_category_link[chosen_category_links])
-write_csv(ocado_product_general, here::here("data/ocado_product_general.csv"))
-# ocado_product_general <- read_csv(here::here("data/ocado_product_general.csv"))
+ocado_product_general <- 
+  collect_category_data(ocado_category_link[chosen_category_links])
+# write_csv(ocado_product_general, here::here("data/ocado_product_general.csv"))
 
-### (B) Grab product details
-# Using selenium get_html_elements: faster than 2 below
+##### (B) Grab extra product details: 1000 products -----
 collect_product_data <- function(links_to_use = ocado_product_general$product_link, 
                                    sleep_min = 0, sleep_max = 1) {
   
@@ -939,6 +949,9 @@ collect_product_data <- function(links_to_use = ocado_product_general$product_li
 set.seed(511)
 random_product_links <- sample(1:length(ocado_product_general$product_link), 
                                    1000, replace = FALSE)
+
+# Collect the details in 4 stages in case if error occurs at any point 
+# (e.g., server disconnects) ---> do not need to start all over again
 ocado_product_extra1 <- collect_product_data(ocado_product_general$product_link[random_product_links[1:250]])
 # write_csv(ocado_product_extra1, here::here("data/ocado_product_extra1.csv"))
 ocado_product_extra2 <- collect_product_data(ocado_product_general$product_link[random_product_links[251:500]])
@@ -947,9 +960,8 @@ ocado_product_extra3 <- collect_product_data(ocado_product_general$product_link[
 # write_csv(ocado_product_extra3, here::here("data/ocado_product_extra3.csv"))
 ocado_product_extra4 <- collect_product_data(ocado_product_general$product_link[random_product_links[751:1000]])
 # write_csv(ocado_product_extra4, here::here("data/ocado_product_extra4.csv"))
-# ocado_product_extra <- read_csv(here::here("data/ocado_product_extra.csv"))
 
-### (C) Grab product reviews
+##### (C) Grab product reviews: same 1000 products as above in (B) -----
 collect_product_reviews <- function(links_to_use = ocado_product_general$product_link, 
                                     sleep_min = 0, sleep_max = 1) {
   
@@ -1055,6 +1067,7 @@ collect_product_reviews <- function(links_to_use = ocado_product_general$product
       }
     })
 }
+
 ocado_review1 <- collect_product_reviews(ocado_product_general$product_link[random_product_links[1:250]])
 # write_csv(ocado_review1, here::here("data/ocado_review1.csv"))
 ocado_review2 <- collect_product_reviews(ocado_product_general$product_link[random_product_links[251:500]])
@@ -1063,9 +1076,8 @@ ocado_review3 <- collect_product_reviews(ocado_product_general$product_link[rand
 # write_csv(ocado_review3, here::here("data/ocado_review3.csv"))
 ocado_review4 <- collect_product_reviews(ocado_product_general$product_link[random_product_links[751:1000]])
 # write_csv(ocado_review4, here::here("data/ocado_review4.csv"))
-# ocado_review <- read_csv(here::here("data/ocado_review.csv"))
 
-# Grab nutrition table
+##### (D) Grab nutrition table: same 1000 products as above in (B) -----
 collect_nutrition_table <- function(links_to_use = ocado_product_general$product_link, 
                                     sleep_min = 0, sleep_max = 1) {
   
@@ -1104,14 +1116,13 @@ collect_nutrition_table <- function(links_to_use = ocado_product_general$product
       }) %>% 
     set_names(links_to_use)
 }
+
 ocado_nutrition_table <- collect_nutrition_table(ocado_product_general$product_link[random_product_links])
 # write_rds(ocado_nutrition_table, here::here("data/ocado_nutrition.rds"))
-# ocado_nutrition_table <- read_rds(here::here("data/ocado_nutrition.rds"))
 
 
-##### 7: Close Selenium server -----
+##### 6: Close Selenium server -----
 remDr$close()
 remDr$closeWindow()
 system("kill /im java.exe /f")
-# system("taskkill /im java.exe /f", intern=FALSE, ignore.stdout=FALSE)
 gc()
