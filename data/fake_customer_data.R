@@ -1,6 +1,9 @@
 ##### 1: Load packages -----
 # Main packages loaded:fabricatr, wakefield, randomNames, charlatan, magrittr, purrr
-# Packages used with namespace: pacman, tibble, dplyr
+# Packages used with namespace: pacman, readr, here, tibble, dplyr
+# install.packages("pacman")
+# pacman::p_install("fabricatr", "wakefield", "randomNames", "charlatan", 
+#                   "magrittr", "purrr", "readr", "here", "tibble", "dplyr")
 pacman::p_load(fabricatr, wakefield, randomNames, charlatan, magrittr, purrr)
 
 ##### 2: Misc functions -----
@@ -53,14 +56,12 @@ select_products_funmart <- function(id = order_funmart_db$customer_id, num_of_pr
     unlist()
 }
 
-
-
 ##### 3: Load grocery data *_for_analysis -----
 stores <- readr::read_csv(here::here("data/clean_grocer_store.csv"))
 products <- readr::read_csv(here::here("data/grocer_products_for_analysis.csv"))
 ocado <- readr::read_rds(here::here("data/ocado_data_for_analysis.rds"))
 
-##### 4: NOTES -----
+##### 4: NOTES: rules related to how data is generated -----
 ### order_db
 ## order_date: 
 # 40% of orders from 2020 & 60% of orders from 2021
@@ -199,7 +200,6 @@ basket_db <- fabricate(
 
 # readr::write_csv(basket_db, here::here("data/basket_db.csv"))
 
-
 ##### 5B: Create fake random customer data for 1 store (funmart) -----
 num_of_customers <- 1000
 num_of_orders <- 2500
@@ -259,4 +259,3 @@ basket_funmart_db <- fabricate(
   dplyr::distinct(basket_id, product, .keep_all = TRUE)
 
 # readr::write_csv(basket_funmart_db, here::here("data/basket_funmart_db.csv"))
-
