@@ -11,7 +11,6 @@ library(ggbeeswarm)
 eg_palette <- c("#92DD7A", "#73D055", "#55C667", "#3CBB75", 
                 "#2AA260", "#1B7B46", "#0F5830", "#074422")
 
-
 ##### 2: Analysis -------------------------------------------------------------
 # Availbale datasets in package
 # data(package = "grocerycart")
