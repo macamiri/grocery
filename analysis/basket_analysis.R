@@ -4,7 +4,8 @@ library(grocerycart)
 library(dplyr)
 library(lubridate)
 library(ggplot2)
-library(arules)
+library(ggforce)
+library(gt)
 
 blue_palette <- c("#99D8EB", "#81C3D7", "#62A7C1", "#3A7CA5", 
                   "#285F80", "#16425B", "#0C2C3E", "#051E2C")
@@ -32,7 +33,34 @@ grocery <-
     inner_join(order_db_funmart, by = "order_id") %>% 
     inner_join(customer_db_funmart, by = "customer_id")
 
-##### 3: General analysis -----------------------------------------------------
+##### 3: Analysis -------------------------------------------------------------
+# How many products are purchased per basket?
+# confirms normally distributed data generation
+grocery_basket <- 
+  basket_db_funmart %>% 
+  count(basket_id, name = "baskets") %>% 
+  ungroup()
+
+grocery_mean <- 
+  grocery_basket %>% summarise(mean(baskets)) %>% purrr::pluck(1) %>% round(2)
+
+grocery_sd <- 
+  grocery_basket %>% summarise(sd(baskets)) %>% purrr::pluck(1) %>% round(2)
+
+grocery_basket %>% 
+  ggplot(aes(x = baskets)) + 
+  geom_histogram(aes(y = stat(count)), 
+                 colour = "grey", fill = blue_palette[4], bins = 21) + 
+  geom_density(stat = "count", alpha = 0.3, 
+               fill = blue_palette[4], colour = blue_palette[3], size = 0.7) + 
+  #geom_rug() + 
+  labs(x = "Products", y = "Baskets", 
+       title = "Number of Products per Basket", 
+       subtitle = stringr::str_glue("On average, there are {round(grocery_mean)} products/basket.
+                                    95% of baskets contain {round(grocery_mean - grocery_sd * 2)} to {round(grocery_mean + grocery_sd * 2)} products.")) + 
+  scale_x_continuous(breaks = seq(from = 0, to = max(grocery_basket$baskets), by = 2)) + 
+  hrbrthemes::theme_ipsum(grid = FALSE)
+
 # Order frequency (3 customers ordered 9 times)
 grocery_freq <- 
   grocery %>% 
@@ -42,17 +70,65 @@ grocery_freq <-
 grocery_freq %>% 
   ggplot(aes(x = orders, y = customers)) + 
   geom_col(colour = "grey", fill = blue_palette[4], alpha = .6) + 
-  labs(x = "Customers", y = "Orders", 
+  labs(x = "Orders", y = "Customers", 
        title = ("Order Freqeuncy"), 
-       subtitle = "Example: 9 customers ordered 3 times") + 
+       subtitle = "Example: 3 customers ordered 9 times") + 
   geom_text(aes(label = customers, vjust = -.2)) + 
   scale_x_continuous(breaks = 1:max(grocery_freq$customers)) + 
   hrbrthemes::theme_ipsum(grid = FALSE)
 
-# Average order value
 grocery %>% 
-  summarise(avg_price = mean(cost), num_orders = n(), 
-            num_customers = n_distinct(customer_id))
+  group_by(payment_method) %>% 
+  count(customer_id, name = "orders") %>% 
+  count(orders, name = "customers") %>% 
+  ungroup() %>% 
+  ggplot(aes(x = orders, y = customers)) + 
+  geom_col(colour = "grey", fill = blue_palette[4], alpha = .6) + 
+  labs(x = "Orders", y = "Customers", 
+       title = ("Order Freqeuncy by Payment Method")) + 
+  geom_text(aes(label = customers, vjust = -.2)) + 
+  scale_x_continuous(breaks = 1:max(grocery_freq$customers)) + 
+  hrbrthemes::theme_ipsum(grid = FALSE) + 
+  facet_wrap(~ payment_method)
+  
+
+# Average order value
+grocery_aov <- 
+  grocery %>% 
+    group_by(Month = month(order_date, label = TRUE)) %>% 
+    summarise(AOV = round(mean(cost), 1), 
+              Orders = n() %>% scales::comma(), 
+              Customers = n_distinct(customer_id) %>% scales::comma())
+
+grocery_aov %>% 
+  gt() %>% 
+  tab_header(title = md("**Average Order Value**"), 
+             subtitle = "Broken down by month*") %>% 
+  tab_source_note(md("*\\*Combined data from 2020 & 2021*")) %>% 
+  tab_footnote(footnote = md("Month with Highest Order Value"), 
+               locations = cells_body(
+                 columns = Month, 
+                 rows = AOV == max(AOV)
+               )) %>% 
+  data_color(
+    columns = AOV,
+    colors = blue_palette) %>% 
+  tab_row_group(
+    label = "Q4",
+    rows = 10:12
+  ) %>% 
+  tab_row_group(
+    label = "Q3",
+    rows = 7:9
+  ) %>% 
+  tab_row_group(
+    label = "Q2",
+    rows = 4:6
+  ) %>% 
+  tab_row_group(
+    label = "Q1",
+    rows = 1:3
+  )
 
 # Create grocery buckets based on width or number of buckets
 bucket_width <- 100
@@ -87,65 +163,73 @@ grocery_buckets(width = 100) %>%
   theme(legend.position = "none")
 
 # Product distribution in baskets (draw average line)
-basket_db_funmart %>% 
-  count(product, name = "baskets") %>% 
-  mutate(basket_perc = baskets / sum(baskets)) %>% 
-  ggplot(aes(x = 1:200, y = basket_perc)) + 
-  geom_point()
+basket_sq <- 
+  basket_db_funmart %>% 
+    group_by(product) %>% 
+    summarise(revenue = sum(price), baskets = n()) %>% 
+    mutate(revenue_perc = revenue / sum(revenue), 
+           baskets_perc = baskets / sum(baskets), 
+           clrs = if_else(revenue_perc > mean(revenue_perc) & baskets_perc > mean(baskets_perc), "I", 
+                          if_else(revenue_perc > mean(revenue_perc) & baskets_perc < mean(baskets_perc), "II", 
+                                  if_else(revenue_perc < mean(revenue_perc) & baskets_perc < mean(baskets_perc), "III", "IV"
+                                          ))))
+    #slice_max(n = 10, order_by = spent_perc)
 
 # Revenue generated by products (Nikai Air Fryer 3.2L generated 10% of revenue)
 plotly::ggplotly(
   p = 
-    basket_db_funmart %>% 
-      group_by(product) %>% 
-      summarise(revenue = sum(price), baskets = n()) %>% 
-      mutate(revenue_perc = revenue / sum(revenue), 
-             baskets_perc = baskets / sum(baskets)) %>% 
-      #slice_max(n = 10, order_by = spent_perc) %>% 
+    basket_sq %>% 
       ggplot(aes(x = baskets_perc, y = revenue_perc)) + 
-      geom_point(color = blue_palette[5], 
-                 aes(
-                   text = stringr::str_glue(
-                     "Product: {product}
-                     Revenue: ￡{scales::comma(round(revenue))} ({round(revenue_perc *100, 4)}%)
-                     Basket: {scales::comma(round(baskets))} ({round(baskets_perc *100, 4)}%)"))) + 
+      geom_point(aes(color = clrs,
+                     text = stringr::str_glue(
+                       "Product: {product}
+                       Revenue: ￡{scales::comma(round(revenue))} ({round(revenue_perc *100, 4)}%)
+                       Basket: {scales::comma(round(baskets))} ({round(baskets_perc *100, 4)}%)"))) + 
+      geom_segment(aes(x = mean(baskets_perc), xend = mean(baskets_perc), 
+                       y = 0, yend = max(revenue_perc)), 
+                   color = blue_palette[3], lwd = .25, lty = 2, alpha = .6) + 
+      geom_segment(aes(x = 0, xend = max(baskets_perc), 
+                       y = mean(revenue_perc), yend = mean(revenue_perc)), 
+                   color = blue_palette[3], lwd = .25, lty = 2, alpha = .6) + 
       scale_x_continuous(labels = scales::percent) +
       scale_y_continuous(labels = scales::percent) + 
+      coord_cartesian(ylim = c(0, .052)) + 
       labs(x = "Percent of Baskets", y = "Percent of Revenue Generated", 
            title = "Product Popularity", 
-           caption = "Hover over the point to view product details") +  
-      hrbrthemes::theme_ipsum(grid = FALSE), 
+           subtitle = "Hover over the point to view product details") +  
+      geom_text(aes(x = 0.0065, y = .04), label = "Products here generated more revenue\n& were bought more frequently on average", nudge_x = 0.002, col = blue_palette[6]) + 
+      geom_text(aes(x = 0, y = .04), label = "Products here generated more revenue,\nbut were bought less frequently on average", nudge_x = 0.002, col = blue_palette[4]) + 
+      scale_color_manual(values = blue_palette[c(7, 5, 3, 1)]) + 
+      hrbrthemes::theme_ipsum(grid = FALSE) + 
+      theme(legend.position = "none"), 
   tooltip = "text", 
 )
 
-# How many products are purchased per basket?
-# confirms normally distributed data generation
-grocery_basket <- 
-  basket_db_funmart %>% 
-    count(basket_id, name = "baskets") %>% 
-    ungroup()
-
-grocery_mean <- 
-  grocery_basket %>% summarise(mean(baskets)) %>% purrr::pluck(1) %>% round(2)
-
-grocery_sd <- 
-  grocery_basket %>% summarise(sd(baskets)) %>% purrr::pluck(1) %>% round(2)
-
-grocery_basket %>% 
-  ggplot(aes(x = baskets)) + 
-  geom_histogram(aes(y = stat(count)), 
-                 colour = "grey", fill = blue_palette[4], bins = 21) + 
-  geom_density(stat = "count", alpha = 0.3, 
-               fill = blue_palette[4], colour = blue_palette[3], size = 0.7) + 
-  #geom_rug() + 
-  labs(x = "Products", y = "Baskets", 
-       title = "Number of Products per Basket", 
-       subtitle = stringr::str_glue("On average, there are {round(grocery_mean)} products/basket.
-                                    95% of baskets contain {round(grocery_mean - grocery_sd * 2)} to {round(grocery_mean + grocery_sd * 2)} products.")) + 
-  scale_x_continuous(breaks = seq(from = 0, to = max(grocery_basket$baskets), by = 2)) + 
-  hrbrthemes::theme_ipsum(grid = FALSE)
-
-
+### TIME ANALYSIS
+###
+# popular_order_time <- function(time_group = c(month, weekday, hour), 
+#                                store_filter = NA) {
+#   output <- 
+#     grocery %>% 
+#     .[, c("store", "order_date", "order_time", "total_cost")] %>% 
+#     transmute(store = store, 
+#               month = month(order_date), 
+#               weekday = wday(order_date), 
+#               hour = hour(order_time), 
+#               price = total_cost) %>% 
+#     group_by(store, {{ time_group }}) %>% 
+#     summarise(num_of_orders = n(), 
+#               avg_price = mean(price))
+#   
+#   if(is.na(store_filter)) {
+#     return(output %>% ungroup())
+#   } else {
+#     output %>% 
+#       filter(store == store_filter) %>% 
+#       ungroup()
+#   }
+# }
+###
 # # Popular hours to place order
 # order_db_funmart %>% 
 #   count(hour = hour(order_time), name = "orders")
@@ -170,4 +254,3 @@ grocery_basket %>%
 # 
 # grocery %>% 
 #   popular_order_time(interval = weekday)
-
