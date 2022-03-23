@@ -312,5 +312,3 @@ oc_kcal %>%
 # oc_reviews %>% 
 #   slice(5) %>% 
 #   pluck(2)
-
-         
