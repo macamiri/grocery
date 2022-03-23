@@ -3,6 +3,7 @@
 library(grocerycart)
 library(arules)
 library(dplyr)
+library(arulesViz)
 
 ##### 2: Load data ------------------------------------------------------------
 # Availbale datasets in package
@@ -48,7 +49,7 @@ inspect_rules <- function(rules, measure = "support", top = 10) {
 # Generate rules
 apriori_rules <- 
   txn %>% 
-    apriori(parameter = list(supp = 0.0005, conf = 0.7, minlen = 2, maxlen = 10)) %>% 
+    apriori(parameter = list(supp = 0.0005, conf = 0.8, minlen = 2, maxlen = 10)) %>% 
     unique_rules()
 
 summary(apriori_rules)
@@ -72,5 +73,31 @@ custom_rules2 <- apriori(txn,
 
 inspect_rules(custom_rules2, measure = "support", top = 5)
 
-# Visualize
+# Frequent rules
+freq_rules <- 
+  txn %>% 
+  apriori(parameter = list(target = "frequent", supp = 0.01, conf = 0.8, minlen = 2, maxlen = 10))
 
+freq_rules %>% 
+  inspect_rules()
+
+# Visualize
+plot(apriori_rules, method = "graph", engine = "htmlwidget")
+plot(apriori_rules, method = "paracoord", reorder = TRUE)
+ruleExplorer(apriori_rules)
+inspectDT(apriori_rules)
+
+# grocery_km <- 
+#   basket_db_funmart %>% 
+#   group_by(product) %>% 
+#   summarise(x = n(), y = price) %>% 
+#   distinct() %>% 
+#   ungroup() %>% 
+#   select(2,3)
+# 
+# km <- kmeans(grocery_km, centers = 4, nstart = 10)
+# 
+# grocery_km %>% 
+#   mutate(cluster = factor(km$cluster)) %>% 
+#   ggplot(aes(x = x, y = y, color = cluster)) + 
+#   geom_point()
