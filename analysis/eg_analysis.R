@@ -45,7 +45,7 @@ eg_payment %>%
   labs(x = "Payment Method", y = "Stores", 
        title = ("Payment Methods Offered At Stores")) + 
   geom_text(aes(label = stores, vjust = -.2)) + 
-  hrbrthemes::theme_ipsum(grid = "Y")
+  hrbrthemes::theme_ipsum(grid = "none")
 
 
 eg_payment %>% 
@@ -124,7 +124,7 @@ eg_sub %>%
        title = ("Number of Subcategories in Stores"), 
        subtitle = "Example: 77 stores have 0 to 9 subcategories") + 
   geom_text(aes(label = n, hjust = -.2)) + 
-  hrbrthemes::theme_ipsum(grid = "Y") + 
+  hrbrthemes::theme_ipsum(grid = "none") + 
   coord_flip()
 
 # rshiny custom
