@@ -10,11 +10,11 @@ library(cohorts)
 library(patchwork)
 library(lubridate)
 
-##### 2: Powerpoint -----------------------------------------------------------
-### Load data
+##### 2: Powerpoint & data prep -----------------------------------------------
+# Load data
 data("grocery_data", package = "grocerycart")
 
-### Initialize slides
+# Initialize slides
 ppt <- read_pptx(here::here("reports/grocerycart-template.pptx"))
 
 layout_summary(ppt)
@@ -34,7 +34,7 @@ ppt_placeholders <- function(pptx, layout, bg_color, hjust = 0) {
     theme_void()
 }
 
-### Add slides & content to powerpoint
+##### 3: Add slides & content to powerpoint -----------------------------------
 # Title Slide -----
 ppt_placeholders(ppt, "Title Slide", "steelblue")
 ppt <- 
