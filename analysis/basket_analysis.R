@@ -68,6 +68,9 @@ grocery_freq <-
     count(orders, name = "customers")
 
 grocery_freq %>% 
+  summarise(sum(customers[1:3])/sum(customers)) # % of customers who ordered <=3x
+
+grocery_freq %>% 
   ggplot(aes(x = orders, y = customers)) + 
   geom_col(colour = "grey", fill = blue_palette[4], alpha = .6) + 
   labs(x = "Orders", y = "Customers", 
