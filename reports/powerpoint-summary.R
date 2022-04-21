@@ -10,6 +10,9 @@ library(cohorts)
 library(patchwork)
 library(lubridate)
 
+blue_palette <- c("#99D8EB", "#81C3D7", "#62A7C1", "#3A7CA5", 
+                  "#285F80", "#16425B", "#0C2C3E", "#051E2C")
+
 ##### 2: Powerpoint & data prep -----------------------------------------------
 # Load data
 data("grocery_data", package = "grocerycart")
@@ -183,9 +186,6 @@ month_plot <-
        subtitle = "Combined data for 2020 & 2021") + 
   geom_text(aes(label = orders, vjust = -.8)) + 
   hrbrthemes::theme_ipsum(grid = FALSE)
-
-blue_palette <- c("#99D8EB", "#81C3D7", "#62A7C1", "#3A7CA5", 
-                  "#285F80", "#16425B", "#0C2C3E", "#051E2C")
 
 month_table <- 
   grocery_data %>% 

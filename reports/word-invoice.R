@@ -19,7 +19,7 @@ styles_info(doc)
 doc <- 
   doc %>% 
     body_add_img(src = here::here("funmart-logo.png"), 
-                 height = 0.81, width = 2, 
+                 height = .81, width = 2, 
                  style = "Normal") %>% 
     body_add_par(value = stringr::str_glue("Invoice Period: {min(grocery_data$order_date)} to {max(grocery_data$order_date)}"), 
                  style = "Normal")

@@ -57,30 +57,32 @@ oc_top_pro <-
 oc_pal <- function(x) rgb(colorRamp(c(oc_palette[1], oc_palette[6]))(x), 
                           maxColorValue = 255)
 
-oc_top_pro %>% 
-  reactable(
-    defaultSortOrder = "desc", 
-    defaultSorted = c("products", "avg_price"), 
-    columns = list(
-      avg_price = colDef(style = function(.x) {
-        norm_avg_price <- 
-          (.x - min(oc_top_pro$avg_price)) / (max(oc_top_pro$avg_price) - min(oc_top_pro$avg_price))
-        
-        color <- oc_pal(norm_avg_price)
-        
-        list(background = color)
-      })
-    ), 
-    defaultColDef = colDef(
-      header = function(.x) {str_replace(.x, "_", " ") %>% str_to_title()},
-      cell = function(.x) format(.x, nsmall = 1),
-      align = "center",
-      minWidth = 70, 
-      headerStyle = list(background = "light grey")
-    ), 
-    defaultPageSize = 20, 
-    bordered = TRUE, striped = TRUE, highlight = TRUE
-  )
+table_oc_brand <- 
+  oc_top_pro %>% 
+    reactable(., defaultPageSize = 20, 
+      resizable = TRUE, showPageSizeOptions = FALSE, 
+      onClick = "select", highlight = TRUE, sortable = FALSE, 
+      theme = fivethirtyeight(centered = TRUE, header_font_size = 11), 
+      defaultSortOrder = "desc", 
+      defaultSorted = c("products", "avg_price"), 
+      columns = list(
+        avg_price = colDef(style = function(.x) {
+          norm_avg_price <- 
+            (.x - min(oc_top_pro$avg_price)) / (max(oc_top_pro$avg_price) - min(oc_top_pro$avg_price))
+          
+          color <- oc_pal(norm_avg_price)
+          
+          list(background = color)
+        })
+      ), 
+      defaultColDef = colDef(
+        header = function(.x) {str_replace(.x, "_", " ") %>% str_to_title()},
+        cell = function(.x) format(.x, nsmall = 1),
+        align = "center",
+        minWidth = 70, 
+        headerStyle = list(background = "light grey")
+      )
+    )
 
 # Which of the top 5 brands with the most reviews 
 # has the highest recommendation score
@@ -134,7 +136,7 @@ anim_badge <-
   shadow_mark() + 
   ggtitle("Products with Dietary Notes", subtitle = ("{closest_state}"))
 
-animate(anim_badge, renderer = gifski_renderer(loop = FALSE), nframes = 40)
+gg_oc_anim <- animate(anim_badge, renderer = gifski_renderer(loop = FALSE), nframes = 40)
 
 # Which of the top 3 brands with the most products 
 # has the highest % of vegetarian friendly products (veg/all)
@@ -171,16 +173,17 @@ oc_flags <-
                                      if_else(country == "EU", "eu", 
                                              if_else(country == "Spain", "es", "gb")))))
 
-oc_flags %>% 
-  ggplot(aes(x = perc_veg, y = country %>% fct_reorder(perc_veg))) + 
-  geom_col(colour = "grey", alpha = .6, fill = oc_palette[6]) + 
-  geom_flag(x = 0, aes(country = country), size = 15) + 
-  labs(x = "Percent of Products that are Vegetarian", y = "Location", 
-       title = ("Vegetarian Products Exported by the Top 5 Locations"), 
-       subtitle = "Top locations = locations with most exported products") + 
-  geom_text(aes(label = products, hjust = -.2)) + 
-  scale_x_continuous(labels = scales::percent) + 
-  hrbrthemes::theme_ipsum(grid = FALSE)
+gg_oc_flags <- 
+  oc_flags %>% 
+    ggplot(aes(x = perc_veg, y = country %>% fct_reorder(perc_veg))) + 
+    geom_col(colour = "grey", alpha = .6, fill = oc_palette[6]) + 
+    geom_flag(x = 0, aes(country = country), size = 15) + 
+    labs(x = "Percent of Products that are Vegetarian", y = "Location", 
+         title = ("Vegetarian Products Exported by the Top 5 Locations"), 
+         subtitle = "Top locations = locations with most exported products") + 
+    geom_text(aes(label = products, hjust = -.2)) + 
+    scale_x_continuous(labels = scales::percent) + 
+    hrbrthemes::theme_ipsum(grid = FALSE)
 
 ### SHELF LIFE
 # Top 5 most common shelf life for products
@@ -190,14 +193,18 @@ oc_data %>%
   slice_max(n = 5, order_by = products)
 
 # Most common shelf life for each brand
-oc_data %>% 
-  filter(!is.na(shelf_life), !is.na(brand)) %>% 
-  group_by(brand, shelf_life) %>% 
-  summarise(products = n()) %>% 
-  mutate(rank = dense_rank(desc(products))) %>% 
-  filter(rank == 1) %>% 
-  arrange(-products) %>% 
-  ungroup()
+table_oc_shelf <- 
+  oc_data %>% 
+    filter(!is.na(shelf_life), !is.na(brand)) %>% 
+    group_by(brand, shelf_life) %>% 
+    summarise(products = n()) %>% 
+    mutate(rank = dense_rank(desc(products))) %>% 
+    filter(rank == 1) %>% 
+    arrange(-products) %>% 
+    ungroup() %>% 
+    reactable(., resizable = TRUE, showPageSizeOptions = FALSE, 
+              onClick = "select", highlight = TRUE, sortable = FALSE, 
+              theme = fivethirtyeight(centered = TRUE, header_font_size = 11))
 
 ### PRODUCT
 # Top 5 most reviewed products
@@ -208,27 +215,28 @@ oc_top5_rev <-
     mutate(product = product %>% fct_reorder(num_of_reviews) %>% fct_rev()) %>% 
     bind_cols(palette = c("#DFBF61", blue_palette[7], "#BFB394", "#D85252", "#D87B3D"))
 
-oc_top5_rev %>% 
-  ggplot(aes(x = product, y = num_of_reviews)) + 
-  geom_image(aes(image = image_link), size = .2) + 
-  geom_label_repel(aes(label = glue::glue("{num_of_reviews} reviews\n{recommend}% recommend"), 
-                       fill = product), 
-                   colour = "white", 
-                   segment.colour = oc_top5_rev$palette, 
-                   segment.curvature = -0.5, 
-                   segment.ncp = 3,
-                   segment.angle = 20, 
-                   fontface = "bold", 
-                   box.padding = unit(2, "cm"),
-                   point.padding = unit(2, "cm")) + 
-  labs(x = "Product", y = "Reviews", 
-       title = ("5 Most Reviewed Products"), 
-       subtitle = "Customer recommendation rate (%)") + 
-  hrbrthemes::theme_ipsum(grid = FALSE) + 
-  coord_cartesian(ylim = c(0, 1000)) + 
-  scale_x_discrete(labels = function(x) str_wrap(x, width = 15)) + 
-  scale_fill_manual(values = setNames(oc_top5_rev$palette, levels(oc_top5_rev$product))) + 
-  theme(legend.position = "none")
+gg_oc_review <- 
+  oc_top5_rev %>% 
+    ggplot(aes(x = product, y = num_of_reviews)) + 
+    geom_image(aes(image = image_link), size = .2) + 
+    geom_label_repel(aes(label = glue::glue("{num_of_reviews} reviews\n{recommend}% recommend"), 
+                         fill = product), 
+                     colour = "white", 
+                     segment.colour = oc_top5_rev$palette, 
+                     segment.curvature = -0.5, 
+                     segment.ncp = 3,
+                     segment.angle = 20, 
+                     fontface = "bold", 
+                     box.padding = unit(2, "cm"),
+                     point.padding = unit(2, "cm")) + 
+    labs(x = "Product", y = "Reviews", 
+         title = ("5 Most Reviewed Products"), 
+         subtitle = "Customer recommendation rate (%)") + 
+    hrbrthemes::theme_ipsum(grid = FALSE) + 
+    coord_cartesian(ylim = c(0, 1000)) + 
+    scale_x_discrete(labels = function(x) str_wrap(x, width = 15)) + 
+    scale_fill_manual(values = setNames(oc_top5_rev$palette, levels(oc_top5_rev$product))) + 
+    theme(legend.position = "none")
 
 # Top 5 highest rated products with >=100 reviews
 oc_data %>% 
@@ -253,38 +261,38 @@ oc_kcal <-
     select(product, price, kcal, image_link) %>% 
     distinct(product, .keep_all = TRUE)
 
-
-oc_kcal %>% 
-  reactable(
-    defaultSortOrder = "desc", 
-    defaultSorted = "kcal", 
-    resizable = TRUE, 
-    columns = list(
-      image_link = colDef(cell = function(value) {
-        image <- img(src = value, height = "120px", alt = "")
-        tagList(
-          div(style = list(display = "inline-block", width = "225px"), image)
+table_oc_kcal <- 
+  oc_kcal %>% 
+    reactable(., defaultPageSize = 8, 
+      resizable = TRUE, showPageSizeOptions = FALSE, 
+      onClick = "select", highlight = TRUE, sortable = FALSE, 
+      theme = fivethirtyeight(centered = TRUE, header_font_size = 11), 
+      defaultSortOrder = "desc", 
+      defaultSorted = "kcal", 
+      columns = list(
+        image_link = colDef(cell = function(value) {
+          image <- img(src = value, height = "120px", alt = "")
+          tagList(
+            div(style = list(display = "inline-block", width = "225px"), image)
+          )
+        }, 
+        name = "Image"
+        ), 
+        kcal = colDef(
+          name = "Energy (kcal)", 
+          cell = function(value) {round(value)}, 
+          maxWidth = 80
+        ), 
+        price = colDef(
+          name = "Price (GBP)", 
+          cell = function(value) {round(value, 2)}, 
+          maxWidth = 75
+        ), 
+        product = colDef(
+          name = "Product"
         )
-      }, 
-      name = "Image"
-      ), 
-      kcal = colDef(
-        name = "Energy (kcal)", 
-        cell = function(value) {round(value)}, 
-        maxWidth = 80
-      ), 
-      price = colDef(
-        name = "Price (GBP)", 
-        cell = function(value) {round(value, 2)}, 
-        maxWidth = 75
-      ), 
-      product = colDef(
-        name = "Product"
       )
-    ), 
-    defaultPageSize = 20, 
-    bordered = TRUE, striped = TRUE, highlight = TRUE
-  )
+    )
 
   
 ### INGREDIENT
