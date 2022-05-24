@@ -1,3 +1,4 @@
+# Load packages
 library(shiny)
 library(grocerycart)
 library(ggplot2)
@@ -25,9 +26,8 @@ pacman::p_load(fabricatr, wakefield, randomNames, charlatan, magrittr, purrr)
 blue_palette <- c("#99D8EB", "#81C3D7", "#62A7C1", "#3A7CA5", 
                   "#285F80", "#16425B", "#0C2C3E", "#051E2C")
 
-# Define server logic required to draw a histogram
+# Set server logic
 shinyServer(function(input, output) {
-  
   
   # Basket Tab -----
   output$gg_product_per_basket <- renderPlot({
@@ -650,6 +650,7 @@ shinyServer(function(input, output) {
   output$reactable_oc_shelf <- renderReactable({
     table_oc_shelf
   })
+  
   
 })
 

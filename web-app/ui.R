@@ -1,3 +1,4 @@
+# Load packages
 library(shiny)
 library(shinyFeedback)
 library(grocerycart)
@@ -8,7 +9,7 @@ library(fresh)
 library(plotly)
 library(visNetwork)
 
-# Define UI using bs4Dash
+# Define UI using bs4Dash -----
 shinyUI(bs4DashPage(
   shinyFeedback::useShinyFeedback(), 
   title = "grocery_dashboard", 
@@ -50,10 +51,6 @@ shinyUI(bs4DashPage(
       controlbarItem(
         title = "Buckets", 
         radioButtons("bucket_width", "Select Bucket Width:", c(50, 100, 200, 300), inline = TRUE)
-      ), 
-      controlbarItem(
-        title = "tab2", 
-        "Content2"
       )
       
     )
@@ -125,8 +122,8 @@ shinyUI(bs4DashPage(
         tabName = "basket_tab", 
         bs4Quote("Analyze grocery basket data. Product data was collected/scraped from the 
                  elgrocer and Ocado websites, while customer/basket data was 
-                 simulated (view Generate Grocery Data tab on the left). 
-                 Click on each card below for more info.", color = "info"), 
+                 simulated (view the 'Generate Grocery Data' for more info). 
+                 Click on each '+' below to expand the card.", color = "info"), 
         
         fluidRow(
           valueBox(
@@ -171,15 +168,15 @@ shinyUI(bs4DashPage(
                   width = 4, status = "olive", collapsed = TRUE, 
                   title = "Average Order Value by Month"), 
           bs4Card(reactableOutput("reactable_quarter_table"), 
-                  width = 8, status = "olive", collapsed = TRUE, 
+                  width = 8, status = "olive", collapsed = FALSE, 
                   title = "Orders Growth by Quarter")
         ), 
         
         fluidRow(
           bs4Card(plotOutput("gg_buckets", height = "450px"), 
-                  width = 12, status = "primary", collapsed = TRUE, 
+                  width = 12, status = "primary", collapsed = FALSE, 
                   title = "Basket Price Buckets: Click on the filter icon on the 
-                  top right corner of the header to select bucket width", 
+                  top right corner of the page to select bucket width", 
                   footer = "Example: 345 Orders were between 0-50", 
                   maximizable = TRUE)
         ), 
@@ -218,7 +215,10 @@ shinyUI(bs4DashPage(
       # Data Download Tab -----
       bs4TabItem(
         tabName = "data_tab", 
-        bs4Quote("Download grocery basket data", color = "indigo"), 
+        bs4Quote("Download grocery basket data. Set your parameters below, 
+                 then click on the 'Generate Data' button. After a few seconds, 
+                 you can view the data in the app and even download it as a zip folder 
+                 for your use. The data is fictional.", color = "indigo"), 
         
         fluidRow(
           
@@ -234,9 +234,9 @@ shinyUI(bs4DashPage(
                   br(), 
                   actionButton("generate", "Generate Data", icon = icon("lightbulb")), 
                   br(), 
-                  p("Note: The exact number of Customer might not match up exactly 
+                  p("Note: The exact number of Customers might not match up exactly 
                     as your input since duplicates of customer's names are dropped. 
-                    The minimum # of products in each basket is 3 (this value cannot be changed)."), 
+                    The minimum possible # of products in any basket is 3 (this value cannot be changed)."), 
                   width = 4, status = "indigo", collapsed = FALSE, collapsible = FALSE,  
                   title = "Required Inputs"), 
           
@@ -266,7 +266,10 @@ shinyUI(bs4DashPage(
       # Reports Tab -----
       bs4TabItem(
         tabName = "reports_tab", 
-        bs4Quote("Upload data to automatically genrate reports", color = "maroon"), 
+        bs4Quote("Upload data files to automatically generate reports. 
+                 Follow the steps below for a quick walkthrough. 
+                 The report and invoice will each take less than 10 seconds 
+                 to become available.", color = "maroon"), 
         
         fluidRow(
           bs4Card("STEP 1: Download sample data (see below) to upload later", 
@@ -300,9 +303,8 @@ shinyUI(bs4DashPage(
                   h3(strong("Note")), 
                   p("This automated report generation example was built to 
                     showcase the possibilites, not to be flexible. For example, 
-                    the column names and types need to be the exact same as the data below. 
-                    That is why it is best to follow the steps on the left. 
-                    The report and invoice will take less than 10 seconds each to generate."), 
+                    the column names and types need to be the exact same as the sample data below. 
+                    That is why it is best to follow the steps on the left."), 
                   h3(strong("Image")), 
                   imageOutput("images", height = "100px", width = "auto"), 
                   h3(strong("Data")), 
@@ -323,7 +325,7 @@ shinyUI(bs4DashPage(
         tabName = "recommendation_tab", 
         bs4Quote("Product recommendations", color = "lightblue"), 
         
-        bs4Card(width = 12, status = "lightblue", collapsed = TRUE, 
+        bs4Card(width = 12, status = "lightblue", collapsed = FALSE, 
                 title = "Product Associations: Select a specific product", 
           fluidRow(
             bs4Card(purrr::map(1:5, function(i) {
@@ -343,7 +345,7 @@ shinyUI(bs4DashPage(
         
         bs4Card(visNetworkOutput("apriori"), 
                 width = 12, status = "lightblue", collapsed = TRUE, 
-                title = "Product Associations: Select a specific product via the dropdown menu, then
+                title = "Associations Network Graph: Select a specific product via the dropdown menu, then
                 hover over the graph to view the products most commonly bought with it", 
                 maximizable = TRUE)
         
@@ -356,11 +358,11 @@ shinyUI(bs4DashPage(
         
         fluidRow(
           bs4Card(plotOutput("gg_eg_top5"), 
-                  width = 6, status = "olive", collapsed = TRUE, 
+                  width = 6, status = "olive", collapsed = FALSE, 
                   title = "Top 5 Most Expensive Products", 
                   maximizable = TRUE), 
           bs4Card(plotOutput("gg_eg_top3"), 
-                  width = 6, status = "olive", collapsed = TRUE, 
+                  width = 6, status = "olive", collapsed = FALSE, 
                   title = "Top 3 Most Expensive Stores on Average", 
                   maximizable = TRUE)
         ), 
@@ -386,23 +388,23 @@ shinyUI(bs4DashPage(
         bs4Quote("Summary of the data scraped from the ocado website", color = "purple"),
 
         fluidRow(
-          bs4Card(reactableOutput("reactable_oc_brand"),
-                  width = 6, status = "purple", collapsed = TRUE,
-                  title = "Brands",
-                  maximizable = TRUE),
+          bs4Card(plotOutput("gg_oc_review"),
+                  width = 6, status = "purple", collapsed = FALSE,
+                  title = "Most Reviewed Products"),
           bs4Card(reactableOutput("reactable_oc_shelf"),
-                  width = 6, status = "purple", collapsed = TRUE,
+                  width = 6, status = "purple", collapsed = FALSE,
                   title = "Most common shelf life for each brand",
                   maximizable = TRUE)
         ),
 
         fluidRow(
-          bs4Card(plotOutput("gg_oc_review"),
-                  width = 6, status = "purple", collapsed = TRUE,
-                  title = "Most Reviewed Products"),
           bs4Card(reactableOutput("reactable_oc_kcal"),
-                  width = 6, status = "purple", collapsed = TRUE,
+                  width = 6, status = "purple", collapsed = FALSE,
                   title = "Product Price & Calories",
+                  maximizable = TRUE), 
+          bs4Card(reactableOutput("reactable_oc_brand"),
+                  width = 6, status = "purple", collapsed = TRUE,
+                  title = "Brands",
                   maximizable = TRUE)
         )
         
@@ -414,23 +416,22 @@ shinyUI(bs4DashPage(
         jumbotron(title = "Reviews Text Analysis", 
                   lead = "Analyze customer reviews for Ocado products", 
                   p("The raw text data was scraped from the Ocado website and 
-                    is available for download as a .tsv file below."), 
+                    is available as part of the 'grocerycart' R package."), 
                   btnName = "View Updates on Github", 
                   href = "https:/github.com/moamiristat/grocery", 
                   status = "info"), 
         boxLayout(
-          type = "deck",
-          lapply(1:4, function(i) {
+          type = "deck", 
+          map(1:4, function(i) {
             box(
-              width = NULL,
-              title = paste("Card", i),
-              closable = FALSE,
-              collapsible = FALSE,
-              "Lorem ipsum is so fun!"
+              width = NULL, 
+              title = paste("Card", i), 
+              closable = FALSE, 
+              collapsible = FALSE, 
+              "Text analysis algorithm 1-4"
             )
           })
         )
-        # Table of product + reviews here
       )
     )
     

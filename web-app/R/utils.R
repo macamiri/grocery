@@ -1,3 +1,4 @@
+# Load packages
 library(fresh)
 library(grocerycart)
 
@@ -35,7 +36,12 @@ library(grocerycart)
 
 #source(here::here("analysis/basket_analysis.R"))
 
-# generate data -----
+##### Source analysis files -----
+source(here::here("analysis/eg_analysis.R"))
+source(here::here("analysis/oc_analysis.R"))
+source(here::here("analysis/basket_analysis.R"))
+
+##### Generate extra data -----
 data("eg_store")
 data("eg_product")
 data("eg_data")
@@ -98,11 +104,6 @@ eg_payment_method <-
 #   tibble::tibble(
 #     product = sample(product_prob$product, size = 200, replace = FALSE)) %>%
 #   dplyr::mutate(probs = probs(j = 200))
-
-
-#source(here::here("analysis/eg_analysis.R"))
-#source(here::here("analysis/oc_analysis.R"))
-
 
 data("basket_db_funmart")
 
