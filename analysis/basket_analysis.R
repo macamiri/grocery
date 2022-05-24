@@ -102,7 +102,7 @@ gg_payment <-
 # Average order value
 grocery_aov <- 
   grocery %>% 
-    group_by(Month = month(order_date, label = TRUE)) %>% 
+    group_by(Month = lubridate::month(order_date, label = TRUE)) %>% 
     summarise(AOV = round(mean(cost), 1), 
               Orders = n() %>% scales::comma(), 
               Customers = n_distinct(customer_id) %>% scales::comma())
@@ -221,9 +221,9 @@ plotly_pop <-
 popular_order_time <- function(data = grocery, interval = c(month, weekday, hour)) {
   data %>%
     .[, c("order_date", "order_time", "cost")] %>%
-    transmute(month = month(order_date, label = TRUE),
-              weekday = wday(order_date, label = TRUE),
-              hour = tryCatch(hour(order_time), error = function(e) {rep(NA, length(grocery$order_time))}),
+    transmute(month = lubridate::month(order_date, label = TRUE),
+              weekday = lubridate::wday(order_date, label = TRUE),
+              hour = tryCatch(lubridate::hour(order_time), error = function(e) {rep(NA, length(grocery$order_time))}),
               price = cost) %>%
     group_by({{ interval }}) %>%
     summarise(orders = n(), avg_price = mean(price)) %>%
@@ -233,8 +233,8 @@ popular_order_time <- function(data = grocery, interval = c(month, weekday, hour
 # Orders placed across quarters
 quarter_order <- 
   order_db_funmart %>%
-    group_by(year = year(order_date)) %>%
-    count(quarter = quarter(order_date), name = "orders") %>% 
+    group_by(year = lubridate::year(order_date)) %>%
+    count(quarter = lubridate::quarter(order_date), name = "orders") %>% 
     ungroup() %>% 
     mutate(change = (orders - lag(orders)) / lag(orders), 
            change = ifelse(is.na(change), 0, change), 
