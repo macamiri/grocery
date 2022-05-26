@@ -8,6 +8,7 @@ library(reactable)
 library(fresh)
 library(plotly)
 library(visNetwork)
+library(reactablefmtr)
 options(spinner.color="#36827F")
 
 # Define UI using bs4Dash -----

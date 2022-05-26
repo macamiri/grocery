@@ -5,7 +5,6 @@ library(ggplot2)
 library(dplyr)
 library(gt)
 library(reactable)
-library(reactablefmtr)
 library(stringr)
 library(grocerycart)
 library(cohorts)
@@ -22,13 +21,14 @@ library(cohorts)
 library(patchwork)
 library(lubridate)
 pacman::p_load(fabricatr, wakefield, randomNames, charlatan, magrittr, purrr)
+library(reactablefmtr)
 
 blue_palette <- c("#99D8EB", "#81C3D7", "#62A7C1", "#3A7CA5", 
                   "#285F80", "#16425B", "#0C2C3E", "#051E2C")
 
 # Set server logic
 shinyServer(function(input, output) {
-  
+
   # Basket Tab -----
   output$gg_product_per_basket <- renderPlot({
     gg_product_per_basket
@@ -190,7 +190,7 @@ shinyServer(function(input, output) {
     datalist()[[1]] %>% 
       reactable(., resizable = TRUE, showPageSizeOptions = FALSE, 
                 onClick = "select", highlight = TRUE, sortable = FALSE, 
-                theme = fivethirtyeight(centered = TRUE, header_font_size = 11), 
+                theme = reactablefmtr::fivethirtyeight(centered = TRUE, header_font_size = 11), 
                 
                 columns = list(
                   customer_id = colDef(name = "Customer ID"), 
@@ -209,7 +209,7 @@ shinyServer(function(input, output) {
     datalist()[[2]] %>% 
       reactable(., resizable = TRUE, showPageSizeOptions = FALSE, 
                 onClick = "select", highlight = TRUE, sortable = FALSE, 
-                theme = fivethirtyeight(centered = TRUE, header_font_size = 11), 
+                theme = reactablefmtr::fivethirtyeight(centered = TRUE, header_font_size = 11), 
                 
                 columns = list(
                   order_id = colDef(name = "Order ID"), 
@@ -227,7 +227,7 @@ shinyServer(function(input, output) {
     datalist()[[3]] %>% 
       reactable(., resizable = TRUE, showPageSizeOptions = FALSE, 
                 onClick = "select", highlight = TRUE, sortable = FALSE, 
-                theme = fivethirtyeight(centered = TRUE, header_font_size = 11), 
+                theme = reactablefmtr::fivethirtyeight(centered = TRUE, header_font_size = 11), 
                 
                 columns = list(
                   basket_id = colDef(name = "Basket ID"), 
@@ -491,7 +491,7 @@ shinyServer(function(input, output) {
     report_data() %>% 
       reactable(., resizable = TRUE, showPageSizeOptions = FALSE, 
                 onClick = "select", highlight = TRUE, sortable = FALSE, 
-                theme = fivethirtyeight(centered = TRUE, header_font_size = 11), 
+                theme = reactablefmtr::fivethirtyeight(centered = TRUE, header_font_size = 11), 
                 
                 columns = list(
                   basket_id = colDef(name = "basket_id"), 
@@ -523,7 +523,7 @@ shinyServer(function(input, output) {
     grocery_sample() %>% 
       reactable(., resizable = TRUE, showPageSizeOptions = FALSE, 
                 onClick = "select", highlight = TRUE, sortable = FALSE, 
-                theme = fivethirtyeight(centered = TRUE, header_font_size = 11), 
+                theme = reactablefmtr::fivethirtyeight(centered = TRUE, header_font_size = 11), 
                 
                 columns = list(
                   basket_id = colDef(name = "basket_id"), 
