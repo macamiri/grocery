@@ -8,10 +8,12 @@ library(reactable)
 library(fresh)
 library(plotly)
 library(visNetwork)
+options(spinner.color="#36827F")
 
 # Define UI using bs4Dash -----
 shinyUI(bs4DashPage(
   shinyFeedback::useShinyFeedback(), 
+  
   title = "grocery_dashboard", 
   
   # Header -----
@@ -65,7 +67,7 @@ shinyUI(bs4DashPage(
     minified = TRUE, 
     expandOnHover = TRUE, 
     bs4SidebarUserPanel(image = "https://cdn4.iconfinder.com/data/icons/user-people-2/48/5-512.png", 
-                        name = "hi"), 
+                        name = "Hello!"), 
     
     sidebarMenu(
       id = "sidebar_tabs", 
@@ -167,13 +169,13 @@ shinyUI(bs4DashPage(
           bs4Card(gt_output(outputId = "gt_table"),
                   width = 4, status = "olive", collapsed = TRUE, 
                   title = "Average Order Value by Month"), 
-          bs4Card(reactableOutput("reactable_quarter_table"), 
+          bs4Card(reactableOutput("reactable_quarter_table") %>% shinycssloaders::withSpinner(), 
                   width = 8, status = "olive", collapsed = FALSE, 
                   title = "Orders Growth by Quarter")
         ), 
         
         fluidRow(
-          bs4Card(plotOutput("gg_buckets", height = "450px"), 
+          bs4Card(plotOutput("gg_buckets", height = "450px") %>% shinycssloaders::withSpinner(), 
                   width = 12, status = "primary", collapsed = FALSE, 
                   title = "Basket Price Buckets: Click on the filter icon on the 
                   top right corner of the page to select bucket width", 
@@ -357,11 +359,11 @@ shinyUI(bs4DashPage(
         bs4Quote("Summary of the data scraped from the elgrocer website", color = "olive"), 
         
         fluidRow(
-          bs4Card(plotOutput("gg_eg_top5"), 
+          bs4Card(plotOutput("gg_eg_top5") %>% shinycssloaders::withSpinner(), 
                   width = 6, status = "olive", collapsed = FALSE, 
                   title = "Top 5 Most Expensive Products", 
                   maximizable = TRUE), 
-          bs4Card(plotOutput("gg_eg_top3"), 
+          bs4Card(plotOutput("gg_eg_top3") %>% shinycssloaders::withSpinner(), 
                   width = 6, status = "olive", collapsed = FALSE, 
                   title = "Top 3 Most Expensive Stores on Average", 
                   maximizable = TRUE)
@@ -388,17 +390,17 @@ shinyUI(bs4DashPage(
         bs4Quote("Summary of the data scraped from the ocado website", color = "purple"),
 
         fluidRow(
-          bs4Card(plotOutput("gg_oc_review"),
+          bs4Card(plotOutput("gg_oc_review") %>% shinycssloaders::withSpinner(),
                   width = 6, status = "purple", collapsed = FALSE,
                   title = "Most Reviewed Products"),
-          bs4Card(reactableOutput("reactable_oc_shelf"),
+          bs4Card(reactableOutput("reactable_oc_shelf") %>% shinycssloaders::withSpinner(),
                   width = 6, status = "purple", collapsed = FALSE,
                   title = "Most common shelf life for each brand",
                   maximizable = TRUE)
         ),
 
         fluidRow(
-          bs4Card(reactableOutput("reactable_oc_kcal"),
+          bs4Card(reactableOutput("reactable_oc_kcal") %>% shinycssloaders::withSpinner(),
                   width = 6, status = "purple", collapsed = FALSE,
                   title = "Product Price & Calories",
                   maximizable = TRUE), 
