@@ -254,7 +254,7 @@ table_quarter_order <-
               
               quarter = colDef(name = "Quarter"), 
               
-              orders = colDef(name = "Orders", sortable = TRUE), 
+              orders = colDef(name = "Orders"), 
               
               change = colDef(name = "Change", 
                               cell = pill_buttons(., color_ref = "change_cols", opacity = .8), 
