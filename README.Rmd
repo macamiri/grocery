@@ -137,5 +137,6 @@ Example of findings: 1-2 summary pics
 ### Notes and FAQs
 ***
 - [ ] Bibliography  
-- [ ] Session Info
+- [ ] Session Info  
+`r devtools::session_info()`
 

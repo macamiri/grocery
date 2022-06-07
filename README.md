@@ -1,157 +1,43 @@
+# Grocery Business R Dashboard
 
-# Collect, Generate, Analyze & Report on Online Grocery Data
+An R Shiny App to visualize and analyze grocery data as well as to act as a hub for automated report and invoice generation.
 
-## Roadmap
+## Demo
+A demo version of the app is available here:
 
-Each of the first 6 stages focuses on a broad task for the project,
-while 7 & 8 include extra project-wide information:  
-1. [Collect data from 2 online grocery services](#collect-online-data)  
-2. [Clean collected data](#clean-collected-data)  
-3. [Generate fake data](#generate-fake-data)  
-4. [Analyze grocery data](#analyze-grocery-data)  
-5. [Grocery Dashboard](#grocery-dashboard)  
-6. [Build Automation Tools](#build-automation-tools)  
-7. [Extra: R Packages used](#r-packages-used)  
-8. [Extra: Notes & FAQs](#notes-and-faqs)
+**website link**
 
-### Collect Online Data
+## Data Source
 
-------------------------------------------------------------------------
+I collected product data by scraping 2 online gorcery services - [elGrocer](https://www.elgrocer.com) (based in UAE) and [Ocado](https://www.ocado.com) (based in UK). After cleaning the data, I made them available in the [`grocerycart`](https://github.com/moamiristat/grocerycart) package.  
 
-Our first task is to find grocery data. In our case, we collected the
-data by scraping 2 online gorcery services:
-[elGrocer](https://www.elgrocer.com) (based in UAE) and
-[Ocado](https://www.ocado.com) (based in UK).
+For more information on how the data was collected and cleaned, view the [`grocerycart`](https://github.com/moamiristat/grocerycart) R package. The package includes 16 grocery related datasets and a tutorial on how you can collect and clean more data.  
 
-Once confirming that the robotxt files do not disallow us from scraping
-the websites, we started building functions to organize the data
-collection workflow for each online grocery delivery service.
+Also, I simulated a fake grocery store's customers, orders and baskets dataset based on the scraped data. You too can generate and download such a dataset via the 'Generate Grocery Data' tab in the dashboard.
 
-Consistent features for all collector functions:  
-- Functional Programming: via the map function in the purrr package  
-- Output: returns a tibble/table of the data collected  
-- Verbose: cat and crayon packages print to the console the progress
-being made  
-- Beep: beepr package sounds a ‘Work Complete’ audio once the required
-data is collected
+## Dashboard Tabs
 
-elGrocer data collected:  
-- Location (UAE) of grocery stores that elGrocer delivers from  
-- Details of each store (i.e., delivery times, minimum order amount)  
-- Random categories & subcategories of products available in each store
-+ All 3279 distinct categories were listed  
-+ Subcategory data was collected from 300 randomly chosen categories
-(from total of 3289). 1164 subcategories were collected  
-- Product details for 17,114 products (i.e., name, price, weight, image
-link)  
-+ The 17,114 products were collected from 1,000 randomly chosen
-subcategories
+Here is a brief description of the 6 tabs in the r Shiny App.
 
-Ocado data collected:  
-- All categories available  
-- Product details for 1,000 products (i.e., name, price, weight,
-nutrition table, ingredients, country of origin, rating, text reviews)  
-+ The 1,000 products were randomly selected from 3 (of the 13)
-categories due to the large number of products available. All products
-would have taken \> 11 hours to collect (regardless of hardware) because
-the system/bot was instructured to sleep within each collector function
-to prevent overloading the website. The time would be less with parallel
-processing (i.e., opening multiple RSelenium servers at once and using
-parallel functional programming vua future package in R).
++ **Basket Analysis**: *Analyzes* the simulated grocery data.  
++ **Generate Grocery Data**: Automatically *generates a set of 3 downloadable, related random datasets* from a fictional grocery store, funmart.  
++ **Automated Reports**: Automatically *creates downloadable and editable powerpoint report and word invoice* based on the data uploaded and input paramters set by the user.  
++ **Recommendations**: *Recommends 10 products* based on 5 products already in the basket. The 'Popular items (POPULAR)' recommendation algorithm is used.  
++ **Summary Elgrocer**: *Descriptive Summary* of the data scraped from the elgrocer website (more analysis can be conducted).  
++ **Summary Ocado**: *Descriptive Summary* of the data scraped from the ocado website (more analysis can be conducted).
 
-Finally, we also collected country names and flags from
-[worldometers](https://www.worldometers.info/geography/flags-of-the-world/).
-The purpose of this was to make it possible to extract the country of
-origin for the products on the Ocado website.
+## Future Additional Features
 
-Code found in: WIP  
-Collected data found in: WIP
+Here are some features that can be included for a more complex version of the App: 
 
-### Clean Collected Data
++ A live version of the App can be built by connecting the R scripts to a live database, causing the dashboard to automatically update periodically (i.e., hourly or daily), or even whenever a user clicks on a 'Refresh' button.  
++ Statistical models can be built to predict future orders (i.e., predict customer lifetime revenue).  
++ Include a filtering option (i.e., only view January data).  
++ Allow users to sign up to receive a daily summary of the dashboard's KPIs.  
++ Text analysis of reviews or customer chat support, if available (i.e., what are the common questions that customers are asking -> build an automated bot support that answers these FAQs).
 
-------------------------------------------------------------------------
+## R Packages Used
 
-The data cleaning process led to 3 new data files that will be used to  
-generate fake customer data and in analysis.
-
-Code found in: WIP  
-Collected data found in: WIP
-
-### Generate Fake Data
-
-------------------------------------------------------------------------
-
-Fake orders were synthesized using the collected data:  
-- customer_db: customer details (i.e., id, name, longitude, latitude).
-Location of long and lat is constrained within UAE.  
-- order_db: orders placed from 2020-01-01 to 2021-12-31 (i.e., id,
-customer id, date, time, store)  
-+ 97 available stores  
-+ 40% of orders from 2020 and 60% from 2021  
-+ 30% 1st half of the year, 70% second half of the year  
-+ The probability of shopping at each store was calculated according to
-the # of products (i.e., more products available in a store —> higher
-probability of ordering from that store).  
-+ 5% of orders from 00:00 to 8:00 am  
-+ 20% of orders from 8:00 to 10:00 am  
-+ 25% of orders from 10:00 to 12:00 pm  
-+ 25% of orders from 12:00 to 6:00 pm  
-+ 15% of orders from 6:00 to 10:00 pm  
-+ 10% of orders from 10:00 to 12:00 am  
-- basket_db: products bought in each order (i.e., id, order id, product,
-price)  
-+ 12,539 products to select from (see ‘Ocado data collected’ above)  
-+ The probability of ordering a product was based on a ‘score’ metric =
-nummber of reviews for that product + % of customers that recommend it
-(i.e., higher score for a product —> higher probability of ordering that
-product).  
-+ The number of products in each basket is normally distributed with a
-mean of 16 and standard deviation of 4 (minimum is 5 products/basket)
-
-To generate a new grocery dataset, visit the [dashboard for this
-project](#grocery-dashboard).
-
-### Analyze Grocery Data
-
-------------------------------------------------------------------------
-
--   [ ] Summary Data  
--   [ ] Market Basket Analysis  
--   [ ] Customer Cohort  
--   [ ] Reviews’ Text Analysis  
-    Example of findings: 1-2 summary pics
-
-### Grocery Dashboard
-
-------------------------------------------------------------------------
-
--   [ ] R shiny
--   [ ] Grocery data generator
--   [ ] Automation tools
-
-### Build Automation Tools
-
-------------------------------------------------------------------------
-
--   [ ] Generate random orders dataset  
--   [ ] Report powerpoint generation  
--   [ ] Invoice pdf
-
-### R Packages Used
-
-------------------------------------------------------------------------
-
-| **Stage** | **Packages Loaded**                                           | **Packages used with Namespace(::)**          |
-|-----------|---------------------------------------------------------------|-----------------------------------------------|
-| 1         | robotstxt, RSelenium, rvest, purrr, stringr, readr            | pacman, netstat, crayon, tibble, dplyr, beepr |
-| 2         | dplyr, readr, stringr, tidyr, purrr                           | pacman, fs, here                              |
-| 3         | fabricatr, wakefield, randomNames, charlatan, magrittr, purrr | pacman, tibble, dplyr                         |
-| 4         | WIP                                                           | WIP                                           |
-| 5         | WIP                                                           | WIP                                           |
-
-### Notes and FAQs
-
-------------------------------------------------------------------------
-
--   [ ] Bibliography  
--   [ ] Session Info
+[R App](https://github.com/moamiristat/grocery/tree/main/web-app): `shiny`, `shinyFeedback`, `grocerycart`, `bs4Dash`, `gt`, `plotly`, `visNetwork`, `reactable`, `reactablefmtr`, `ggplot2`, `dplyr`, `stringr`, `cohorts`, `arules`, `arulesViz`, `visNetwork`, `Matrix`, `recommenderlab`, `officer`, `lubridate`, `flextable`, `patchwork`, `fabricatr`, `wakefield`, `randomNames`, `charlatan`, `magrittr`, `purrr`.  
+[basket_analysis.R](https://github.com/moamiristat/grocery/blob/main/analysis/basket_analysis.R): `grocerycart`, `dplyr`, `lubridate`, `ggplot2`, `ggforce`, `gt`, `reactable`, `reactablefmtr`, `purrr`, `stringr`, `hrbrthemes`, `lubridate`, `scales`.  
+[oc_analysis.R](https://github.com/moamiristat/grocery/blob/main/analysis/oc_analysis.R): `grocerycart`, `tidyverse`, `stringr`, `reactable`, `gganimate`, `ggflags`, `ggimage`, `ggrepel`, `htmltools`, `hrbrthemes`, `scales`, `glue`.  
