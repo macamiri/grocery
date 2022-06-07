@@ -62,7 +62,7 @@ table_oc_brand <-
     reactable(., defaultPageSize = 20, 
       resizable = TRUE, showPageSizeOptions = FALSE, 
       onClick = "select", highlight = TRUE, sortable = FALSE, 
-      theme = fivethirtyeight(centered = TRUE, header_font_size = 11), 
+      theme = reactablefmtr::fivethirtyeight(centered = TRUE, header_font_size = 11), 
       defaultSortOrder = "desc", 
       defaultSorted = c("products", "avg_price"), 
       columns = list(
@@ -204,7 +204,7 @@ table_oc_shelf <-
     ungroup() %>% 
     reactable(., resizable = TRUE, showPageSizeOptions = FALSE, 
               onClick = "select", highlight = TRUE, sortable = FALSE, 
-              theme = fivethirtyeight(centered = TRUE, header_font_size = 11))
+              theme = reactablefmtr::fivethirtyeight(centered = TRUE, header_font_size = 11))
 
 ### PRODUCT
 # Top 5 most reviewed products
@@ -266,7 +266,7 @@ table_oc_kcal <-
     reactable(., defaultPageSize = 8, 
       resizable = TRUE, showPageSizeOptions = FALSE, 
       onClick = "select", highlight = TRUE, sortable = FALSE, 
-      theme = fivethirtyeight(centered = TRUE, header_font_size = 11), 
+      theme = reactablefmtr::fivethirtyeight(centered = TRUE, header_font_size = 11), 
       defaultSortOrder = "desc", 
       defaultSorted = "kcal", 
       columns = list(
