@@ -1,4 +1,5 @@
 # Load packages
+devtools::install_github("https://github.com/moamiristat/grocerycart.git")
 library(grocerycart)
 
 ##### Source analysis files -----
