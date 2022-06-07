@@ -13,6 +13,7 @@ options(spinner.color="#36827F")
 
 # Define UI using bs4Dash -----
 shinyUI(bs4DashPage(
+  
   shinyFeedback::useShinyFeedback(), 
   
   title = "grocery_dashboard", 
@@ -157,7 +158,7 @@ shinyUI(bs4DashPage(
         fluidRow(
           bs4Card(plotOutput("gg_month_order"), 
                   width = 4, status = "olive", collapsed = TRUE, 
-                  title = "Combined Monthly Orders for 2020-2021"), 
+                  title = "Combined Monthly Orders for '20-'21"), 
           bs4Card(plotOutput("gg_product_per_basket"), 
                   width = 4, status = "primary", collapsed = TRUE, 
                   title = "# of Products/Basket"), 
@@ -208,7 +209,7 @@ shinyUI(bs4DashPage(
           bs4Card(plotOutput("gg_cohort", height = "600px"), 
                   width = 12, status = "lightblue", collapsed = TRUE, 
                   title = "Customer Cohort Analysis", 
-                  footer = "Example from the end of the top row: 22% of the customers 
+                  footer = "Example from the end of the top row: 18% of the customers 
                   from 'Cohort 1' placed an order 23 months after their 1st order", 
                   maximizable = TRUE)
         )
@@ -269,10 +270,10 @@ shinyUI(bs4DashPage(
       # Reports Tab -----
       bs4TabItem(
         tabName = "reports_tab", 
-        bs4Quote("Upload data files to automatically generate reports. 
+        bs4Quote("Upload data files to automatically generate reports based on template. 
                  Follow the steps below for a quick walkthrough. 
-                 The report and invoice will each take less than 10 seconds 
-                 to become available.", color = "maroon"), 
+                 The editable report and invoice will each take less than 10 seconds 
+                 to become available for download.", color = "maroon"), 
         
         fluidRow(
           bs4Card("STEP 1: Download sample data (see below) to upload later", 
@@ -326,12 +327,13 @@ shinyUI(bs4DashPage(
       # Recommendations Tab -----
       bs4TabItem(
         tabName = "recommendation_tab", 
-        bs4Quote("Product recommendations", color = "lightblue"), 
+        bs4Quote("Product recommendations based on products already in basket.", color = "lightblue"), 
         
         bs4Card(width = 12, status = "lightblue", collapsed = FALSE, 
                 title = "Product Associations: Select a specific product", 
           fluidRow(
             bs4Card(purrr::map(1:5, function(i) {
+              # Functional programming to add multiple input boxes in parallel
               selectInput(paste0("product", i), paste0("Product #", i), choices = c("", products_available))
               }), 
                     actionButton("recommend", "Recommend Products", icon = icon("plus")), 
@@ -346,10 +348,10 @@ shinyUI(bs4DashPage(
                     title = "Recommended based on other orders") 
           )), 
         
-        bs4Card(visNetworkOutput("apriori"), 
+        bs4Card(visNetworkOutput("apriori") %>% shinycssloaders::withSpinner(), 
                 width = 12, status = "lightblue", collapsed = TRUE, 
                 title = "Associations Network Graph: Select a specific product via the dropdown menu, then
-                hover over the graph to view the products most commonly bought with it", 
+                hover over (or zoom into) the graph to view the products most commonly bought with it", 
                 maximizable = TRUE)
         
       ), 
