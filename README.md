@@ -27,7 +27,7 @@ https://user-images.githubusercontent.com/98935576/172756122-8909f8dd-f3ac-4043-
 
 ## Dashboard Tabs
 
-Here is a brief description of the 6 tabs in the r Shiny App:
+Here is a brief description of the 6 tabs in the R Shiny App:
 
 + **Basket Analysis**: *Analyzes* the simulated grocery data.  
 + **Generate Grocery Data**: Automatically *generates a set of 3 downloadable, related random datasets* from a fictional grocery store, funmart.  
