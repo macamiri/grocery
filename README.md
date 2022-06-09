@@ -3,7 +3,26 @@
 An R Shiny App to visualize and analyze grocery data as well as to act as a hub for automated report and invoice generation. See below for a short description of the tabs included in this dashboard.
 
 ## Demo
-A demo version of the app is available here: [R Shiny Dashboard Demo](http://moamiristat.shinyapps.io/grocery)
+A demo version of the app is available here: [R Shiny Dashboard Demo](http://moamiristat.shinyapps.io/grocery). It takes about 30-45 seconds for the dashboard to load initially, due to known hosting limitations.
+
+Alternatively, to download and run the app directly on your machine (i.e.,local R session), run the following code:
+```
+# install the packages used in this project
+cran_packages <- c("shiny", "shinyFeedback", "bs4Dash", "gt", "plotly", "visNetwork", "reactable", "reactablefmtr", "ggplot2", "dplyr", "stringr", "cohorts", "arules", "arulesViz", "Matrix", "recommenderlab", "officer", "lubridate", "flextable", "patchwork", "randomNames", "charlatan", "magrittr", "purrr", "ggforce", "hrbrthemes", "scales", "tidyverse", "forcats", "ggrepel", "ggimage", "ggbeeswarm", "gganimate", "htmltools", "glue")
+
+cran_to_install <- cran_packages[!cran_packages %in% installed.packages()[, "Package"]]
+install.packages(to_install, repos = "https://cran.rstudio.com/")
+
+devtools::install_github("https://github.com/moamiristat/grocery.git")
+devtools::install_github("https://github.com/trinker/wakefield.git")
+devtools::install_github("https://github.com/jimjam-slam/ggflags.git")
+install.packages("fabricatr", dependencies = TRUE, repos = c("http://r.declaredesign.org", "https://cloud.r-project.org"))
+
+
+# download and run the application - the app will open automatically
+library("shiny")
+shiny::runGitHub('grocery', 'moamiristat')
+```
 
 ## Data Source
 
@@ -24,6 +43,11 @@ Here is a brief description of the 6 tabs in the r Shiny App.
 + **Summary Elgrocer**: *Descriptive Summary* of the data scraped from the elgrocer website (more analysis can be conducted).  
 + **Summary Ocado**: *Descriptive Summary* of the data scraped from the ocado website (more analysis can be conducted).
 
+## Dashboard Walkthrough
+
+Here are 4 quick videos to give a preview of the app:
+
+
 ## Future Additional Features
 
 Here are some features that can be included for a more complex version of the App: 
@@ -32,10 +56,13 @@ Here are some features that can be included for a more complex version of the Ap
 + Statistical models can be built to predict future orders (i.e., predict customer lifetime revenue).  
 + Include a filtering option (i.e., only view January data).  
 + Allow users to sign up to receive a daily summary of the dashboard's KPIs.  
-+ Text analysis of reviews or customer chat support, if available (i.e., what are the common questions that customers are asking -> build an automated bot support that answers these FAQs).
++ Text analysis of reviews or customer chat support, if available (i.e., what are the common questions that customers are asking -> build an automated bot support that answers these FAQs).  
++ Deploy App on Amazon Web Services, Digital Ocean or Heroku for better performance and security.
 
 ## R Packages Used
 
-[R App](https://github.com/moamiristat/grocery/tree/main/web-app): `shiny`, `shinyFeedback`, `grocerycart`, `bs4Dash`, `gt`, `plotly`, `visNetwork`, `reactable`, `reactablefmtr`, `ggplot2`, `dplyr`, `stringr`, `cohorts`, `arules`, `arulesViz`, `visNetwork`, `Matrix`, `recommenderlab`, `officer`, `lubridate`, `flextable`, `patchwork`, `fabricatr`, `wakefield`, `randomNames`, `charlatan`, `magrittr`, `purrr`.  
-[basket_analysis.R](https://github.com/moamiristat/grocery/blob/main/analysis/basket_analysis.R): `grocerycart`, `dplyr`, `lubridate`, `ggplot2`, `ggforce`, `gt`, `reactable`, `reactablefmtr`, `purrr`, `stringr`, `hrbrthemes`, `lubridate`, `scales`.  
-[oc_analysis.R](https://github.com/moamiristat/grocery/blob/main/analysis/oc_analysis.R): `grocerycart`, `tidyverse`, `stringr`, `reactable`, `gganimate`, `ggflags`, `ggimage`, `ggrepel`, `htmltools`, `hrbrthemes`, `scales`, `glue`.  
+*ui & server*: `shiny`, `shinyFeedback`, `grocerycart`, `bs4Dash`, `gt`, `plotly`, `visNetwork`, `reactable`, `reactablefmtr`, `ggplot2`, `dplyr`, `stringr`, `cohorts`, `arules`, `arulesViz`, `Matrix`, `recommenderlab`, `officer`, `lubridate`, `flextable`, `patchwork`, `fabricatr`, `wakefield`, `randomNames`, `charlatan`, `magrittr`, `purrr`.  
+[*basket_analysis.R*](https://github.com/moamiristat/grocery/blob/main/analysis/basket_analysis.R): `grocerycart`, `dplyr`, `lubridate`, `ggplot2`, `ggforce`, `gt`, `reactable`, `reactablefmtr`, `purrr`, `stringr`, `hrbrthemes`, `scales`.  
+[*eg_analysis.R*](https://github.com/moamiristat/grocery/blob/main/analysis/eg_analysis.R): `grocerycart`, `tidyverse`, `stringr`, `forcats`, `ggrepel`, `ggimage`, `ggbeeswarm`.  
+[*oc_analysis.R*](https://github.com/moamiristat/grocery/blob/main/analysis/oc_analysis.R): `grocerycart`, `tidyverse`, `stringr`, `reactable`, `gganimate`, `ggflags`, `ggimage`, `ggrepel`, `htmltools`, `hrbrthemes`, `scales`, `glue`.
+
