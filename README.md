@@ -1,6 +1,6 @@
 # Grocery Business R Dashboard
 
-An R Shiny App to visualize and analyze grocery data as well as to act as a hub for automated report and invoice generation. See below for a short description of the tabs included in this dashboard.
+An R Shiny App to visualize and analyze grocery data as well as to act as a hub for automated report and invoice generation. See below for a short description of the tabs included in this dashboard. To learn how the data was collected, cleaned and analyzed, view the [grocerycart R package](https://github.com/moamiristat/grocerycart).
 
 ## Demo
 A demo version of the app is available here: [R Shiny Dashboard Demo](http://moamiristat.shinyapps.io/grocery). It takes about 30-45 seconds for the dashboard to load initially, due to known hosting limitations.
