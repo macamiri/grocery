@@ -10,6 +10,7 @@ library(ggflags)
 library(ggimage)
 library(ggrepel)
 library(htmltools)
+library(gifski)
 
 oc_palette <- c("#D3CAEC", "#B3A2E7", "#9F8BDC", "#7D67BD",
                 "#664EAB", "#513C90", "#36246C", "#281956")
