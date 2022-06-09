@@ -22,7 +22,7 @@ devtools::install_github("https://github.com/moamiristat/grocery.git")
 devtools::install_github("https://github.com/trinker/wakefield.git")
 devtools::install_github("https://github.com/jimjam-slam/ggflags.git")
 install.packages("fabricatr", dependencies = TRUE, repos = c("http://r.declaredesign.org", 
-"https://cloud.r-project.org"))
+                 "https://cloud.r-project.org"))
 
 
 # download and run the application - the app will open automatically
