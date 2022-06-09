@@ -52,7 +52,13 @@ Here is a brief description of the 6 tabs in the r Shiny App.
 ## Dashboard Walkthrough
 
 Here are 4 quick videos to give a preview of the app:
+https://user-images.githubusercontent.com/98935576/172756076-944c53a6-c56e-4493-9f30-37ef33e0c7c4.mov
 
+https://user-images.githubusercontent.com/98935576/172756099-9cd0ed68-5d4b-42f0-84bd-94c5dba25111.mov
+
+https://user-images.githubusercontent.com/98935576/172756113-c97e7604-1757-4d05-bd46-e28a835ead0b.mov
+
+https://user-images.githubusercontent.com/98935576/172756122-8909f8dd-f3ac-4043-8904-9ac0415dc924.mov
 
 ## Future Additional Features
 
